@@ -39,6 +39,9 @@
     <ClInclude Include="Goomba.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Simon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -66,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Simon.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

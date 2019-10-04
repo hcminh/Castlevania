@@ -1,20 +1,2 @@
-﻿  Brick.cpp
-  debug.cpp
-  Game.cpp
-e:\minh\projects\c++\castlevania\castlevania\game.cpp(63): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
-e:\minh\projects\c++\castlevania\castlevania\game.cpp(262): warning C4305: '=': truncation from '__int64' to 'float'
-e:\minh\projects\c++\castlevania\castlevania\game.cpp(263): warning C4305: '=': truncation from '__int64' to 'float'
-e:\minh\projects\c++\castlevania\castlevania\game.cpp(273): warning C4305: '=': truncation from '__int64' to 'float'
-e:\minh\projects\c++\castlevania\castlevania\game.cpp(274): warning C4305: '=': truncation from '__int64' to 'float'
-  GameObject.cpp
-  Goomba.cpp
-  main.cpp
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(276): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(293): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(298): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(330): warning C4018: '<': signed/unsigned mismatch
-  Mario.cpp
-  Sprites.cpp
-  Textures.cpp
-  Generating Code...
+﻿  Simon.cpp
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

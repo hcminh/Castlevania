@@ -90,6 +90,10 @@ void CSimon::Render()
 	int ani;
 	if (state == SIMON_STATE_DIE)
 		ani = SIMON_ANI_DIE;
+	else if (state == SIMON_STATE_JUMP_LEFT)
+		ani = SIMON_ANI_JUMP_LEFT;
+	else if (state == SIMON_STATE_JUMP_RIGHT)
+		ani = SIMON_ANI_JUMP_RIGHT;
 	else 
 	{
 			if (vx == 0)
@@ -122,8 +126,6 @@ void CSimon::SetState(int state)
 		vx = -SIMON_WALKING_SPEED;
 		nx = -1;
 		break;
-	case SIMON_STATE_JUMP:
-		vy = -SIMON_JUMP_SPEED_Y;
 	case SIMON_STATE_IDLE:
 		vx = 0;
 		break;
@@ -131,6 +133,11 @@ void CSimon::SetState(int state)
 		vy = -SIMON_DIE_DEFLECT_SPEED;
 		break;
 	}
+}
+
+void CSimon::SetStateJump()
+{
+	vy = -SIMON_JUMP_SPEED_Y;
 }
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)

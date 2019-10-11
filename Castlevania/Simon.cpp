@@ -1,4 +1,4 @@
-#include <algorithm>
+﻿#include <algorithm>
 #include "debug.h"
 
 #include "Simon.h"
@@ -47,8 +47,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		y += min_ty * dy + ny * 0.4f;
 
 		if (nx != 0) vx = 0;
-		if (ny != 0) vy = 0;
-
+		if (ny != 0) {
+			vy = 0;
+			isJumping = false;
+		}
 		// Collision logic with Goombas
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -90,12 +92,24 @@ void CSimon::Render()
 	int ani;
 	if (state == SIMON_STATE_DIE)
 		ani = SIMON_ANI_DIE;
+	else if(isJumping)
+	{
+		if (nx > 0) ani = SIMON_ANI_JUMP_RIGHT;
+		else ani = SIMON_ANI_JUMP_LEFT;
+	}
 	else 
 	{
 			if (vx == 0)
 			{
-				if (nx > 0) ani = SIMON_ANI_BIG_IDLE_RIGHT;
-				else ani = SIMON_ANI_BIG_IDLE_LEFT;
+				if (state == SIMON_STATE_SIT) {
+					if (nx > 0) ani = SIMON_ANI_SIT_RIGHT;
+					else ani = SIMON_ANI_SIT_LEFT;
+			}
+				else
+				{
+					if (nx > 0) ani = SIMON_ANI_BIG_IDLE_RIGHT;
+					else ani = SIMON_ANI_BIG_IDLE_LEFT;
+				}
 			}
 			else if (vx > 0)
 				ani = SIMON_ANI_BIG_WALKING_RIGHT;
@@ -107,6 +121,7 @@ void CSimon::Render()
 
 	RenderBoundingBox();
 }
+
 
 void CSimon::SetState(int state)
 {
@@ -122,8 +137,14 @@ void CSimon::SetState(int state)
 		vx = -SIMON_WALKING_SPEED;
 		nx = -1;
 		break;
+	case SIMON_STATE_SIT:
+		vx = 0;
+		break;
 	case SIMON_STATE_JUMP:
+		if (isJumping)return;
+		isJumping = true;
 		vy = -SIMON_JUMP_SPEED_Y;
+		break;
 	case SIMON_STATE_IDLE:
 		vx = 0;
 		break;
@@ -133,12 +154,12 @@ void CSimon::SetState(int state)
 	}
 }
 
+
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
 	left = x;
 	top = y;
-
-		right = x + SIMON_BIG_BBOX_WIDTH;
-		bottom = y + SIMON_BIG_BBOX_HEIGHT;
+	right = x + SIMON_BIG_BBOX_WIDTH;
+	bottom = y + SIMON_BIG_BBOX_HEIGHT;
 }
 

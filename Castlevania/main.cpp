@@ -48,11 +48,13 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_SPACE:
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
-	case DIK_A: // reset
+	case DIK_R: // reset
 		simon->SetState(SIMON_STATE_IDLE);
-		simon->SetLevel(SIMON_LEVEL_BIG);
-		simon->SetPosition(50.0f,0.0f);
+		simon->SetPosition(50.0f, 0.0f);
 		simon->SetSpeed(0, 0);
+		break;
+	case DIK_A: // ATTACK
+		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
 }
@@ -141,6 +143,15 @@ void LoadResources()
 
 	sprites->Add(10051, 300, 198, 300 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit left
 
+	//// ATTACK
+	sprites->Add(10061, 300, 0, 300 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK right
+	sprites->Add(10062, 360, 0, 360 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10063, 420, 0, 420 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
+
+	sprites->Add(10064, 600, 0, 600 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK left		
+	sprites->Add(10065, 540, 0, 540 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10066, 480, 0, 480 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
+
 
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(20001, 408, 225, 424, 241, texMisc);
@@ -153,11 +164,11 @@ void LoadResources()
 
 	LPANIMATION ani;
 
-	ani = new CAnimation(100);	// idle big right
+	ani = new CAnimation(100);	// idle right
 	ani->Add(10001);
 	animations->Add(400, ani);
 
-	ani = new CAnimation(100);	// idle big left
+	ani = new CAnimation(100);	// idle left
 	ani->Add(10011);
 	animations->Add(401, ani);
 
@@ -169,28 +180,41 @@ void LoadResources()
 	ani->Add(10031);
 	animations->Add(403, ani);
 
-	ani = new CAnimation(1000);	// jump right
+	ani = new CAnimation(100);	// jump right
 	ani->Add(10041);
 	animations->Add(404, ani);
 
-	ani = new CAnimation(1000);	// jump left
+	ani = new CAnimation(100);	// jump left
 	ani->Add(10051);
 	animations->Add(405, ani);
 
-	ani = new CAnimation(100);	// walk right big
+	ani = new CAnimation(100);	// walk right 
 	ani->Add(10001);
 	ani->Add(10002);
 	ani->Add(10003);
 	ani->Add(10004);
 	animations->Add(500, ani);
 
-	ani = new CAnimation(100);	// // walk left big
+	ani = new CAnimation(100);	// // walk left 
 	ani->Add(10011);
 	ani->Add(10012);
 	ani->Add(10013);
 	ani->Add(10014);
 	animations->Add(501, ani);
 
+	ani = new CAnimation(100);	// // ATTACK left 
+	ani->Add(10064);
+	ani->Add(10065);
+	ani->Add(10066);
+	ani->Add(10001);
+	animations->Add(502, ani);
+
+	ani = new CAnimation(100);	// // ATTACK right 
+	ani->Add(10061);
+	ani->Add(10062);
+	ani->Add(10063);
+	ani->Add(10011);
+	animations->Add(503, ani);
 
 	ani = new CAnimation(100);		// Simon die
 	ani->Add(10099);
@@ -215,6 +239,10 @@ void LoadResources()
 	simon->AddAnimation(405);		// jump left
 
 	simon->AddAnimation(599);		// die
+
+	simon->AddAnimation(502);		// ATTACK right
+	simon->AddAnimation(503);		// ATTACK left
+
 
 	simon->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
 	objects.push_back(simon);

@@ -13,7 +13,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	// Simple fall down
 	vy += SIMON_GRAVITY * dt;
-
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
@@ -22,7 +21,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
-
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
@@ -90,12 +88,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render()
 {
 	int ani;
+
 	if (state == SIMON_STATE_DIE)
 		ani = SIMON_ANI_DIE;
-	else if(isJumping)
+	else if (isJumping)
 	{
 		if (nx > 0) ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
+	}
+	else if (isAttacking)
+	{
+		if (nx > 0) ani = SIMON_ANI_ATTACK_RIGHT;
+		else ani = SIMON_ANI_ATTACK_LEFT;
 	}
 	else 
 	{
@@ -107,17 +111,19 @@ void CSimon::Render()
 			}
 				else
 				{
-					if (nx > 0) ani = SIMON_ANI_BIG_IDLE_RIGHT;
-					else ani = SIMON_ANI_BIG_IDLE_LEFT;
+					if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
+					else ani = SIMON_ANI_IDLE_LEFT;
 				}
 			}
 			else if (vx > 0)
-				ani = SIMON_ANI_BIG_WALKING_RIGHT;
-			else ani = SIMON_ANI_BIG_WALKING_LEFT;
+				ani = SIMON_ANI_WALKING_RIGHT;
+			else ani = SIMON_ANI_WALKING_LEFT;
 	}
 
 	int alpha = 255;
 	animations[ani]->Render(x, y, alpha);
+	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+		isAttacking = false;
 
 	RenderBoundingBox();
 }
@@ -145,6 +151,11 @@ void CSimon::SetState(int state)
 		isJumping = true;
 		vy = -SIMON_JUMP_SPEED_Y;
 		break;
+
+	case SIMON_STATE_ATTACK:
+		if (isAttacking)return;
+		isAttacking = true;
+		break;
 	case SIMON_STATE_IDLE:
 		vx = 0;
 		break;
@@ -159,7 +170,12 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 	left = x;
 	top = y;
-	right = x + SIMON_BIG_BBOX_WIDTH;
-	bottom = y + SIMON_BIG_BBOX_HEIGHT;
+	right = x + SIMON_BBOX_WIDTH;
+	bottom = y + SIMON_BBOX_HEIGHT;
 }
 
+
+void CSimon::Attack()
+{
+
+}

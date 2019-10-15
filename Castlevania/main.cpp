@@ -10,6 +10,7 @@
 #include "Simon.h"
 #include "Brick.h"
 #include "Goomba.h"
+#include "Whip.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Castlevania"
@@ -20,13 +21,15 @@
 
 #define MAX_FRAME_RATE 120
 
-#define ID_TEX_SIMON 0
-#define ID_TEX_ENEMY 10
-#define ID_TEX_MISC 20
+#define ID_TEX_SIMON	0
+#define ID_TEX_WHIP		5
+#define ID_TEX_ENEMY	20
+#define ID_TEX_MISC		30
 
 CGame *game;
 
 CSimon *simon;
+Whip *whip;
 //CGoomba *goomba;
 
 vector<LPGAMEOBJECT> objects;
@@ -62,6 +65,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	switch (KeyCode)
+	{
+	case DIK_DOWN:
+		simon->SetState(SIMON_STATE_STANDUP);
+		break;
+	}
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
@@ -71,11 +80,11 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	//disable when jump
 	//if (simon->GetState() == SIMON_STATE_JUMP) return;
 
-	if (game->IsKeyDown(DIK_RIGHT))
+	if (game->IsKeyDown(DIK_RIGHT) && !simon->isAttacking)
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT))
+	else if (game->IsKeyDown(DIK_LEFT) && !simon->isAttacking)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN))
+	else if (game->IsKeyDown(DIK_DOWN) && !simon->isAttacking)
 		simon->SetState(SIMON_STATE_SIT);
 	else
 		simon->SetState(SIMON_STATE_IDLE);
@@ -103,55 +112,12 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
-
-	textures->Add(ID_TEX_SIMON, L"textures\\full-simon.png",D3DCOLOR_XRGB(255, 0, 255));
-	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
-	//textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
-
-
-	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
-
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
-	
-	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
 
-	// big
-	sprites->Add(10001, 900, 0, 900 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// idle right
-
-	sprites->Add(10002, 840, 0, 840 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// walk
-	sprites->Add(10003, 780, 0, 780 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10004, 720, 0, 720 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	sprites->Add(10011, 0, 0, 0 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// idle left
-
-	sprites->Add(10012, 60, 0, 60 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// walk
-	sprites->Add(10013, 120, 0, 120 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10014, 180, 0, 180 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-
-	sprites->Add(10099, 215, 120, 215 + SIMON_SPRITE_WIDTH, 120 + SIMON_SPRITE_HEIGHT, texSimon);		// die 
-
-	//// sit
-	sprites->Add(10021, 600, 198, 600 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit right
-
-	sprites->Add(10031, 300, 198, 300 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit left
-
-	//// jump
-	sprites->Add(10041, 600, 198, 600 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit right
-
-	sprites->Add(10051, 300, 198, 300 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit left
-
-	//// ATTACK
-	sprites->Add(10061, 300, 0, 300 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK right
-	sprites->Add(10062, 360, 0, 360 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10063, 420, 0, 420 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	sprites->Add(10064, 600, 0, 600 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK left		
-	sprites->Add(10065, 540, 0, 540 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10066, 480, 0, 480 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
+	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
+	//textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
+	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(20001, 408, 225, 424, 241, texMisc);
@@ -164,112 +130,46 @@ void LoadResources()
 
 	LPANIMATION ani;
 
-	ani = new CAnimation(100);	// idle right
-	ani->Add(10001);
-	animations->Add(400, ani);
+	//simon
+	simon = new CSimon();
+	simon->LoadResources();
+	simon->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
+	objects.push_back(simon);
 
-	ani = new CAnimation(100);	// idle left
-	ani->Add(10011);
-	animations->Add(401, ani);
+	//whip
+	whip = new Whip();
+	whip->LoadResources();
+	whip->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
+	objects.push_back(whip);
 
-	ani = new CAnimation(100);	// sit right
-	ani->Add(10021);
-	animations->Add(402, ani);
-
-	ani = new CAnimation(100);	// sit left
-	ani->Add(10031);
-	animations->Add(403, ani);
-
-	ani = new CAnimation(100);	// jump right
-	ani->Add(10041);
-	animations->Add(404, ani);
-
-	ani = new CAnimation(100);	// jump left
-	ani->Add(10051);
-	animations->Add(405, ani);
-
-	ani = new CAnimation(100);	// walk right 
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	ani->Add(10004);
-	animations->Add(500, ani);
-
-	ani = new CAnimation(100);	// // walk left 
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	ani->Add(10014);
-	animations->Add(501, ani);
-
-	ani = new CAnimation(100);	// // ATTACK left 
-	ani->Add(10064);
-	ani->Add(10065);
-	ani->Add(10066);
-	ani->Add(10001);
-	animations->Add(502, ani);
-
-	ani = new CAnimation(100);	// // ATTACK right 
-	ani->Add(10061);
-	ani->Add(10062);
-	ani->Add(10063);
-	ani->Add(10011);
-	animations->Add(503, ani);
-
-	ani = new CAnimation(100);		// Simon die
-	ani->Add(10099);
-	animations->Add(599, ani);
-
-	
 
 	ani = new CAnimation(100);		// brick
 	ani->Add(20001);
 	animations->Add(601, ani);
 
-	simon = new CSimon();
-	simon->AddAnimation(400);		// idle right big
-	simon->AddAnimation(401);		// idle left big
-	simon->AddAnimation(402);		// sit small
-	simon->AddAnimation(403);		// sit small
+	for (int i = 0; i < 5; i++)
+	{
+		CBrick *brick = new CBrick();
+		brick->AddAnimation(601);
+		brick->SetPosition(100.0f + i*60.0f, 90.0f);
+		objects.push_back(brick);
+	
+		brick = new CBrick();
+		brick->AddAnimation(601);
+		brick->SetPosition(68.0f + i*60.0f, 90.0f);
+		objects.push_back(brick);
 
-	simon->AddAnimation(500);		// walk right big
-	simon->AddAnimation(501);		// walk left big
-
-	simon->AddAnimation(404);		// jump right
-	simon->AddAnimation(405);		// jump left
-
-	simon->AddAnimation(599);		// die
-
-	simon->AddAnimation(502);		// ATTACK right
-	simon->AddAnimation(503);		// ATTACK left
-
-
-	simon->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
-	objects.push_back(simon);
-
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	CBrick *brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(100.0f + i*60.0f, 74.0f);
-	//	objects.push_back(brick);
-
-	//	brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(100.0f + i*60.0f, 90.0f);
-	//	objects.push_back(brick);
-
-	//	brick = new CBrick();
-	//	brick->AddAnimation(601);
-	//	brick->SetPosition(84.0f + i*60.0f, 90.0f);
-	//	objects.push_back(brick);
-	//}
+		brick = new CBrick();
+		brick->AddAnimation(601);
+		brick->SetPosition(84.0f + i * 60.0f, 90.0f);
+		objects.push_back(brick);
+	}
 
 	for (int i = 0; i < 100; i++)
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(-SCREEN_WIDTH/2 + 50.0f + i*16.0f, SCREEN_HEIGHT - BRICK_BBOX_WIDTH*3 - 6.0f);
+		brick->SetPosition(-SCREEN_WIDTH/2 + 50.0f + i*16.0f, SCREEN_HEIGHT/2 + 40);
 		objects.push_back(brick);
 	}
 

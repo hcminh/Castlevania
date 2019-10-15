@@ -1,5 +1,9 @@
 ﻿#pragma once
 #include "GameObject.h"
+#include "Textures.h"
+#include "Whip.h"
+
+#define ID_TEX_SIMON 0
 
 #define SIMON_WALKING_SPEED		0.1f 
 //0.1f
@@ -34,39 +38,52 @@
 #define SIMON_ANI_ATTACK_RIGHT			9
 #define SIMON_ANI_ATTACK_LEFT			10
 
-#define MAX_ATTACK_FRAME				3
+#define SIMON_ANI_SIT_ATTACK_RIGHT			11
+#define SIMON_ANI_SIT_ATTACK_LEFT			12
 
-#define	SIMON_LEVEL_BIG		2
+#define MAX_ATTACK_FRAME				3
+#define MAX_SIT_ATTACK_FRAME				2
 
 #define SIMON_SPRITE_WIDTH  60
 #define SIMON_SPRITE_HEIGHT 66
 
 #define SIMON_BBOX_WIDTH  60
-#define SIMON_BBOX_HEIGHT 66
+#define SIMON_BBOX_HEIGHT 63
 
+#define SIMON_SIT_BBOX_WIDTH  60
+#define SIMON_SIT_BBOX_HEIGHT 45
+
+#define SIMON_STATE_STANDUP		30
 
 #define SIMON_UNTOUCHABLE_TIME 5000
 
 
 class CSimon : public CGameObject
 {
-	//biến để kiểm tra Simon đang làm việc khác
-	bool isJumping = false;
-	bool isAttacking = false;
+	static CSimon * __instance; // Singleton Patern
 
 	int currentFrame = 0;
 	int untouchable;
 	DWORD untouchable_start;
 public:
+	//biến để kiểm tra Simon đang làm việc khác
+	bool isJumping = false;
+	bool isAttacking = false;
+	bool isSitting = false;
+	bool isMoving = false;
+
+
 	CSimon() : CGameObject()
 	{
 		untouchable = 0;
 	}
+
+	static CSimon * GetInstance();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int state);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 
-
+	void LoadResources();
 	void Attack();
 };

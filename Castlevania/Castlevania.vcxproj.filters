@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\weapon">
+      <UniqueIdentifier>{3351b1db-6c95-47c1-801c-a0fa8c7c4774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\weapon">
+      <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="debug.h">
@@ -41,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="Simon.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Whip.h">
+      <Filter>Header Files\weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="Simon.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Whip.cpp">
+      <Filter>Source Files\weapon</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,5 +1,8 @@
 ﻿  main.cpp
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(299): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(304): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(336): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(199): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(204): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(236): warning C4018: '<': signed/unsigned mismatch
+  Simon.cpp
+  Whip.cpp
+  Generating Code...
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

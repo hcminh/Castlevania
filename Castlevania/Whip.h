@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "debug.h"
 
-#include "Simon.h"
 #include "Game.h"
 
 // Whip
@@ -16,25 +15,24 @@
 #define WHIP_BBOX_WIDTH				55
 #define WHIP_BBOX_HEIGHT			15
 
-#define WHIP_HEIGHT			66
-#define WHIP_WIDTH			240	
+#define WHIP_HEIGHT			68
+#define WHIP_WIDTH			160
 
 
-class Whip : public CGameObject
+class CWhip : public CGameObject
 {
-
+	int level = 1;
+	int currentID = -1;
 public:
-	Whip();
+	CWhip();
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL, bool stopMovement = false);
 	virtual void Render();
 
-	void Render(int currentID = -1);
-
-	void SetWhipPosition(D3DXVECTOR3 simonPositon, bool isStand);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 
-	void setPosition();
+	void setCurrentID(int id);
+	void setPosition(float x, float y);
 	void LoadResources();
 };
 

@@ -29,7 +29,7 @@
 CGame *game;
 
 CSimon *simon;
-Whip *whip;
+//Whip *whip;
 //CGoomba *goomba;
 
 vector<LPGAMEOBJECT> objects;
@@ -137,10 +137,12 @@ void LoadResources()
 	objects.push_back(simon);
 
 	//whip
-	whip = new Whip();
-	whip->LoadResources();
-	whip->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
-	objects.push_back(whip);
+	//whip = new Whip();
+	/*whip->LoadResources();*/
+	/*whip->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
+	objects.push_back(whip);*/
+	simon->whip = new CWhip();
+	simon->whip->LoadResources();
 
 
 	ani = new CAnimation(100);		// brick

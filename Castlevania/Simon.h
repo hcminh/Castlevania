@@ -42,10 +42,11 @@
 #define SIMON_ANI_SIT_ATTACK_LEFT			12
 
 #define MAX_ATTACK_FRAME				3
-#define MAX_SIT_ATTACK_FRAME				2
 
 #define SIMON_SPRITE_WIDTH  60
 #define SIMON_SPRITE_HEIGHT 66
+
+#define PADDING 15
 
 #define SIMON_BBOX_WIDTH  60
 #define SIMON_BBOX_HEIGHT 63
@@ -65,12 +66,16 @@ class CSimon : public CGameObject
 	int currentFrame = 0;
 	int untouchable;
 	DWORD untouchable_start;
+
+
 public:
 	//biến để kiểm tra Simon đang làm việc khác
 	bool isJumping = false;
 	bool isAttacking = false;
 	bool isSitting = false;
 	bool isMoving = false;
+
+	CWhip *whip;
 
 
 	CSimon() : CGameObject()
@@ -79,6 +84,7 @@ public:
 	}
 
 	static CSimon * GetInstance();
+
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *colliable_objects = NULL);
 	virtual void Render();
 	void SetState(int state);

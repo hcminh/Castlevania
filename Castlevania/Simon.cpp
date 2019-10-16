@@ -91,7 +91,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render()
 {
 	int ani;
-
+	whip->setCurrentID(-1);
 	if (state == SIMON_STATE_DIE)
 	{
 		ani = SIMON_ANI_DIE;
@@ -104,13 +104,31 @@ void CSimon::Render()
 	}
 	else if (isAttacking && isSitting)
 	{
-		if (nx > 0) ani = SIMON_ANI_SIT_ATTACK_RIGHT;
-		else ani = SIMON_ANI_SIT_ATTACK_LEFT;
+		if (nx > 0) {
+			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
+			whip->setCurrentID(0);
+			whip->setPosition(x - 24, y -3);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+		}
+		else
+		{
+			ani = SIMON_ANI_SIT_ATTACK_LEFT;
+			whip->setCurrentID(1);
+			whip->setPosition(x - 54 - 24, y - 3); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
+		}
 	}
 	else if (isAttacking)
 	{
-		if (nx > 0) ani = SIMON_ANI_ATTACK_RIGHT;
-		else ani = SIMON_ANI_ATTACK_LEFT;
+		if (nx > 0) {
+			ani = SIMON_ANI_ATTACK_RIGHT;
+			whip->setCurrentID(4);
+			whip->setPosition(x - 24, y);
+		} 
+		else
+		{
+			ani = SIMON_ANI_ATTACK_LEFT;
+			whip->setCurrentID(5);
+			whip->setPosition(x - 54 - 24, y);
+		}
 	}
 	else if (isSitting)
 	{
@@ -139,9 +157,10 @@ void CSimon::Render()
 	int alpha = 255;
 	animations[ani]->Render(x, y, alpha);
 
-	if (isAttacking && isSitting && animations[ani]->getCurrentFrame() >= MAX_SIT_ATTACK_FRAME)
-		isAttacking = false;
-	else if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+	whip->Render();
+
+
+	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
 		isAttacking = false;
 
 	RenderBoundingBox();
@@ -201,27 +220,54 @@ void CSimon::SetState(int state)
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	if (isSitting) 
+	if (nx > 0)
 	{
-		left = x;
-		top = y;
-		right = x + SIMON_BBOX_WIDTH;
-		bottom = top + SIMON_SIT_BBOX_HEIGHT;
+		if (isSitting)
+		{
+			left = x + 16;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH - 13;
+			bottom = top + SIMON_SIT_BBOX_HEIGHT;
+		}
+		/*else if (isJumping)
+		{
+			left = x;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH;
+			bottom = top + SIMON_SIT_BBOX_HEIGHT;
+		}*/
+		else
+		{
+			left = x + 16;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH - 13;
+			bottom = top + SIMON_BBOX_HEIGHT;
+		}
 	}
-	/*else if (isJumping)
-	{
-		left = x;
-		top = y;
-		right = x + SIMON_BBOX_WIDTH;
-		bottom = top + SIMON_SIT_BBOX_HEIGHT;
-	}*/
-	else
-	{
-		left = x;
-		top = y;
-		right = x + SIMON_BBOX_WIDTH;
-		bottom = top + SIMON_BBOX_HEIGHT;
+	else {
+		if (isSitting)
+		{
+			left = x + 13;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH -16;
+			bottom = top + SIMON_SIT_BBOX_HEIGHT;
+		}
+		/*else if (isJumping)
+		{
+			left = x;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH;
+			bottom = top + SIMON_SIT_BBOX_HEIGHT;
+		}*/
+		else
+		{
+			left = x + 13;
+			top = y;
+			right = x + SIMON_BBOX_WIDTH - 16;
+			bottom = top + SIMON_BBOX_HEIGHT;
+		}
 	}
+	
 }
 
 
@@ -264,11 +310,13 @@ void CSimon::LoadResources()
 
 
 	//// SITTING ATTACK 
-	sprites->Add(10022, 900, 132 + 18, 900 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK right
-	sprites->Add(10023, 840, 132 + 18, 840 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10022, 480, 66 + 18, 480 + SIMON_SPRITE_WIDTH, 66 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK right
+	sprites->Add(10023, 900, 132 + 18, 900 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10024, 840, 132 + 18, 840 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
 
-	sprites->Add(10032, 0, 132 + 18, 0 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK left		
-	sprites->Add(10033, 60, 132 + 18, 60 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10032, 420, 66 + 18, 420 + SIMON_SPRITE_WIDTH, 66 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK left		
+	sprites->Add(10033, 0, 132 + 18, 0 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
+	sprites->Add(10034, 60, 132 + 18, 60 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
 
 	//// ATTACK
 	sprites->Add(10061, 300, 0, 300 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK right
@@ -337,12 +385,14 @@ void CSimon::LoadResources()
 	ani = new CAnimation(100);	// // SIT ATTACK right 
 	ani->Add(10022);
 	ani->Add(10023);
+	ani->Add(10024);
 	ani->Add(10021);
 	animations->Add(504, ani);
 
 	ani = new CAnimation(100);	// // SIT ATTACK left 
 	ani->Add(10032);
 	ani->Add(10033);
+	ani->Add(10034);
 	ani->Add(10031);
 	animations->Add(505, ani);
 

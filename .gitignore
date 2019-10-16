@@ -33,6 +33,8 @@
 
 # dependencies
 /Debug
-/DirectX9-Research/Debug/
+/Castlevania/Debug/
+*.vs
+*.vscode
 .vs
 .vscode

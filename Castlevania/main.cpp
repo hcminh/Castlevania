@@ -11,6 +11,7 @@
 #include "Brick.h"
 #include "Goomba.h"
 #include "Whip.h"
+#include "Candle.h"
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Castlevania"
@@ -25,10 +26,13 @@
 #define ID_TEX_WHIP		5
 #define ID_TEX_ENEMY	20
 #define ID_TEX_MISC		30
+#define ID_TEX_CANDLE	35
+
 
 CGame *game;
 
 CSimon *simon;
+
 //Whip *whip;
 //CGoomba *goomba;
 
@@ -58,6 +62,12 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_A: // ATTACK
 		simon->SetState(SIMON_STATE_ATTACK);
+		break;
+	case DIK_Q: 
+		simon->whip->levelUp();
+		break;
+	case DIK_W: 
+		simon->whip->levelDown();
 		break;
 	}
 }

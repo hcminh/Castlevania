@@ -51,6 +51,9 @@
     <ClInclude Include="Whip.h">
       <Filter>Header Files\weapon</Filter>
     </ClInclude>
+    <ClInclude Include="Candle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug.cpp">
@@ -85,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Whip.cpp">
       <Filter>Source Files\weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Candle.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

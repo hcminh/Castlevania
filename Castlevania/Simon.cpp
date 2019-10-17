@@ -91,12 +91,23 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 void CSimon::Render()
 {
 	int ani;
-	whip->setCurrentID(-1);
+
 	if (state == SIMON_STATE_DIE)
 	{
 		ani = SIMON_ANI_DIE;
 	}
-		
+	else if (isAttacking && isJumping)
+	{
+		if (nx > 0) {
+			ani = SIMON_ANI_ATTACK_RIGHT;
+			whip->setPosition(x - 24, y - 3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+		}
+		else
+		{
+			ani = SIMON_ANI_ATTACK_LEFT;
+			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
+		}
+	}
 	else if (isJumping)
 	{
 		if (nx > 0) ani = SIMON_ANI_JUMP_RIGHT;
@@ -106,28 +117,24 @@ void CSimon::Render()
 	{
 		if (nx > 0) {
 			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
-			whip->setCurrentID(0);
-			whip->setPosition(x - 24, y -3);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+			whip->setPosition(x - 24, y -3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
 		}
 		else
 		{
 			ani = SIMON_ANI_SIT_ATTACK_LEFT;
-			whip->setCurrentID(1);
-			whip->setPosition(x - 54 - 24, y - 3); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
+			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
 		}
 	}
 	else if (isAttacking)
 	{
 		if (nx > 0) {
 			ani = SIMON_ANI_ATTACK_RIGHT;
-			whip->setCurrentID(4);
-			whip->setPosition(x - 24, y);
+			whip->setPosition(x - 24, y, 0); //direct = 0 khi danh ben phai
 		} 
 		else
 		{
 			ani = SIMON_ANI_ATTACK_LEFT;
-			whip->setCurrentID(5);
-			whip->setPosition(x - 54 - 24, y);
+			whip->setPosition(x - 54 - 24, y, 1);
 		}
 	}
 	else if (isSitting)
@@ -156,14 +163,15 @@ void CSimon::Render()
 
 	int alpha = 255;
 	animations[ani]->Render(x, y, alpha);
-
 	whip->Render();
 
-
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+	{
 		isAttacking = false;
+		whip->setPosition(x - 54 - 24, y - 3, -1); //dat direct gia tri bang -1 de ko danh
+	}
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 CSimon *CSimon::GetInstance()
@@ -175,6 +183,7 @@ CSimon *CSimon::GetInstance()
 void CSimon::SetState(int state)
 {
 	CGameObject::SetState(state);
+	//if (isAttacking) return;
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
@@ -188,7 +197,7 @@ void CSimon::SetState(int state)
 		nx = -1;
 		break;
 	case SIMON_STATE_SIT:
-		if (isSitting)return;
+		if (isSitting || isAttacking)return;
 		isSitting = true;
 		y += 18;
 		vx = 0;
@@ -216,7 +225,6 @@ void CSimon::SetState(int state)
 		break;
 	}
 }
-
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -269,7 +277,6 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 	
 }
-
 
 void CSimon::LoadResources()
 {
@@ -400,12 +407,6 @@ void CSimon::LoadResources()
 	ani = new CAnimation(100);		// Simon die
 	ani->Add(10099);
 	animations->Add(599, ani);
-
-
-
-	ani = new CAnimation(100);		// brick
-	ani->Add(20001);
-	animations->Add(601, ani);
 
 	AddAnimation(400);		// idle right
 	AddAnimation(401);		// idle left

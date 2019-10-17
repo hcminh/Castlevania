@@ -12,9 +12,11 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool stopMovement)
 
 void CWhip::Render()
 {
-	if (currentID == -1) return;
-	animations[currentID]->Render(x, y, 255);
-	RenderBoundingBox();
+	if (direct < 0) return;
+	int ani;
+	ani = level + direct; // level bang gia tri cua loai roi, direct = -1 -> ko danh, direct = 0 danh phai, direct = 1 danh trai
+	animations[ani]->Render(x, y, 255);
+	//RenderBoundingBox();
 }
 
 void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bottom)
@@ -25,13 +27,9 @@ void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bot
 	bottom = top + WHIP_BBOX_HEIGHT;
 }
 
-void CWhip::setCurrentID(int id)
+void CWhip::setPosition(float x, float y, int direct)
 {
-	this->currentID = id;
-}
-
-void CWhip::setPosition(float x, float y)
-{
+	this->direct = direct;
 	this->x = x ; 
 	this->y = y;
 }

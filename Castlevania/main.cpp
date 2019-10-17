@@ -20,7 +20,7 @@
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 240
 
-#define MAX_FRAME_RATE 20
+#define MAX_FRAME_RATE 120
 
 #define ID_TEX_SIMON	0
 #define ID_TEX_WHIP		5
@@ -38,14 +38,14 @@ CSimon *simon;
 
 vector<LPGAMEOBJECT> objects;
 
-class CSampleKeyHander: public CKeyEventHandler
+class CSampleKeyHander : public CKeyEventHandler
 {
 	virtual void KeyState(BYTE *states);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
 };
 
-CSampleKeyHander * keyHandler; 
+CSampleKeyHander * keyHandler;
 
 void CSampleKeyHander::OnKeyDown(int KeyCode)
 {
@@ -53,7 +53,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		simon->SetStateJump();
+		simon->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_R: // reset
 		simon->SetState(SIMON_STATE_IDLE);
@@ -63,10 +63,10 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_A: // ATTACK
 		simon->SetState(SIMON_STATE_ATTACK);
 		break;
-	case DIK_Q: 
+	case DIK_Q:
 		simon->whip->levelUp();
 		break;
-	case DIK_W: 
+	case DIK_W:
 		simon->whip->levelDown();
 		break;
 	}
@@ -114,7 +114,7 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 /*
-	Load all game resources 
+	Load all game resources
 	In this example: load textures, sprites, animations and simon object
 
 	TO-DO: Improve this function by loading texture,sprite,animation,object from file
@@ -163,12 +163,12 @@ void LoadResources()
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(100.0f + i*60.0f, 90.0f);
+		brick->SetPosition(100.0f + i * 60.0f, 90.0f);
 		objects.push_back(brick);
-	
+
 		brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(68.0f + i*60.0f, 90.0f);
+		brick->SetPosition(68.0f + i * 60.0f, 90.0f);
 		objects.push_back(brick);
 
 		brick = new CBrick();
@@ -181,7 +181,7 @@ void LoadResources()
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(-SCREEN_WIDTH/2 + 50.0f + i*16.0f, SCREEN_HEIGHT/2 + 40);
+		brick->SetPosition(-SCREEN_WIDTH / 2 + 50.0f + i * 16.0f, SCREEN_HEIGHT / 2 + 40);
 		objects.push_back(brick);
 	}
 
@@ -215,7 +215,7 @@ void Update(DWORD dt)
 
 	for (int i = 0; i < objects.size(); i++)
 	{
-		objects[i]->Update(dt,&coObjects);
+		objects[i]->Update(dt, &coObjects);
 	}
 
 
@@ -230,7 +230,7 @@ void Update(DWORD dt)
 }
 
 /*
-	Render a frame 
+	Render a frame
 */
 void Render()
 {
@@ -290,7 +290,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 			hInstance,
 			NULL);
 
-	if (!hWnd) 
+	if (!hWnd)
 	{
 		OutputDebugString(L"[ERROR] CreateWindow failed");
 		DWORD ErrCode = GetLastError();
@@ -331,12 +331,12 @@ int Run()
 			frameStart = now;
 
 			game->ProcessKeyboard();
-			
+
 			Update(dt);
 			Render();
 		}
 		else
-			Sleep(tickPerFrame - dt);	
+			Sleep(tickPerFrame - dt);
 	}
 
 	return 1;
@@ -355,7 +355,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	LoadResources();
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH*2, SCREEN_HEIGHT*2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	Run();
 

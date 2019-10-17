@@ -33,7 +33,7 @@
 
 # dependencies
 /Debug
-/Castlevania/Debug/
+/Castlevania/Debug
 *.vs
 *.vscode
 .vs

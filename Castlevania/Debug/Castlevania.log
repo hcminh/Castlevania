@@ -1,18 +1,2 @@
-﻿  Brick.cpp
-  Candle.cpp
-  GameObject.cpp
-  Goomba.cpp
-  main.cpp
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(56): error C2039: 'SetStateJump': is not a member of 'CSimon'
-  e:\minh\projects\c++\castlevania\castlevania\simon.h(61): note: see declaration of 'CSimon'
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(211): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(216): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\main.cpp(248): warning C4018: '<': signed/unsigned mismatch
-  Mario.cpp
-  Simon.cpp
-e:\minh\projects\c++\castlevania\castlevania\simon.cpp(229): error C2039: 'SetStateJump': is not a member of 'CSimon'
-  e:\minh\projects\c++\castlevania\castlevania\simon.h(61): note: see declaration of 'CSimon'
-e:\minh\projects\c++\castlevania\castlevania\simon.cpp(231): error C2065: 'vy': undeclared identifier
-  Sprites.cpp
-  Whip.cpp
-  Generating Code...
+﻿  Simon.cpp
+  Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

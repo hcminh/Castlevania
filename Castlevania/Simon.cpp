@@ -226,10 +226,6 @@ void CSimon::SetState(int state)
 	}
 }
 
-void CSimon::SetStateJump()
-{
-	vy = -SIMON_JUMP_SPEED_Y;
-}
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {

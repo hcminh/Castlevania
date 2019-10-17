@@ -38,7 +38,6 @@ LPSPRITE CSprites::Get(int id)
 }
 
 
-
 void CAnimation::Add(int spriteId, DWORD time)
 {
 	int t = time;

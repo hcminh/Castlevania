@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿  Brick.cpp
   GameObject.cpp
   Goomba.cpp
@@ -8,5 +9,13 @@
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(265): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(270): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(302): warning C4018: '<': signed/unsigned mismatch
+=======
+﻿  Candle.cpp
+  main.cpp
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(211): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(216): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(248): warning C4018: '<': signed/unsigned mismatch
+  Simon.cpp
+>>>>>>> Simon
   Generating Code...
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

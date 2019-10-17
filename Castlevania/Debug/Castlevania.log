@@ -1,5 +1,12 @@
-﻿  main.cpp
+﻿  Brick.cpp
+  GameObject.cpp
+  Goomba.cpp
+  Mario.cpp
+  Simon.cpp
+  Sprites.cpp
+  main.cpp
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(265): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(270): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\main.cpp(302): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

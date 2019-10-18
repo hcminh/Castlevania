@@ -5,26 +5,52 @@ CWhip::CWhip() : CGameObject()
 {
 }
 
-void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects, bool stopMovement)
+void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	
+	if (animations[ani]->getCurrentFrame() == 2)
+	{
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			float top, left, bottom, right;
+			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
+			if (isCollision(left, top, right, bottom))
+			{
+				if (coObjects->at(i)->type == ObjectType::CANDLE);
+				{
+					DebugOut(L"[COLLISION] đụng nè đụng nè: %d\n");
+					coObjects->at(i)->SetState(CANDLE_DESTROYED);
+				}
+			}
+
+
+		}
+	}
 }
 
 void CWhip::Render()
 {
 	if (direct < 0) return;
-	int ani;
 	ani = level + direct; // level bang gia tri cua loai roi, direct = -1 -> ko danh, direct = 0 danh phai, direct = 1 danh trai
 	animations[ani]->Render(x, y, 255);
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
-	left = x;
-	top = y + 15; //từ đầu xuống tay của con simon là 15
-	right = left + WHIP_BBOX_WIDTH;
-	bottom = top + WHIP_BBOX_HEIGHT;
+	if(direct == 0)
+	{
+		left = x + RANGE_OF_WHIP_SIMON_X + 32; //32 là khoảng cách từ x simon (biên bên trái) tới vị trí tay của simon (biên bên phải)
+		top = y + 15; //từ đầu xuống tay của con simon là 15
+		right = left + ((level >= 3) ? LONG_CHAIN_BBOX_WIDTH : WHIP_BBOX_WIDTH); //cái này kiểm tra nếu level của whip >= 3 (Long chain) thì witdh dài hơn, chỉ kiểm tra 2 trường hợp vì short chain = normal whip
+		bottom = top + WHIP_BBOX_HEIGHT;
+	}
+	else if(direct == 1)
+	{
+		left = x + RANGE_OF_WHIP_SIMON_X - 7 - ((level >= 3) ? RANGE_OF_LONG_NORMAL : 0); //7 là sai số khi dịch x lại gần biên bên trái của simon (vì nó chìa cái tay ra nữa)
+		top = y + 15; //từ đầu xuống tay của con simon là 15
+		right = left + ((level >= 3) ? LONG_CHAIN_BBOX_WIDTH : WHIP_BBOX_WIDTH);
+		bottom = top + WHIP_BBOX_HEIGHT;
+	}
 }
 
 void CWhip::setPosition(float x, float y, int direct)
@@ -32,6 +58,18 @@ void CWhip::setPosition(float x, float y, int direct)
 	this->direct = direct;
 	this->x = x ; 
 	this->y = y;
+}
+
+bool CWhip::isCollision(float obj_left, float obj_top, float obj_right, float obj_bottom)
+{
+	float whip_left,
+		whip_top,
+		whip_right,
+		whip_bottom;
+
+	GetBoundingBox(whip_left, whip_top, whip_right, whip_bottom);
+
+	return CGameObject::AABB(whip_left, whip_top, whip_right, whip_bottom, obj_left, obj_top, obj_right, obj_bottom);
 }
 
 void CWhip::LoadResources()
@@ -83,14 +121,14 @@ void CWhip::LoadResources()
 	ani->Add(40002);
 	ani->Add(40003);
 	ani->Add(40007);
-	animations->Add(700, ani);
+	animations->Add(800, ani);
 
 	ani = new CAnimation(100);	// left 
 	ani->Add(40004);
 	ani->Add(40005);
 	ani->Add(40006);
 	ani->Add(40007);
-	animations->Add(701, ani);
+	animations->Add(801, ani);
 
 	// short whip SHORT_CHAIN
 	ani = new CAnimation(100);	// right 
@@ -98,14 +136,14 @@ void CWhip::LoadResources()
 	ani->Add(40009);
 	ani->Add(40010);
 	ani->Add(40007);
-	animations->Add(702, ani);
+	animations->Add(802, ani);
 
 	ani = new CAnimation(100);	// left 
 	ani->Add(40011);
 	ani->Add(40012);
 	ani->Add(40013);
 	ani->Add(40007);
-	animations->Add(703, ani);
+	animations->Add(803, ani);
 
 	// long whip LONG_CHAIN	
 	ani = new CAnimation(100);	// right 
@@ -113,24 +151,24 @@ void CWhip::LoadResources()
 	ani->Add(40015);
 	ani->Add(40016);
 	ani->Add(40007);
-	animations->Add(704, ani);
+	animations->Add(804, ani);
 
 	ani = new CAnimation(100);	// left 
 	ani->Add(40017);
 	ani->Add(40018);
 	ani->Add(40019);
 	ani->Add(40007);
-	animations->Add(705, ani);
+	animations->Add(805, ani);
 
 
-	AddAnimation(700);		// normal whip right
-	AddAnimation(701);		// normal whip left
+	AddAnimation(800);		// normal whip right
+	AddAnimation(801);		// normal whip left
 
-	AddAnimation(702);		// short whip right
-	AddAnimation(703);		// short whip left
+	AddAnimation(802);		// short whip right
+	AddAnimation(803);		// short whip left
 
-	AddAnimation(704);		// long whip right
-	AddAnimation(705);		// long whip left
+	AddAnimation(804);		// long whip right
+	AddAnimation(805);		// long whip left
 }
 
 

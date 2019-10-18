@@ -13,7 +13,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
+	whip->Update(dt, coObjects);
 	// Simple fall down
 	vy += SIMON_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -171,7 +171,7 @@ void CSimon::Render()
 		whip->setPosition(x - 54 - 24, y - 3, -1); //dat direct gia tri bang -1 de ko danh
 	}
 
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 CSimon *CSimon::GetInstance()
@@ -249,7 +249,7 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		{
 			left = x + 16;
 			top = y;
-			right = x + SIMON_BBOX_WIDTH - 13;
+			right = x + SIMON_BBOX_WIDTH - 14;
 			bottom = top + SIMON_BBOX_HEIGHT;
 		}
 	}

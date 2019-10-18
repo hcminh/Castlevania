@@ -58,3 +58,35 @@ void CGoomba::SetState(int state)
 	}
 
 }
+
+void CGoomba::LoadResources()
+{
+	CTextures * textures = CTextures::GetInstance();
+
+	textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
+
+	CSprites * sprites = CSprites::GetInstance();
+	CAnimations * animations = CAnimations::GetInstance();
+
+	LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
+	sprites->Add(30001, 5, 14, 21, 29, texEnemy);
+	sprites->Add(30002, 25, 14, 41, 29, texEnemy);
+
+	sprites->Add(30003, 45, 21, 61, 29, texEnemy); // die sprite
+
+	LPANIMATION ani;
+
+
+	ani = new CAnimation(100);		// gooma
+	ani->Add(30001);
+	ani->Add(30002);
+	animations->Add(701, ani);
+
+	ani = new CAnimation(100);		// gooma die
+	ani->Add(30003);
+	animations->Add(702, ani);
+
+
+	AddAnimation(701);
+	AddAnimation(702);
+}

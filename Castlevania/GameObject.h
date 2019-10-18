@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <Windows.h>
 #include <d3dx9.h>
@@ -10,6 +10,16 @@
 using namespace std;
 
 #define ID_TEX_BBOX -100		// special texture to draw object bounding box
+
+enum ObjectType
+{
+	CANDLE
+};
+
+enum ItemType
+{
+	BIG_HEART
+};
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
@@ -46,9 +56,10 @@ public:
 	int nx;	 
 
 	int state;
+	bool isEnable = true;
 
 	DWORD dt; 
-
+	ObjectType type;
 	vector<LPANIMATION> animations;
 
 public: 
@@ -61,6 +72,11 @@ public:
 
 	void RenderBoundingBox();
 
+	// cái này kiểm tra 2 vũ khí vs mấy cái object tĩnh khác có chạm nhau ko
+	bool AABB(
+		float left_a, float top_a, float right_a, float bottom_a,
+		float left_b, float top_b, float right_b, float bottom_b
+	);
 	LPCOLLISIONEVENT SweptAABBEx(LPGAMEOBJECT coO);
 	void CalcPotentialCollisions(vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents);
 	void FilterCollision(

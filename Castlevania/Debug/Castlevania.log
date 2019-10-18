@@ -1,2 +1,10 @@
-﻿  Simon.cpp
+﻿  Candle.cpp
+  Simon.cpp
+  Whip.cpp
+e:\minh\projects\c++\castlevania\castlevania\whip.cpp(18): warning C4390: ';': empty controlled statement found; is this the intent?
+  main.cpp
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(186): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(191): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\main.cpp(223): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

@@ -16,7 +16,7 @@
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Castlevania"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 200)
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 600
 #define SCREEN_HEIGHT 240
 
@@ -27,13 +27,14 @@
 #define ID_TEX_ENEMY	20
 #define ID_TEX_MISC		30
 #define ID_TEX_CANDLE	35
+#define ID_TEX_ITEM		40
 
 
 CGame *game;
 
 CSimon *simon;
+CCandle *candle;
 
-//Whip *whip;
 //CGoomba *goomba;
 
 vector<LPGAMEOBJECT> objects;
@@ -126,19 +127,14 @@ void LoadResources()
 	CAnimations * animations = CAnimations::GetInstance();
 
 	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
-	//textures->Add(ID_TEX_ENEMY, L"textures\\enemies.png", D3DCOLOR_XRGB(3, 26, 110));
 	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(20001, 408, 225, 424, 241, texMisc);
 
-	/*LPDIRECT3DTEXTURE9 texEnemy = textures->Get(ID_TEX_ENEMY);
-	sprites->Add(30001, 5, 14, 21, 29, texEnemy);
-	sprites->Add(30002, 25, 14, 41, 29, texEnemy);*/
-
-	//sprites->Add(30003, 45, 21, 61, 29, texEnemy); // die sprite
 
 	LPANIMATION ani;
+
 
 	//simon
 	simon = new CSimon();
@@ -146,11 +142,19 @@ void LoadResources()
 	simon->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
 	objects.push_back(simon);
 
-	//whip
-	//whip = new Whip();
-	/*whip->LoadResources();*/
-	/*whip->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
-	objects.push_back(whip);*/
+	//candle
+	candle = new CCandle();
+	candle->LoadResources();
+	candle->SetPosition(-SCREEN_WIDTH / 2 + 100.0f, 97.0f);
+	objects.push_back(candle);
+
+	//goomba
+	//goomba = new CGoomba();
+	//goomba->LoadResources();
+	//goomba->SetPosition(200, 135);
+	//goomba->SetState(GOOMBA_STATE_WALKING);
+	//objects.push_back(goomba);
+
 	simon->whip = new CWhip();
 	simon->whip->LoadResources();
 
@@ -159,42 +163,13 @@ void LoadResources()
 	ani->Add(20001);
 	animations->Add(601, ani);
 
-	for (int i = 0; i < 5; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(601);
-		brick->SetPosition(100.0f + i * 60.0f, 90.0f);
-		objects.push_back(brick);
-
-		brick = new CBrick();
-		brick->AddAnimation(601);
-		brick->SetPosition(68.0f + i * 60.0f, 90.0f);
-		objects.push_back(brick);
-
-		brick = new CBrick();
-		brick->AddAnimation(601);
-		brick->SetPosition(84.0f + i * 60.0f, 90.0f);
-		objects.push_back(brick);
-	}
-
 	for (int i = 0; i < 100; i++)
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(-SCREEN_WIDTH / 2 + 50.0f + i * 16.0f, SCREEN_HEIGHT / 2 + 40);
+		brick->SetPosition(-SCREEN_WIDTH + i * 16.0f, SCREEN_HEIGHT / 2 + 40);
 		objects.push_back(brick);
 	}
-
-	// and Goombas 
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	goomba = new CGoomba();
-	//	goomba->AddAnimation(701);
-	//	goomba->AddAnimation(702);
-	//	goomba->SetPosition(200 + i*60, 135);
-	//	goomba->SetState(GOOMBA_STATE_WALKING);
-	//	objects.push_back(goomba);
-	//}
 
 }
 

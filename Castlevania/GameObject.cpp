@@ -22,6 +22,12 @@ void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	dy = vy*dt;
 }
 
+
+bool CGameObject::AABB(float left_a, float top_a, float right_a, float bottom_a, float left_b, float top_b, float right_b, float bottom_b)
+{
+	return left_a < right_b && right_a > left_b && top_a < bottom_b && bottom_a > top_b;
+}
+
 /*
 	Extension of original SweptAABB to deal with two moving objects
 */
@@ -68,6 +74,7 @@ void CGameObject::CalcPotentialCollisions(
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
+		if (!coObjects->at(i)->isEnable) continue;
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 		if (e->t > 0 && e->t <= 1.0f)

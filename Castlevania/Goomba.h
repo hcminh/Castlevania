@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "Textures.h"
 
 #define GOOMBA_WALKING_SPEED 0.05f;
 
@@ -12,6 +13,7 @@
 
 #define GOOMBA_ANI_WALKING 0
 #define GOOMBA_ANI_DIE 1
+#define ID_TEX_ENEMY	20
 
 class CGoomba : public CGameObject
 {
@@ -22,4 +24,6 @@ class CGoomba : public CGameObject
 
 public: 	
 	virtual void SetState(int state);
+
+	void LoadResources();
 };

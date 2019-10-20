@@ -30,14 +30,16 @@
 class CCandle : public CGameObject
 {
 	DWORD timeWaited = 0;
-	CItem *item;
+	ItemType item;
 public:
 	CCandle();
 	~CCandle();
+
 	virtual void Render();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 
+	ItemType getTypeItem();
 	void SetState(int state);
 	void LoadResources();
 };

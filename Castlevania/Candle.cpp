@@ -3,10 +3,16 @@
 CCandle::CCandle()
 {
 	type = ObjectType::CANDLE;
+	item = ItemType::BIG_HEART;
 }
 
 CCandle::~CCandle()
 {
+}
+
+ItemType CCandle::getTypeItem()
+{
+	return this->item;
 }
 
 void CCandle::Render()

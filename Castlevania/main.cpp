@@ -1,11 +1,13 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 
+#include "define.h"
 #include "debug.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
+#include "Scenes.h"
 
 #include "Simon.h"
 #include "Brick.h"
@@ -13,12 +15,12 @@
 #include "Whip.h"
 #include "Candle.h"
 
+#include "tilemap.h"
+
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Castlevania"
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 240
 
 #define MAX_FRAME_RATE 120
 
@@ -31,13 +33,15 @@
 
 
 CGame *game;
+CScenes *scenes;
 
 CSimon *simon;
 CCandle *candle;
 
+CMaps * cmaps = CMaps::GetInstance();
 //CGoomba *goomba;
 
-vector<LPGAMEOBJECT> objects;
+//vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander : public CKeyEventHandler
 {
@@ -128,7 +132,7 @@ void LoadResources()
 
 	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-
+	cmaps->Add(SCENE_1, L"textures\\scene1.png", L"textures\\scene1_map.txt");
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
 	sprites->Add(20001, 408, 225, 424, 241, texMisc);
 
@@ -139,14 +143,19 @@ void LoadResources()
 	//simon
 	simon = new CSimon();
 	simon->LoadResources();
-	simon->SetPosition(-SCREEN_WIDTH / 2 + 50.0f, 0);
-	objects.push_back(simon);
+	simon->SetPosition(0, 50.0f);
+	simon->whip = new CWhip();
+	simon->whip->LoadResources();
+	//objects.push_back(simon);
+	scenes->pushObject(simon);
+	scenes->setSimon(simon); //nhét nó vào mảng object của scenes để tính va chạm thôi, nên add nó vào thằng simon của scene nữa
 
 	//candle
 	candle = new CCandle();
 	candle->LoadResources();
-	candle->SetPosition(-SCREEN_WIDTH / 2 + 100.0f, 97.0f);
-	objects.push_back(candle);
+	candle->SetPosition(SCREEN_WIDTH/2+ 100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115);
+	//objects.push_back(candle);
+	scenes->pushObject(candle);
 
 	//goomba
 	//goomba = new CGoomba();
@@ -155,8 +164,6 @@ void LoadResources()
 	//goomba->SetState(GOOMBA_STATE_WALKING);
 	//objects.push_back(goomba);
 
-	simon->whip = new CWhip();
-	simon->whip->LoadResources();
 
 
 	ani = new CAnimation(100);		// brick
@@ -167,8 +174,9 @@ void LoadResources()
 	{
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
-		brick->SetPosition(-SCREEN_WIDTH + i * 16.0f, SCREEN_HEIGHT / 2 + 40);
-		objects.push_back(brick);
+		brick->SetPosition(i * 16.0f, SCREEN_HEIGHT - 115);
+		//objects.push_back(brick);
+		scenes->pushObject(brick);
 	}
 
 }
@@ -179,29 +187,30 @@ void LoadResources()
 */
 void Update(DWORD dt)
 {
-	// We know that Simon is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
+	//// We know that Simon is the first object in the list hence we won't add him into the colliable object list
+	//// TO-DO: This is a "dirty" way, need a more organized way 
 
-	vector<LPGAMEOBJECT> coObjects;
-	for (int i = 1; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
+	//vector<LPGAMEOBJECT> coObjects;
+	//for (int i = 1; i < objects.size(); i++)
+	//{
+	//	coObjects.push_back(objects[i]);
+	//}
 
-	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
+	//for (int i = 0; i < objects.size(); i++)
+	//{
+	//	objects[i]->Update(dt, &coObjects);
+	//}
 
 
-	// Update camera to follow simon
-	float cx, cy;
-	simon->GetPosition(cx, cy);
+	//// Update camera to follow simon
+	//float cx, cy;
+	//simon->GetPosition(cx, cy);
 
-	cx -= SCREEN_WIDTH / 2;
-	cy -= SCREEN_HEIGHT / 2;
+	//cx -= SCREEN_WIDTH / 2;
+	//cy -= SCREEN_HEIGHT / 2;
 
-	CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
+	scenes->Update(dt);
 }
 
 /*
@@ -220,8 +229,10 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();
+		/*for (int i = 0; i < objects.size(); i++)
+			objects[i]->Render();*/
+
+		scenes->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -328,9 +339,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	game->InitKeyboard(keyHandler);
 
 
+	scenes = CScenes::GetInstance();
 	LoadResources();
 
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+
 
 	Run();
 

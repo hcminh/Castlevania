@@ -31,16 +31,6 @@ bool CItem::isWaitingDisplay()
 }
 
 
-bool CItem::getFinish()
-{
-	return isFinish;
-}
-
-void CItem::setFinish(bool b)
-{
-	isFinish = b;
-}
-
 void CItem::LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();

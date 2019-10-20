@@ -26,7 +26,5 @@ public:
 
 	virtual bool isWaitingDisplay(); // đang chờ object hiển thi? - simon chưa được ăn
 
-	bool getFinish();
-	void setFinish(bool b);
 	void LoadResources();
 };

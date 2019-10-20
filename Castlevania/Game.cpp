@@ -302,7 +302,8 @@ void CGame::SweptAABB(
 
 }
 
-CGame *CGame::GetInstance()
+
+	CGame *CGame::GetInstance()
 {
 	if (__instance == NULL) __instance = new CGame();
 	return __instance;

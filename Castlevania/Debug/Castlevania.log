@@ -1,5 +1,2 @@
-﻿  Scenes.cpp
-e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(18): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(23): warning C4018: '<': signed/unsigned mismatch
-e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(35): warning C4018: '<': signed/unsigned mismatch
+﻿  main.cpp
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

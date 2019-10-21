@@ -15,6 +15,7 @@
 #include "Whip.h"
 #include "Candle.h"
 #include "Item.h"
+#include "Ground.h"
 
 #include "tilemap.h"
 
@@ -31,6 +32,7 @@
 #define ID_TEX_MISC		30
 #define ID_TEX_CANDLE	35
 #define ID_TEX_ITEM		40
+#define ID_TEX_GROUND	45
 
 
 CGame *game;
@@ -130,7 +132,6 @@ void LoadResources()
 	CSprites * sprites = CSprites::GetInstance();
 	CAnimations * animations = CAnimations::GetInstance();
 
-	textures->Add(ID_TEX_MISC, L"textures\\misc.png", D3DCOLOR_XRGB(176, 224, 248));
 	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
 	cmaps->Add(SCENE_1, L"textures\\scene1.png", L"textures\\scene1_map.txt");
 	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
@@ -183,9 +184,24 @@ void LoadResources()
 	animations->Add(807, ani);
 	//////////////////////////  Weapon  ///////////////////////////
 
-
 	//simon
 	scenes->pushObject(CSimon::GetInstance());
+
+	//////////////////////////  GROUND  ///////////////////////////
+	textures->Add(ID_TEX_GROUND, L"textures\\scene1.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texGround = textures->Get(ID_TEX_GROUND);
+	sprites->Add(20001, 320, 96, 320 + 32, 96 + 32, texGround);		// GROUND
+	ani = new CAnimation(100);		// brick
+	ani->Add(20001);
+	animations->Add(601, ani);
+	for (int i = 0; i < 48; i++)
+	{
+		CGround *ground = new CGround();
+		ground->SetPosition(i * 32.0f, SCREEN_HEIGHT - 115);
+		scenes->pushObject(ground);
+	}
+	//////////////////////////  GROUND  ///////////////////////////
+
 
 	//candle 1
 	candle = new CCandle(160.0, 304.0, ItemType::BIG_HEART);
@@ -203,19 +219,6 @@ void LoadResources()
 	candle = new CCandle(1216.0, 304.0, ItemType::KNIFE);
 	scenes->pushObject(candle);
 
-	ani = new CAnimation(100);		// brick
-	ani->Add(20001);
-	animations->Add(601, ani);
-
-	for (int i = 0; i < 100; i++)
-	{
-		CBrick *brick = new CBrick();
-		brick->AddAnimation(601);
-		brick->SetPosition(i * 16.0f, SCREEN_HEIGHT - 115);
-		scenes->pushObject(brick);
-	}
-	/*item = new CItem(ItemType::BIG_HEART);
-	scenes->pushObject(item);*/
 }
 
 void Update(DWORD dt)

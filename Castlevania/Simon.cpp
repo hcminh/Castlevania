@@ -11,6 +11,7 @@ CSimon * CSimon::__instance = NULL;
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+
 	accuTime += dt;
 	if (unTouch && accuTime <= SIMON_UP_LEVEL_TIME) {
 		return;

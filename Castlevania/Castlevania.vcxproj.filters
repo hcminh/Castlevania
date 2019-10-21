@@ -83,6 +83,9 @@
     <ClInclude Include="Brick.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -131,6 +134,9 @@
       <Filter>Source Files\weapon</Filter>
     </ClCompile>
     <ClCompile Include="Brick.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
   </ItemGroup>

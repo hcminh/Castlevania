@@ -1,8 +1,13 @@
 ﻿#include "Brick.h"
 
+CBrick::CBrick()
+{
+	type = ObjectType::BRICK;
+}
+
 void CBrick::Render()
 {
-	animations[0]->Render(x, y);
+	animations[0]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 

@@ -14,9 +14,6 @@ CScenes::~CScenes()
 
 void CScenes::Update(DWORD dt)
 {	
-	// We know that Simon is the first object in the list hence we won't add him into the colliable object list
-	// TO-DO: This is a "dirty" way, need a more organized way 
-
 	vector<LPGAMEOBJECT> coObjects;
 	for (int i = 1; i < objects.size(); i++)
 	{
@@ -28,30 +25,30 @@ void CScenes::Update(DWORD dt)
 		objects[i]->Update(dt, &coObjects);
 	}
 
-
 	// update camera
 	updateCamPos();
-	// Update camera to follow simon
-	//float cx, cy;
-	//simon->GetPosition(cx, cy);
-
-	//cx -= SCREEN_WIDTH / 2;
-	//cy -= SCREEN_HEIGHT / 2;
-
-	//CGame::GetInstance()->SetCamPos(cx, /*0.0f*/ cy);
 }
 
 void CScenes::Render()
 {
 	CMaps::GetInstance()->Get(SCENE_1)->Draw(CGame::GetInstance()->getCamPos());
-	for (int i = 0; i < objects.size(); i++)
+	for (int i = 1; i < objects.size(); i++)
 		objects[i]->Render();
+
+	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
 
 
 void CScenes::pushObject(LPGAMEOBJECT objects)
 {
 	this->objects.push_back(objects);
+}
+
+void CScenes::putItem(ItemType type, float x, float y)
+{
+	CItem *item = new CItem(type);
+	item->SetPosition(x, y);
+	pushObject(item);
 }
 
 void CScenes::updateCamPos()

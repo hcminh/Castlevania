@@ -3,14 +3,20 @@
 
 #include "Simon.h"
 #include "Game.h"
-
-#include "Goomba.h"
+#include <math.h>
+//#include "Goomba.h"
 
 
 CSimon * CSimon::__instance = NULL;
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	accuTime += dt;
+	if (unTouch && accuTime <= SIMON_UP_LEVEL_TIME) {
+		return;
+	} 
+	unTouch = false;
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	whip->Update(dt, coObjects);
@@ -24,11 +30,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
+
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
-		untouchable_start = 0;
-		untouchable = 0;
+		/*untouchable_start = 0;
+		untouchable = 0;*/
 	}
 
 	// No collision occured, proceed normally
@@ -53,35 +60,33 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			isJumping = false;
 		}
 		// Collision logic with Goombas
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -SIMON_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else if (e->nx != 0)
-				{
-					if (untouchable == 0)
-					{
-						if (goomba->GetState() != GOOMBA_STATE_DIE)
-						{
-								SetState(SIMON_STATE_DIE);
-						}
-					}
-				}
-			}
-		}
+		//for (UINT i = 0; i < coEventsResult.size(); i++)
+		//{
+		//	LPCOLLISIONEVENT e = coEventsResult[i];
+		//	if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
+		//	{
+		//		CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
+		//		// jump on top >> kill Goomba and deflect a bit 
+		//		if (e->ny < 0)
+		//		{
+		//			if (goomba->GetState() != GOOMBA_STATE_DIE)
+		//			{
+		//				goomba->SetState(GOOMBA_STATE_DIE);
+		//				vy = -SIMON_JUMP_DEFLECT_SPEED;
+		//			}
+		//		}
+		//		else if (e->nx != 0)
+		//		{
+		//			if (untouchable == 0)
+		//			{
+		//				if (goomba->GetState() != GOOMBA_STATE_DIE)
+		//				{
+		//						SetState(SIMON_STATE_DIE);
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 	}
 
 	// clean up collision events
@@ -90,11 +95,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::Render()
 {
-	int ani;
-
+	int ani = this->currentFrame;
+	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (state == SIMON_STATE_DIE)
 	{
 		ani = SIMON_ANI_DIE;
+	}
+	else if (unTouch) {
+		//ani = SIMON_ANI_LEVEL_UP;
+		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	}
 	else if (isAttacking && isJumping)
 	{
@@ -161,8 +170,7 @@ void CSimon::Render()
 			else ani = SIMON_ANI_WALKING_LEFT;
 	}
 
-	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animations[ani]->Render(x, y, color);
 	whip->Render();
 
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
@@ -218,10 +226,17 @@ void CSimon::SetState(int state)
 		isAttacking = true;
 		break;
 	case SIMON_STATE_IDLE:
+		//unTouch = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:
 		vy = -SIMON_DIE_DEFLECT_SPEED;
+		break;
+	case SIMON_STATE_LEVEL_UP:
+		if (unTouch) return;
+		whip->levelUp();
+		unTouch = true;
+		accuTime = 0;
 		break;
 	}
 }
@@ -277,6 +292,38 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		}
 	}
 	
+}
+
+bool CSimon::isColisionItem(CItem *item)
+{
+	//float l, t, r, b;
+	//float l1, t1, r1, b1;
+	//this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	//item->GetBoundingBox(l1, t1, r1, b1);
+	//if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	//{
+	//	return true; // check with AABB
+	//}
+	LPCOLLISIONEVENT e = SweptAABBEx(item); // kt va chạm giữa 2 object bằng sweptAABB
+	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
+	delete e;
+	return res;
+}
+
+void CSimon::colisionItem(CItem *item)
+{
+	switch (item->item)
+	{
+	case ItemType::BIG_HEART:
+		DebugOut(L"[COLISION] chạm vào tim to bự nè: %d\n");
+		break;
+	case ItemType::WHIP:
+		SetState(SIMON_STATE_LEVEL_UP);
+		break;
+	default:
+		break;
+	}
 }
 
 void CSimon::LoadResources()

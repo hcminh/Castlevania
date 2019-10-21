@@ -100,7 +100,7 @@ void CMap::Draw(D3DXVECTOR3 camPosition)
 			float x = TILE_WIDTH* (j - start_col_to_draw) + camPosition.x - (int)camPosition.x % 32;
 			float y = TILE_HEIGHT* i + 80;
 
-			tilemap[i][j]->Draw(x, y);
+			tilemap[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
 }

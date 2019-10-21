@@ -13,12 +13,17 @@ using namespace std;
 
 enum ObjectType
 {
-	CANDLE
+	CANDLE,
+	BRICK,
+	ITEM
 };
 
 enum ItemType
 {
-	BIG_HEART
+	BIG_HEART,
+	SMALL_HEART,
+	WHIP,
+	KNIFE
 };
 
 class CGameObject; 
@@ -60,6 +65,7 @@ public:
 
 	DWORD dt; 
 	ObjectType type;
+	ItemType item;
 	vector<LPANIMATION> animations;
 
 public: 

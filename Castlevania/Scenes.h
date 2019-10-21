@@ -29,6 +29,7 @@ public:
 	// Get, Set
 	void pushObject(LPGAMEOBJECT objects);
 	int getListObjectSize() { return objects.size(); };
+	void putItem(ItemType type, float x, float y);
 
 	void updateCamPos();
 	static CScenes * GetInstance();

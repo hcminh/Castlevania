@@ -39,7 +39,7 @@ void CGoomba::Render()
 		ani = GOOMBA_ANI_DIE;
 	}
 
-	animations[ani]->Render(x,y);
+	animations[ani]->Render(x,y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 

@@ -1,20 +1,16 @@
 ﻿#include "Candle.h"
+#include "Scenes.h"
 
-CCandle::CCandle(float x, float y)
+CCandle::CCandle(float x, float y, ItemType item)
 {
 	type = ObjectType::CANDLE;
-	item = ItemType::BIG_HEART;
+	this->item = item;
 	LoadResources();
 	SetPosition(x, y);
 }
 
 CCandle::~CCandle()
 {
-}
-
-ItemType CCandle::getTypeItem()
-{
-	return this->item;
 }
 
 void CCandle::Render()
@@ -29,8 +25,8 @@ void CCandle::Render()
 	{
 		ani = CANDLE_BIG;
 	}
-	animations[ani]->Render(x, y);
-	RenderBoundingBox();
+	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+	//RenderBoundingBox();
 }
 
 void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -63,6 +59,9 @@ void CCandle::SetState(int state)
 	{
 	case CANDLE_DESTROYED:
 		//isEnable = false;
+		if (destroyed) return;
+		destroyed = true;
+		CScenes::GetInstance()->putItem(this->item, this->x, this->y);
 		break;
 	default:
 		break;

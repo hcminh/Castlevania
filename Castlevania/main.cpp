@@ -14,6 +14,7 @@
 #include "Goomba.h"
 #include "Whip.h"
 #include "Candle.h"
+#include "Item.h"
 
 #include "tilemap.h"
 
@@ -36,6 +37,7 @@ CGame *game;
 CScenes *scenes;
 
 CCandle *candle;
+//CItem *item;
 
 CMaps * cmaps = CMaps::GetInstance();
 
@@ -133,8 +135,20 @@ void LoadResources()
 	//simon
 	scenes->pushObject(CSimon::GetInstance());
 
-	//candle
-	candle = new CCandle(SCREEN_WIDTH / 2 + 100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115);
+	//candle 1
+	candle = new CCandle(160.0, 304.0, ItemType::BIG_HEART);
+	scenes->pushObject(candle);
+	//candle 2
+	candle = new CCandle(448.0, 304.0, ItemType::WHIP);
+	scenes->pushObject(candle);
+	//candle 3
+	candle = new CCandle(672.0, 304.0, ItemType::WHIP);
+	scenes->pushObject(candle);
+	//candle 4
+	candle = new CCandle(960.0, 304.0, ItemType::BIG_HEART);
+	scenes->pushObject(candle);
+	//candle 5
+	candle = new CCandle(1216.0, 304.0, ItemType::KNIFE);
 	scenes->pushObject(candle);
 
 	ani = new CAnimation(100);		// brick
@@ -148,7 +162,8 @@ void LoadResources()
 		brick->SetPosition(i * 16.0f, SCREEN_HEIGHT - 115);
 		scenes->pushObject(brick);
 	}
-
+	/*item = new CItem(ItemType::BIG_HEART);
+	scenes->pushObject(item);*/
 }
 
 void Update(DWORD dt)

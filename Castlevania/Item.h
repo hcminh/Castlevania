@@ -1,30 +1,34 @@
 ﻿#pragma once
 #include "GameObject.h"
 #include "Textures.h"
+#include "define.h"
 
 #define ID_TEX_ITEM		40	
 
-#define ITEM_BBOX_WIDTH  16
-#define ITEM_BBOX_HEIGHT 16
+#define BIG_HEART_BBOX  23
+#define BIG_HEART_GRAVITY 0.002f
+#define BIG_HEART_BBOX_HEIGHT 22
 
 #define ITEM_BIG_HEART		0
+#define ITEM_SMALL_HEART	1
+#define ITEM_WHIP			2
+#define ITEM_KNIFE			3
+
+#define TIME_DELAY_ITEM		250
+#define TIME_APPEAR_ITEM	2000
 
 class CItem : public CGameObject
 {
+	DWORD timeDisplayed; // Thời gian đã hiển thị.
 
-	DWORD TimeDisplayMax; // thời gian tối đa cho phép hiển thị.
-	DWORD TimeDisplayed; // Thời gian đã hiển thị.
-
-	DWORD TimeWaited; // Thời gian đã chờ trước khi hiển thị
-	DWORD TimeWaitMax; // Thời gian tối đa phải chờ trước khi hiển thị
+	DWORD timeWaited; // Thời gian đã chờ trước khi hiển thị
 
 	bool isFinish; // đã kết thúc chưa?
 public:
 	CItem(ItemType type);
+	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-
-	virtual bool isWaitingDisplay(); // đang chờ object hiển thi? - simon chưa được ăn
 
 	void LoadResources();
 };

@@ -5,6 +5,7 @@
 
 #include "Game.h"
 #include "Candle.h"
+//#include "Scenes.h"
 
 // Whip
 #define ID_TEX_WHIP		5

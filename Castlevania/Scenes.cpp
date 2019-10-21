@@ -53,16 +53,17 @@ void CScenes::putItem(ItemType type, float x, float y)
 
 void CScenes::updateCamPos()
 {
-	if (CSimon::GetInstance()->x > SCREEN_WIDTH / 2 &&
-		CSimon::GetInstance()->x + SCREEN_WIDTH / 2 < CMaps::GetInstance()->Get(SCENE_1)->GetMapWidth())
+	float xSimon = CSimon::GetInstance()->x + SIMON_SPRITE_WIDTH;
+	if (xSimon > SCREEN_WIDTH / 2 &&
+		xSimon + SCREEN_WIDTH / 2 < CMaps::GetInstance()->Get(SCENE_1)->GetMapWidth())
 	{
 
 		CMap * map = CMaps::GetInstance()->Get(SCENE_1);
 
-		if (CSimon::GetInstance()->x >= MAP_1_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
-			CSimon::GetInstance()->x <= MAP_1_MAX_COL * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
+		if (xSimon >= MAP_1_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
+			xSimon <= MAP_1_MAX_COL * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
 		{
-			CGame::GetInstance()->SetCamPos(CSimon::GetInstance()->x - SCREEN_WIDTH / 2, 0);
+			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
 		}
 	}
 }

@@ -20,6 +20,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	whip->Update(dt, coObjects);
+	if(subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// Simple fall down
 	vy += SIMON_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -95,14 +96,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::Render()
 {
-	int ani = this->currentFrame;
+	int ani;
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (state == SIMON_STATE_DIE)
 	{
 		ani = SIMON_ANI_DIE;
 	}
 	else if (unTouch) {
-		//ani = SIMON_ANI_LEVEL_UP;
+		if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
+		else ani = SIMON_ANI_IDLE_LEFT;
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	}
 	else if (isAttacking && isJumping)
@@ -110,11 +112,13 @@ void CSimon::Render()
 		if (nx > 0) {
 			ani = SIMON_ANI_ATTACK_RIGHT;
 			whip->setPosition(x - 24, y - 3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
 		}
 		else
 		{
 			ani = SIMON_ANI_ATTACK_LEFT;
 			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
 		}
 	}
 	else if (isJumping)
@@ -127,11 +131,25 @@ void CSimon::Render()
 		if (nx > 0) {
 			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
 			whip->setPosition(x - 24, y -3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
 		}
 		else
 		{
 			ani = SIMON_ANI_SIT_ATTACK_LEFT;
 			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
+		}
+	}
+	else if (isAttackWithSub)
+	{
+		if (nx > 0) {
+			ani = SIMON_ANI_ATTACK_RIGHT;
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
+		} 
+		else
+		{
+			ani = SIMON_ANI_ATTACK_LEFT;
+			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
 		}
 	}
 	else if (isAttacking)
@@ -139,7 +157,7 @@ void CSimon::Render()
 		if (nx > 0) {
 			ani = SIMON_ANI_ATTACK_RIGHT;
 			whip->setPosition(x - 24, y, 0); //direct = 0 khi danh ben phai
-		} 
+		}
 		else
 		{
 			ani = SIMON_ANI_ATTACK_LEFT;
@@ -171,11 +189,15 @@ void CSimon::Render()
 	}
 
 	animations[ani]->Render(x, y, color);
+
+	if (subWeapon != NULL) subWeapon->Render();
 	whip->Render();
 
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
 	{
+		if (subWeapon != NULL) subWeapon->isFlying = true;
 		isAttacking = false;
+		isAttackWithSub = false;
 		whip->setPosition(x - 54 - 24, y - 3, -1); //dat direct gia tri bang -1 de ko danh
 	}
 
@@ -225,6 +247,11 @@ void CSimon::SetState(int state)
 		if (isAttacking)return;
 		isAttacking = true;
 		break;
+	case SIMON_STATE_ATTACK_WITH_SUB:
+		if (isAttacking && isAttackWithSub) return;
+		isAttackWithSub = true;
+		isAttacking = true;
+		break;
 	case SIMON_STATE_IDLE:
 		//unTouch = false;
 		vx = 0;
@@ -240,7 +267,6 @@ void CSimon::SetState(int state)
 		break;
 	}
 }
-
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
@@ -296,15 +322,15 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 
 bool CSimon::isColisionItem(CItem *item)
 {
-	//float l, t, r, b;
-	//float l1, t1, r1, b1;
-	//this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+	float l, t, r, b;
+	float l1, t1, r1, b1;
+	this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
 
-	//item->GetBoundingBox(l1, t1, r1, b1);
-	//if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
-	//{
-	//	return true; // check with AABB
-	//}
+	item->GetBoundingBox(l1, t1, r1, b1);
+	if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	{
+		return true; // check with AABB
+	}
 	LPCOLLISIONEVENT e = SweptAABBEx(item); // kt va chạm giữa 2 object bằng sweptAABB
 	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
 	delete e;
@@ -320,6 +346,10 @@ void CSimon::colisionItem(CItem *item)
 		break;
 	case ItemType::WHIP:
 		SetState(SIMON_STATE_LEVEL_UP);
+		break;
+	case ItemType::KNIFE:
+		subWeapon = new CWeapon();
+		subWeapon->LoadResources();
 		break;
 	default:
 		break;
@@ -475,9 +505,4 @@ void CSimon::LoadResources()
 
 	AddAnimation(504);		// SIT ATTACK right
 	AddAnimation(505);		// SIT ATTACK left
-}
-
-void CSimon::Attack()
-{
-
 }

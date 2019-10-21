@@ -1,12 +1,5 @@
-﻿  Candle.cpp
-  Item.cpp
-  Scenes.cpp
+﻿  Scenes.cpp
 e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(18): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(23): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(35): warning C4018: '<': signed/unsigned mismatch
-  Simon.cpp
-  Whip.cpp
-e:\minh\projects\c++\castlevania\castlevania\whip.cpp(21): warning C4390: ';': empty controlled statement found; is this the intent?
-  main.cpp
-  Generating Code...
   Castlevania.vcxproj -> E:\MINH\Projects\C++\Castlevania\Debug\Castlevania.exe

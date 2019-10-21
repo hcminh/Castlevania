@@ -40,7 +40,6 @@ void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			isEnable = false;
 		return;
 	}
-	DebugOut(L"[CANDLE] update của CCandle nè: %d\n", timeWaited);
 }
 
 void CCandle::GetBoundingBox(float &l, float &t, float &r, float &b)

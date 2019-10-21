@@ -15,7 +15,8 @@ enum ObjectType
 {
 	CANDLE,
 	BRICK,
-	ITEM
+	ITEM,
+	WEAPON
 };
 
 enum ItemType
@@ -62,6 +63,7 @@ public:
 
 	int state;
 	bool isEnable = true;
+	bool loadedSrc = false;
 
 	DWORD dt; 
 	ObjectType type;

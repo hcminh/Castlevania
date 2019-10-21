@@ -1,0 +1,32 @@
+﻿  Brick.cpp
+  Candle.cpp
+e:\minh\projects\c++\castlevania\castlevania\scenes.h(31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  debug.cpp
+  Game.cpp
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(63): warning C4244: 'argument': conversion from 'double' to 'FLOAT', possible loss of data
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(82): error C2065: 'GWL_HINSTANCE': undeclared identifier
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(262): warning C4305: '=': truncation from '__int64' to 'float'
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(263): warning C4305: '=': truncation from '__int64' to 'float'
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(273): warning C4305: '=': truncation from '__int64' to 'float'
+e:\minh\projects\c++\castlevania\castlevania\game.cpp(274): warning C4305: '=': truncation from '__int64' to 'float'
+  GameObject.cpp
+  Goomba.cpp
+  Item.cpp
+  main.cpp
+e:\minh\projects\c++\castlevania\castlevania\scenes.h(31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Mario.cpp
+  Scenes.cpp
+e:\minh\projects\c++\castlevania\castlevania\scenes.h(31): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Simon.cpp
+  Sprites.cpp
+  Textures.cpp
+  tilemap.cpp
+e:\minh\projects\c++\castlevania\castlevania\tilemap.cpp(43): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\tilemap.cpp(45): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\tilemap.cpp(94): warning C4018: '<': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\tilemap.cpp(96): warning C4018: '<=': signed/unsigned mismatch
+e:\minh\projects\c++\castlevania\castlevania\tilemap.cpp(101): warning C4244: 'initializing': conversion from 'UINT' to 'float', possible loss of data
+  Weapon.cpp
+  Whip.cpp
+e:\minh\projects\c++\castlevania\castlevania\whip.cpp(21): warning C4390: ';': empty controlled statement found; is this the intent?
+  Generating Code...

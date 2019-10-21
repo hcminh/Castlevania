@@ -3,6 +3,7 @@
 #include "Textures.h"
 #include "Whip.h"
 #include "Item.h"
+#include "Weapon.h"
 
 #define ID_TEX_SIMON 0
 
@@ -12,14 +13,15 @@
 #define SIMON_GRAVITY			0.002f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
 
-#define SIMON_STATE_IDLE			0
-#define SIMON_STATE_WALKING_RIGHT	100
-#define SIMON_STATE_WALKING_LEFT	200
-#define SIMON_STATE_JUMP			300
-#define SIMON_STATE_DIE				400
-#define SIMON_STATE_SIT				500
-#define SIMON_STATE_ATTACK			600
-#define SIMON_STATE_LEVEL_UP		700
+#define SIMON_STATE_IDLE				0
+#define SIMON_STATE_WALKING_RIGHT		100
+#define SIMON_STATE_WALKING_LEFT		200
+#define SIMON_STATE_JUMP				300
+#define SIMON_STATE_DIE					400
+#define SIMON_STATE_SIT					500
+#define SIMON_STATE_ATTACK				600
+#define SIMON_STATE_ATTACK_WITH_SUB		700
+#define SIMON_STATE_LEVEL_UP			800
 
 #define SIMON_ANI_IDLE_RIGHT			0
 #define SIMON_ANI_IDLE_LEFT				1
@@ -60,14 +62,13 @@
 #define SIMON_STATE_STANDUP		30
 
 #define SIMON_UNTOUCHABLE_TIME	 5000
-#define SIMON_UP_LEVEL_TIME		 250
+#define SIMON_UP_LEVEL_TIME		700
 
 
 class CSimon : public CGameObject
 {
 	static CSimon * __instance; // Singleton Patern
 
-	int currentFrame = 0;
 	DWORD accuTime = 0; //thời gian tích lũy được
 	DWORD untouchable_start;
 
@@ -76,12 +77,14 @@ public:
 	//biến để kiểm tra Simon đang làm việc khác
 	bool isJumping = false;
 	bool isAttacking = false;
+	bool isAttackWithSub = false;
 	bool isSitting = false;
 	bool isMoving = false;
 	bool unTouch = false;
 
 	CWhip *whip;
-
+	//vector<CWeapon*> subWeapon;
+	CWeapon *subWeapon = NULL;
 
 	CSimon() : CGameObject()
 	{
@@ -100,5 +103,4 @@ public:
 	bool isColisionItem(CItem *item);
 	void colisionItem(CItem *item);
 	void LoadResources();
-	void Attack();
 };

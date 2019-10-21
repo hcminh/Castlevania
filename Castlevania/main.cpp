@@ -72,6 +72,14 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_W:
 		CSimon::GetInstance()->whip->levelDown();
 		break;
+	case DIK_Z: //sub attack
+		if (CSimon::GetInstance()->subWeapon != NULL && CSimon::GetInstance()->subWeapon->isFlying) {
+			CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
+			return;
+		}
+
+		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK_WITH_SUB);
+		break;
 	}
 }
 
@@ -130,6 +138,50 @@ void LoadResources()
 
 
 	LPANIMATION ani;
+
+	////////////////////////// Item ///////////////////////////
+	textures->Add(ID_TEX_ITEM, L"textures\\Items.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texItem = textures->Get(ID_TEX_ITEM);
+	sprites->Add(60000, 16, 0, 40, 20, texItem);	// big heart
+	sprites->Add(60001, 0, 0, 16, 16, texItem);	// small heart
+	sprites->Add(60002, 130, 0, 162, 32, texItem);	// whip
+	sprites->Add(60003, 162, 0, 194, 18, texItem);	// knife
+
+	ani = new CAnimation(100);	// big heart
+	ani->Add(60000);
+	animations->Add(900, ani);
+
+	ani = new CAnimation(100);	// small heart
+	ani->Add(60001);
+	animations->Add(901, ani);
+
+	ani = new CAnimation(100);	// whip
+	ani->Add(60002);
+	animations->Add(902, ani);
+
+	ani = new CAnimation(100);	// knife
+	ani->Add(60003);
+	animations->Add(903, ani);
+
+	////////////////////////// Item ///////////////////////////
+
+	//////////////////////////  Weapon  ///////////////////////////
+
+	textures->Add(ID_TEX_SUB_WEAPON, L"textures\\weapons-full.png", D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(ID_TEX_SUB_WEAPON);
+	// knife
+	sprites->Add(40020, 204, 32, 238, 50, texWeapon);		// right
+	sprites->Add(40021, 204, 0, 238, 18, texWeapon);		// left
+
+	//knife
+	ani = new CAnimation(100);	// right 
+	ani->Add(40020);
+	animations->Add(806, ani);
+
+	ani = new CAnimation(100);	// left 
+	ani->Add(40021);
+	animations->Add(807, ani);
+	//////////////////////////  Weapon  ///////////////////////////
 
 
 	//simon

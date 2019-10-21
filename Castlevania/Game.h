@@ -71,6 +71,8 @@ public:
 
 	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; };
 	D3DXVECTOR3 getCamPos() { return D3DXVECTOR3(cam_x, cam_y, 0); };
+
+	float getCamPosX() { return cam_x; };
 	static CGame * GetInstance();
 
 	~CGame();

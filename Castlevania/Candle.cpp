@@ -1,9 +1,11 @@
 ﻿#include "Candle.h"
 
-CCandle::CCandle()
+CCandle::CCandle(float x, float y)
 {
 	type = ObjectType::CANDLE;
 	item = ItemType::BIG_HEART;
+	LoadResources();
+	SetPosition(x, y);
 }
 
 CCandle::~CCandle()

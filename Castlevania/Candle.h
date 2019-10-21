@@ -32,7 +32,7 @@ class CCandle : public CGameObject
 	DWORD timeWaited = 0;
 	ItemType item;
 public:
-	CCandle();
+	CCandle(float x, float y);
 	~CCandle();
 
 	virtual void Render();

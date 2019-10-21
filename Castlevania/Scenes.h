@@ -16,7 +16,6 @@ class CScenes
 	static CScenes * __instance; // Singleton Patern
 
 	vector<LPGAMEOBJECT> objects; //các object của map
-	CSimon * simon;
 
 public:
 
@@ -33,8 +32,6 @@ public:
 
 	void updateCamPos();
 	static CScenes * GetInstance();
-	void setSimon(CSimon * simon) { this->simon = simon; }
-	CSimon * getSimon() { return this->simon; }
 
 
 };

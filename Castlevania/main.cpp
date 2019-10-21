@@ -35,13 +35,9 @@
 CGame *game;
 CScenes *scenes;
 
-CSimon *simon;
 CCandle *candle;
 
 CMaps * cmaps = CMaps::GetInstance();
-//CGoomba *goomba;
-
-//vector<LPGAMEOBJECT> objects;
 
 class CSampleKeyHander : public CKeyEventHandler
 {
@@ -58,21 +54,21 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		simon->SetState(SIMON_STATE_JUMP);
+		CSimon::GetInstance()->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_R: // reset
-		simon->SetState(SIMON_STATE_IDLE);
-		simon->SetPosition(50.0f, 0.0f);
-		simon->SetSpeed(0, 0);
+		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+		CSimon::GetInstance()->SetPosition(50.0f, 0.0f);
+		CSimon::GetInstance()->SetSpeed(0, 0);
 		break;
 	case DIK_A: // ATTACK
-		simon->SetState(SIMON_STATE_ATTACK);
+		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
 	case DIK_Q:
-		simon->whip->levelUp();
+		CSimon::GetInstance()->whip->levelUp();
 		break;
 	case DIK_W:
-		simon->whip->levelDown();
+		CSimon::GetInstance()->whip->levelDown();
 		break;
 	}
 }
@@ -83,7 +79,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_DOWN:
-		simon->SetState(SIMON_STATE_STANDUP);
+		CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
 		break;
 	}
 }
@@ -91,18 +87,18 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 void CSampleKeyHander::KeyState(BYTE *states)
 {
 	// disable control key when Simon die 
-	if (simon->GetState() == SIMON_STATE_DIE) return;
+	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
 	//disable when jump
 	//if (simon->GetState() == SIMON_STATE_JUMP) return;
 
-	if (game->IsKeyDown(DIK_RIGHT) && !simon->isAttacking)
-		simon->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT) && !simon->isAttacking)
-		simon->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN) && !simon->isAttacking)
-		simon->SetState(SIMON_STATE_SIT);
+	if (game->IsKeyDown(DIK_RIGHT) && !CSimon::GetInstance()->isAttacking)
+		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
+	else if (game->IsKeyDown(DIK_LEFT) && !CSimon::GetInstance()->isAttacking)
+		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
+		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
 	else
-		simon->SetState(SIMON_STATE_IDLE);
+		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -118,12 +114,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-/*
-	Load all game resources
-	In this example: load textures, sprites, animations and simon object
-
-	TO-DO: Improve this function by loading texture,sprite,animation,object from file
-*/
 void LoadResources()
 {
 	CTextures * textures = CTextures::GetInstance();
@@ -141,30 +131,11 @@ void LoadResources()
 
 
 	//simon
-	simon = new CSimon();
-	simon->LoadResources();
-	simon->SetPosition(0, 50.0f);
-	simon->whip = new CWhip();
-	simon->whip->LoadResources();
-	//objects.push_back(simon);
-	scenes->pushObject(simon);
-	scenes->setSimon(simon); //nhét nó vào mảng object của scenes để tính va chạm thôi, nên add nó vào thằng simon của scene nữa
+	scenes->pushObject(CSimon::GetInstance());
 
 	//candle
-	candle = new CCandle();
-	candle->LoadResources();
-	candle->SetPosition(SCREEN_WIDTH/2+ 100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115);
-	//objects.push_back(candle);
+	candle = new CCandle(SCREEN_WIDTH / 2 + 100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115);
 	scenes->pushObject(candle);
-
-	//goomba
-	//goomba = new CGoomba();
-	//goomba->LoadResources();
-	//goomba->SetPosition(200, 135);
-	//goomba->SetState(GOOMBA_STATE_WALKING);
-	//objects.push_back(goomba);
-
-
 
 	ani = new CAnimation(100);		// brick
 	ani->Add(20001);
@@ -175,47 +146,19 @@ void LoadResources()
 		CBrick *brick = new CBrick();
 		brick->AddAnimation(601);
 		brick->SetPosition(i * 16.0f, SCREEN_HEIGHT - 115);
-		//objects.push_back(brick);
 		scenes->pushObject(brick);
 	}
 
 }
 
-/*
+void Update(DWORD dt)
+{/*
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
-void Update(DWORD dt)
-{
-	//// We know that Simon is the first object in the list hence we won't add him into the colliable object list
-	//// TO-DO: This is a "dirty" way, need a more organized way 
-
-	//vector<LPGAMEOBJECT> coObjects;
-	//for (int i = 1; i < objects.size(); i++)
-	//{
-	//	coObjects.push_back(objects[i]);
-	//}
-
-	//for (int i = 0; i < objects.size(); i++)
-	//{
-	//	objects[i]->Update(dt, &coObjects);
-	//}
-
-
-	//// Update camera to follow simon
-	//float cx, cy;
-	//simon->GetPosition(cx, cy);
-
-	//cx -= SCREEN_WIDTH / 2;
-	//cy -= SCREEN_HEIGHT / 2;
-
-	//CGame::GetInstance()->SetCamPos(cx, 0.0f /*cy*/);
 	scenes->Update(dt);
 }
 
-/*
-	Render a frame
-*/
 void Render()
 {
 	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
@@ -228,9 +171,6 @@ void Render()
 		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-		/*for (int i = 0; i < objects.size(); i++)
-			objects[i]->Render();*/
 
 		scenes->Render();
 

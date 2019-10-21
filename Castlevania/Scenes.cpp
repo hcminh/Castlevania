@@ -56,16 +56,16 @@ void CScenes::pushObject(LPGAMEOBJECT objects)
 
 void CScenes::updateCamPos()
 {
-	if (simon->x > SCREEN_WIDTH / 2 &&
-		simon->x + SCREEN_WIDTH / 2 < CMaps::GetInstance()->Get(SCENE_1)->GetMapWidth())
+	if (CSimon::GetInstance()->x > SCREEN_WIDTH / 2 &&
+		CSimon::GetInstance()->x + SCREEN_WIDTH / 2 < CMaps::GetInstance()->Get(SCENE_1)->GetMapWidth())
 	{
 
 		CMap * map = CMaps::GetInstance()->Get(SCENE_1);
 
-		if (simon->x >= MAP_1_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
-			simon->x <= MAP_1_MAX_COL * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
+		if (CSimon::GetInstance()->x >= MAP_1_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
+			CSimon::GetInstance()->x <= MAP_1_MAX_COL * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
 		{
-			CGame::GetInstance()->SetCamPos(simon->x - SCREEN_WIDTH / 2, 0);
+			CGame::GetInstance()->SetCamPos(CSimon::GetInstance()->x - SCREEN_WIDTH / 2, 0);
 		}
 	}
 }

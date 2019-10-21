@@ -80,6 +80,10 @@ public:
 	CSimon() : CGameObject()
 	{
 		untouchable = 0;
+		LoadResources();
+		SetPosition(0, 50.0f);
+		whip = new CWhip();
+		whip->LoadResources();
 	}
 
 	static CSimon * GetInstance();

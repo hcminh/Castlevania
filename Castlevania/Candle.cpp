@@ -1,4 +1,5 @@
 ﻿#include "Candle.h"
+#include "Scenes.h"
 
 CCandle::CCandle(float x, float y)
 {
@@ -10,11 +11,6 @@ CCandle::CCandle(float x, float y)
 
 CCandle::~CCandle()
 {
-}
-
-ItemType CCandle::getTypeItem()
-{
-	return this->item;
 }
 
 void CCandle::Render()
@@ -30,7 +26,7 @@ void CCandle::Render()
 		ani = CANDLE_BIG;
 	}
 	animations[ani]->Render(x, y);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CCandle::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -63,6 +59,9 @@ void CCandle::SetState(int state)
 	{
 	case CANDLE_DESTROYED:
 		//isEnable = false;
+		if (destroyed) return;
+		destroyed = true;
+		CScenes::GetInstance()->putItem(this->item, this->x, this->y);
 		break;
 	default:
 		break;

@@ -27,6 +27,12 @@
     <Filter Include="Header Files\framework">
       <UniqueIdentifier>{2023136d-419f-4349-b6a2-ceeecf3c0463}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\item">
+      <UniqueIdentifier>{c9708c56-06e8-4793-81a3-3ed98de62a77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\item">
+      <UniqueIdentifier>{b012a5ad-b344-4014-957f-7f41f6caf325}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -50,12 +56,6 @@
     <ClInclude Include="Whip.h">
       <Filter>Header Files\weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Candle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="define.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="debug.h">
       <Filter>Header Files\framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\item</Filter>
+    </ClInclude>
+    <ClInclude Include="Candle.h">
+      <Filter>Header Files\item</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,12 +106,6 @@
     <ClCompile Include="Whip.cpp">
       <Filter>Source Files\weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Candle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="tilemap.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
@@ -120,6 +120,12 @@
     </ClCompile>
     <ClCompile Include="debug.cpp">
       <Filter>Source Files\framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\item</Filter>
+    </ClCompile>
+    <ClCompile Include="Candle.cpp">
+      <Filter>Source Files\item</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

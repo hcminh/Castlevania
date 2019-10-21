@@ -1,6 +1,8 @@
 ﻿#include "Whip.h"
 #include "Textures.h"
 
+//#include "Scenes.h"
+
 CWhip::CWhip() : CGameObject()
 {
 }
@@ -8,17 +10,18 @@ CWhip::CWhip() : CGameObject()
 void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (animations[ani]->getCurrentFrame() == 2)
-	{
+	{	
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
+			if (coObjects->at(i)->type == ObjectType::BRICK) continue;
 			float top, left, bottom, right;
 			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 			if (isCollision(left, top, right, bottom))
 			{
 				if (coObjects->at(i)->type == ObjectType::CANDLE);
 				{
-					DebugOut(L"[COLLISION] đụng nè đụng nè: %d\n");
 					coObjects->at(i)->SetState(CANDLE_DESTROYED);
+					//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
 				}
 			}
 
@@ -32,7 +35,7 @@ void CWhip::Render()
 	if (direct < 0) return;
 	ani = level + direct; // level bang gia tri cua loai roi, direct = -1 -> ko danh, direct = 0 danh phai, direct = 1 danh trai
 	animations[ani]->Render(x, y, 255);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bottom)

@@ -4,7 +4,7 @@
 #include "Simon.h"
 #include "Game.h"
 
-#include "Goomba.h"
+//#include "Goomba.h"
 
 
 CSimon * CSimon::__instance = NULL;
@@ -24,6 +24,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(coObjects, coEvents);
+
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
@@ -53,35 +54,33 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			isJumping = false;
 		}
 		// Collision logic with Goombas
-		for (UINT i = 0; i < coEventsResult.size(); i++)
-		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-			{
-				CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-
-				// jump on top >> kill Goomba and deflect a bit 
-				if (e->ny < 0)
-				{
-					if (goomba->GetState() != GOOMBA_STATE_DIE)
-					{
-						goomba->SetState(GOOMBA_STATE_DIE);
-						vy = -SIMON_JUMP_DEFLECT_SPEED;
-					}
-				}
-				else if (e->nx != 0)
-				{
-					if (untouchable == 0)
-					{
-						if (goomba->GetState() != GOOMBA_STATE_DIE)
-						{
-								SetState(SIMON_STATE_DIE);
-						}
-					}
-				}
-			}
-		}
+		//for (UINT i = 0; i < coEventsResult.size(); i++)
+		//{
+		//	LPCOLLISIONEVENT e = coEventsResult[i];
+		//	if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
+		//	{
+		//		CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
+		//		// jump on top >> kill Goomba and deflect a bit 
+		//		if (e->ny < 0)
+		//		{
+		//			if (goomba->GetState() != GOOMBA_STATE_DIE)
+		//			{
+		//				goomba->SetState(GOOMBA_STATE_DIE);
+		//				vy = -SIMON_JUMP_DEFLECT_SPEED;
+		//			}
+		//		}
+		//		else if (e->nx != 0)
+		//		{
+		//			if (untouchable == 0)
+		//			{
+		//				if (goomba->GetState() != GOOMBA_STATE_DIE)
+		//				{
+		//						SetState(SIMON_STATE_DIE);
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 	}
 
 	// clean up collision events
@@ -277,6 +276,35 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		}
 	}
 	
+}
+
+bool CSimon::isColisionItem(CItem *item)
+{
+	//float l, t, r, b;
+	//float l1, t1, r1, b1;
+	//this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	//item->GetBoundingBox(l1, t1, r1, b1);
+	//if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	//{
+	//	return true; // check with AABB
+	//}
+	LPCOLLISIONEVENT e = SweptAABBEx(item); // kt va chạm giữa 2 object bằng sweptAABB
+	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
+	delete e;
+	return res;
+}
+
+void CSimon::colisionItem(CItem *item)
+{
+	switch (item->item)
+	{
+	case ItemType::BIG_HEART:
+		DebugOut(L"[COLISION] chạm vào tim to bự nè: %d\n");
+		break;
+	default:
+		break;
+	}
 }
 
 void CSimon::LoadResources()

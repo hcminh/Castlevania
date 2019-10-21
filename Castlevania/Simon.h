@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Textures.h"
 #include "Whip.h"
+#include "Item.h"
 
 #define ID_TEX_SIMON 0
 
@@ -92,7 +93,8 @@ public:
 	virtual void Render();
 	void SetState(int state);
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-
+	bool isColisionItem(CItem *item);
+	void colisionItem(CItem *item);
 	void LoadResources();
 	void Attack();
 };

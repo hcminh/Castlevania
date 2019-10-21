@@ -4,7 +4,6 @@
 #include "debug.h"
 #include "Item.h"
 
-
 #define ID_TEX_CANDLE	35
 
 #define CANDLE_BIG		0
@@ -30,7 +29,7 @@
 class CCandle : public CGameObject
 {
 	DWORD timeWaited = 0;
-	ItemType item;
+	bool destroyed = false;
 public:
 	CCandle(float x, float y);
 	~CCandle();
@@ -39,7 +38,6 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 
-	ItemType getTypeItem();
 	void SetState(int state);
 	void LoadResources();
 };

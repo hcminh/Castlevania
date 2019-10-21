@@ -1,4 +1,9 @@
-﻿  Candle.cpp
+﻿  Brick.cpp
+  Candle.cpp
+  GameObject.cpp
+  Goomba.cpp
+  Item.cpp
+  Mario.cpp
   Scenes.cpp
 e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(21): warning C4018: '<': signed/unsigned mismatch
 e:\minh\projects\c++\castlevania\castlevania\scenes.cpp(26): warning C4018: '<': signed/unsigned mismatch

@@ -34,7 +34,7 @@ void CWhip::Render()
 {
 	if (direct < 0) return;
 	ani = level + direct; // level bang gia tri cua loai roi, direct = -1 -> ko danh, direct = 0 danh phai, direct = 1 danh trai
-	animations[ani]->Render(x, y, 255);
+	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 

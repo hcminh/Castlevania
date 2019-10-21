@@ -3,7 +3,7 @@
 
 #include "Simon.h"
 #include "Game.h"
-
+#include <math.h>
 //#include "Goomba.h"
 
 
@@ -11,6 +11,12 @@ CSimon * CSimon::__instance = NULL;
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
+	accuTime += dt;
+	if (unTouch && accuTime <= SIMON_UP_LEVEL_TIME) {
+		return;
+	} 
+	unTouch = false;
+
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	whip->Update(dt, coObjects);
@@ -28,8 +34,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// reset untouchable timer if untouchable time has passed
 	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
 	{
-		untouchable_start = 0;
-		untouchable = 0;
+		/*untouchable_start = 0;
+		untouchable = 0;*/
 	}
 
 	// No collision occured, proceed normally
@@ -89,11 +95,15 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::Render()
 {
-	int ani;
-
+	int ani = this->currentFrame;
+	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (state == SIMON_STATE_DIE)
 	{
 		ani = SIMON_ANI_DIE;
+	}
+	else if (unTouch) {
+		//ani = SIMON_ANI_LEVEL_UP;
+		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	}
 	else if (isAttacking && isJumping)
 	{
@@ -160,8 +170,7 @@ void CSimon::Render()
 			else ani = SIMON_ANI_WALKING_LEFT;
 	}
 
-	int alpha = 255;
-	animations[ani]->Render(x, y, alpha);
+	animations[ani]->Render(x, y, color);
 	whip->Render();
 
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
@@ -217,10 +226,17 @@ void CSimon::SetState(int state)
 		isAttacking = true;
 		break;
 	case SIMON_STATE_IDLE:
+		//unTouch = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:
 		vy = -SIMON_DIE_DEFLECT_SPEED;
+		break;
+	case SIMON_STATE_LEVEL_UP:
+		if (unTouch) return;
+		whip->levelUp();
+		unTouch = true;
+		accuTime = 0;
 		break;
 	}
 }
@@ -301,6 +317,9 @@ void CSimon::colisionItem(CItem *item)
 	{
 	case ItemType::BIG_HEART:
 		DebugOut(L"[COLISION] chạm vào tim to bự nè: %d\n");
+		break;
+	case ItemType::WHIP:
+		SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	default:
 		break;

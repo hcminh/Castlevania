@@ -1,10 +1,10 @@
 ﻿#include "Candle.h"
 #include "Scenes.h"
 
-CCandle::CCandle(float x, float y)
+CCandle::CCandle(float x, float y, ItemType item)
 {
 	type = ObjectType::CANDLE;
-	item = ItemType::BIG_HEART;
+	this->item = item;
 	LoadResources();
 	SetPosition(x, y);
 }
@@ -25,7 +25,7 @@ void CCandle::Render()
 	{
 		ani = CANDLE_BIG;
 	}
-	animations[ani]->Render(x, y);
+	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 

@@ -20,7 +20,7 @@
 #define TILE_HEIGHT		32
 
 #define MAP_1_MIN_COL	0
-#define MAP_1_MAX_COL	0
+#define MAP_1_MAX_COL	48
 
 // Scene
 #define SCENE_1			1000

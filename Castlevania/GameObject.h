@@ -20,7 +20,10 @@ enum ObjectType
 
 enum ItemType
 {
-	BIG_HEART
+	BIG_HEART,
+	SMALL_HEART,
+	WHIP,
+	KNIFE
 };
 
 class CGameObject; 

@@ -19,6 +19,7 @@
 #define SIMON_STATE_DIE				400
 #define SIMON_STATE_SIT				500
 #define SIMON_STATE_ATTACK			600
+#define SIMON_STATE_LEVEL_UP		700
 
 #define SIMON_ANI_IDLE_RIGHT			0
 #define SIMON_ANI_IDLE_LEFT				1
@@ -38,8 +39,10 @@
 #define SIMON_ANI_ATTACK_RIGHT			9
 #define SIMON_ANI_ATTACK_LEFT			10
 
-#define SIMON_ANI_SIT_ATTACK_RIGHT			11
-#define SIMON_ANI_SIT_ATTACK_LEFT			12
+#define SIMON_ANI_SIT_ATTACK_RIGHT		11
+#define SIMON_ANI_SIT_ATTACK_LEFT		12
+
+#define SIMON_ANI_LEVEL_UP				13
 
 #define MAX_ATTACK_FRAME				3
 
@@ -56,7 +59,8 @@
 
 #define SIMON_STATE_STANDUP		30
 
-#define SIMON_UNTOUCHABLE_TIME 5000
+#define SIMON_UNTOUCHABLE_TIME	 5000
+#define SIMON_UP_LEVEL_TIME		 250
 
 
 class CSimon : public CGameObject
@@ -64,7 +68,7 @@ class CSimon : public CGameObject
 	static CSimon * __instance; // Singleton Patern
 
 	int currentFrame = 0;
-	int untouchable;
+	DWORD accuTime = 0; //thời gian tích lũy được
 	DWORD untouchable_start;
 
 
@@ -74,13 +78,13 @@ public:
 	bool isAttacking = false;
 	bool isSitting = false;
 	bool isMoving = false;
+	bool unTouch = false;
 
 	CWhip *whip;
 
 
 	CSimon() : CGameObject()
 	{
-		untouchable = 0;
 		LoadResources();
 		SetPosition(0, 50.0f);
 		whip = new CWhip();

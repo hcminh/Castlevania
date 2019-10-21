@@ -136,7 +136,7 @@ void LoadResources()
 	scenes->pushObject(CSimon::GetInstance());
 
 	//candle
-	candle = new CCandle(100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115);
+	candle = new CCandle(100.0f, SCREEN_HEIGHT - CANDLE_BIG_HEIGHT - 115, ItemType::WHIP);
 	scenes->pushObject(candle);
 
 	ani = new CAnimation(100);		// brick

@@ -31,7 +31,7 @@ class CCandle : public CGameObject
 	DWORD timeWaited = 0;
 	bool destroyed = false;
 public:
-	CCandle(float x, float y);
+	CCandle(float x, float y, ItemType item);
 	~CCandle();
 
 	virtual void Render();

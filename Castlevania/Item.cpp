@@ -73,7 +73,16 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CItem::Render()
 {
 	if (timeWaited < TIME_DELAY_ITEM || timeDisplayed >= TIME_APPEAR_ITEM || !isEnable) return;
-	animations[0]->Render(x, y);
+	int ani;
+	if (item == ItemType::BIG_HEART)
+		ani = ITEM_BIG_HEART;
+	else if(item == ItemType::SMALL_HEART)
+		ani = ITEM_SMALL_HEART;
+	else if (item == ItemType::WHIP)
+		ani = ITEM_WHIP;
+	else if (item == ItemType::KNIFE)
+		ani = ITEM_KNIFE;
+	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	RenderBoundingBox();
 }
 
@@ -97,15 +106,33 @@ void CItem::LoadResources()
 
 	LPDIRECT3DTEXTURE9 texItem = textures->Get(ID_TEX_ITEM);
 
-	// heart
-	sprites->Add(60000, 16,	0,	40,	20, texItem);
-
+	sprites->Add(60000,  16, 0,	 40, 20, texItem);	// big heart
+	sprites->Add(60001,   0, 0,  16, 16, texItem);	// small heart
+	sprites->Add(60002, 130, 0,	162, 32, texItem);	// whip
+	sprites->Add(60003, 162, 0, 194, 18, texItem);	// knife
+	 
 	LPANIMATION ani;
 
-	ani = new CAnimation(100);	// heart
+	ani = new CAnimation(100);	// big heart
 	ani->Add(60000);
 	animations->Add(900, ani);
 
-	AddAnimation(900);		// heart
+	ani = new CAnimation(100);	// small heart
+	ani->Add(60001);
+	animations->Add(901, ani);
+
+	ani = new CAnimation(100);	// whip
+	ani->Add(60002);
+	animations->Add(902, ani);
+
+	ani = new CAnimation(100);	// knife
+	ani->Add(60003);
+	animations->Add(903, ani);
+
+
+	AddAnimation(900);		// big heart
+	AddAnimation(901);		// small heart
+	AddAnimation(902);		// whip
+	AddAnimation(903);		// knife
 
 }

@@ -6,11 +6,9 @@ CScenes::CScenes()
 {
 }
 
-
 CScenes::~CScenes()
 {
 }
-
 
 void CScenes::Update(DWORD dt)
 {	
@@ -37,7 +35,6 @@ void CScenes::Render()
 
 	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
-
 
 void CScenes::pushObject(LPGAMEOBJECT objects)
 {

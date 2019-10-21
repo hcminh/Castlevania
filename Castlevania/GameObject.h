@@ -16,7 +16,8 @@ enum ObjectType
 	CANDLE,
 	BRICK,
 	ITEM,
-	WEAPON
+	WEAPON,
+	GROUND
 };
 
 enum ItemType

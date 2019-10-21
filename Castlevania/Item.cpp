@@ -35,22 +35,21 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (CSimon::GetInstance()->isColisionItem(this))
 	{
-		DebugOut(L"[SIMON VÀ ITEM] Simon chạm item: %d\n");
 		isEnable = false;
 		CSimon::GetInstance()->colisionItem(this);
 	}
 
-	vector<LPGAMEOBJECT> listObject_Brick;
-	listObject_Brick.clear();
+	vector<LPGAMEOBJECT> listObject_Ground;
+	listObject_Ground.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type == ObjectType::BRICK)
-			listObject_Brick.push_back(coObjects->at(i));
+		if (coObjects->at(i)->type == ObjectType::GROUND)
+			listObject_Ground.push_back(coObjects->at(i));
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
-	CalcPotentialCollisions(&listObject_Brick, coEvents); // Lấy danh sách các va chạm 
+	CalcPotentialCollisions(&listObject_Ground, coEvents); // Lấy danh sách các va chạm 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{

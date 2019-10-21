@@ -197,7 +197,7 @@ void LoadResources()
 	for (int i = 0; i < 48; i++)
 	{
 		CGround *ground = new CGround();
-		ground->SetPosition(i * 32.0f, SCREEN_HEIGHT - 115);
+		ground->SetPosition(i * 32.0f, SCREEN_HEIGHT - 114);
 		scenes->pushObject(ground);
 	}
 	//////////////////////////  GROUND  ///////////////////////////

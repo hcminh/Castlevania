@@ -3,7 +3,7 @@
 #include "Textures.h"
 #include "define.h"
 
-#define ID_TEX_ITEM		40	
+#define ID_TEX_ITEM		4	
 
 #define BIG_HEART_BBOX  23
 #define BIG_HEART_GRAVITY 0.002f

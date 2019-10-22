@@ -85,35 +85,11 @@ bool CWeapon::isCollision(float obj_left, float obj_top, float obj_right, float 
 
 void CWeapon::LoadResources()
 {
-	//CTextures * textures = CTextures::GetInstance();
-
-	//textures->Add(ID_TEX_SUB_WEAPON, L"textures\\weapons-full.png", D3DCOLOR_XRGB(255, 0, 255));
-
-	//CSprites * sprites = CSprites::GetInstance();
-	//CAnimations * animations = CAnimations::GetInstance();
-
-	//LPDIRECT3DTEXTURE9 texWeapon = textures->Get(ID_TEX_SUB_WEAPON);
-
-	//// knife
-	//sprites->Add(40020, 204, 32, 238, 50, texWeapon);		// right
-	//sprites->Add(40021, 204, 0, 238, 18, texWeapon);		// left
-
-	//LPANIMATION ani;
-
-	////knife
-	//ani = new CAnimation(100);	// right 
-	//ani->Add(40020);
-	//animations->Add(806, ani);
-
-	//ani = new CAnimation(100);	// left 
-	//ani->Add(40021);
-	//animations->Add(807, ani);
-
 	if (loadedSrc) return;
 	loadedSrc = true;
 
-	AddAnimation(806);		// knife right
-	AddAnimation(807);		// knife left
+	AddAnimation(200);		// knife right
+	AddAnimation(201);		// knife left
 }
 
 

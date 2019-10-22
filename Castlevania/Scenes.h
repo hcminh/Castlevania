@@ -27,7 +27,8 @@ public:
 	void Render();
 
 	// Get, Set
-	void pushObject(LPGAMEOBJECT objects);
+	void pushObject(LPGAMEOBJECT object);
+	void insertObject(LPGAMEOBJECT object);
 	int getListObjectSize() { return objects.size(); };
 	void putItem(ItemType type, float x, float y);
 

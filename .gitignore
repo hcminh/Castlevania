@@ -32,9 +32,8 @@
 *.app
 
 # dependencies
-Debug
-/Debug
-Castlevania/Debug
+Debug/
+Castlevania/Debug/
 Castlevania/x64
 *.vs
 *.vscode

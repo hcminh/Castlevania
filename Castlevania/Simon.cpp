@@ -5,7 +5,6 @@
 #include "Game.h"
 #include <math.h>
 
-
 CSimon * CSimon::__instance = NULL;
 CSimon *CSimon::GetInstance()
 {
@@ -173,12 +172,12 @@ void CSimon::SetState(int state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
 		vx = SIMON_WALKING_SPEED;
-		if (isSitting) vx = 0;
+		if (isSitting) SetState(SIMON_STATE_STANDUP);
 		nx = 1;
 		break;
 	case SIMON_STATE_WALKING_LEFT:
 		vx = -SIMON_WALKING_SPEED;
-		if (isSitting) vx = 0;
+		if (isSitting) SetState(SIMON_STATE_STANDUP);
 		nx = -1;
 		break;
 	case SIMON_STATE_SIT:
@@ -197,10 +196,9 @@ void CSimon::SetState(int state)
 		isJumping = true;
 		vy = -SIMON_JUMP_SPEED_Y;
 		break;
-
 	case SIMON_STATE_ATTACK:
 		if (isAttacking)return;
-		vx = 0;
+		if(!isJumping) vx = 0;
 		isAttacking = true;
 		if (isUseSubWeapon)
 		{

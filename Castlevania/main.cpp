@@ -52,6 +52,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->isUseSubWeapon = false;
 		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
+	//case DIK_DOWN: // sit
+	//	CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
+	//	break;
 	case DIK_Q:
 		CSimon::GetInstance()->whip->levelUp();
 		break;
@@ -76,14 +79,14 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	// disable control key when Simon die 
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
 	//disable when jump
-	//if (simon->GetState() == SIMON_STATE_JUMP) return;
+	if (CSimon::GetInstance()->GetState() == SIMON_STATE_JUMP && CSimon::GetInstance()->isJumping) return;
 
-	if (game->IsKeyDown(DIK_RIGHT) && !CSimon::GetInstance()->isAttacking)
+	if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
+		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
+	else if (game->IsKeyDown(DIK_RIGHT) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
-		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
 	else
 	{
 		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);

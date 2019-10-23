@@ -18,6 +18,7 @@
 #include "Ground.h"
 #include "define.h"
 #include "tilemap.h"
+#include "Door.h"
 
 #include<iostream>
 #include<fstream>
@@ -207,6 +208,12 @@ void loadObject(string filepath) {
 		{
 			CGround *ground = new CGround(x, y);
 			CScenes::GetInstance()->pushObject(ground);
+			break;
+		}
+		case ID_DOOR:
+		{
+			CDoor *door = new CDoor(x, y);
+			CScenes::GetInstance()->pushObject(door);
 			break;
 		}
 		}

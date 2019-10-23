@@ -6,7 +6,7 @@
 
 #define ID_TEX_SIMON 0
 
-#define SIMON_WALKING_SPEED		0.15f 
+#define SIMON_WALKING_SPEED		0.4f	//0.15f 
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -92,5 +92,6 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	bool isColisionItem(CItem *item);
 	void colisionItem(CItem *item);
+	//void isColisionWithDoor();
 	void LoadResources();
 };

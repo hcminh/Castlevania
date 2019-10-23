@@ -26,6 +26,7 @@
 #define ID_CANDLE	3
 #define ID_ITEM		4
 #define ID_GROUND	5
+#define ID_DOOR		6
 
 //SIMON DÙNG ANI CỦA SỐ TỪ 100 đến 112, sprite từ 10001 đến 10023 (lại dư thêm tới 10050)
 //WHIP DÙNG ANI CỦA SỐ TỪ 150 đến 155, sprite từ 10051 đến 10069 (lại dư thêm tới 10100)

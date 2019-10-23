@@ -37,11 +37,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		CalcPotentialCollisions(coObjects, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
-	if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
-	{
-		/*untouchable_start = 0;
-		untouchable = 0;*/
-	}
+	//if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
+	//{
+	//	untouchable_start = 0;
+	//	untouchable = 0;
+	//}
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -59,39 +59,21 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) vx = 0;
+		//if (nx != 0) vx = 0;
 		if (ny != 0) {
 			vy = 0;
 			isJumping = false;
 		}
-		// Collision logic with Goombas
-		//for (UINT i = 0; i < coEventsResult.size(); i++)
-		//{
-		//	LPCOLLISIONEVENT e = coEventsResult[i];
-		//	if (dynamic_cast<CGoomba *>(e->obj)) // if e->obj is Goomba 
-		//	{
-		//		CGoomba *goomba = dynamic_cast<CGoomba *>(e->obj);
-		//		// jump on top >> kill Goomba and deflect a bit 
-		//		if (e->ny < 0)
-		//		{
-		//			if (goomba->GetState() != GOOMBA_STATE_DIE)
-		//			{
-		//				goomba->SetState(GOOMBA_STATE_DIE);
-		//				vy = -SIMON_JUMP_DEFLECT_SPEED;
-		//			}
-		//		}
-		//		else if (e->nx != 0)
-		//		{
-		//			if (untouchable == 0)
-		//			{
-		//				if (goomba->GetState() != GOOMBA_STATE_DIE)
-		//				{
-		//						SetState(SIMON_STATE_DIE);
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+		//Collision logic with DOOR
+		for (UINT i = 0; i < coEventsResult.size(); i++)
+		{
+			LPCOLLISIONEVENT e = coEventsResult[i];
+			if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR
+			{
+				DebugOut(L"[DOOR] DOOR NOW OPEN \n ");
+				//xử lý qua màn
+			}
+		}
 	}
 
 	// clean up collision events

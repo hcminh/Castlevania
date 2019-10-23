@@ -202,7 +202,7 @@ void CSimon::Render()
 		whip->setPosition(x - 54 - 24, y - 3, -1); //dat direct gia tri bang -1 de ko danh
 	}
 
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 CSimon *CSimon::GetInstance()
@@ -359,151 +359,20 @@ void CSimon::colisionItem(CItem *item)
 
 void CSimon::LoadResources()
 {
-	CTextures * textures = CTextures::GetInstance();
-
-	textures->Add(ID_TEX_SIMON, L"textures\\full-simon.png", D3DCOLOR_XRGB(255, 0, 255));
-
-	CSprites * sprites = CSprites::GetInstance();
-	CAnimations * animations = CAnimations::GetInstance();
-
-	LPDIRECT3DTEXTURE9 texSimon = textures->Get(ID_TEX_SIMON);
-
-	// big
-	sprites->Add(10001, 900, 0, 900 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// idle right
-
-	sprites->Add(10002, 840, 0, 840 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// walk
-	sprites->Add(10003, 780, 0, 780 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10004, 720, 0, 720 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	sprites->Add(10011, 0, 0, 0 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// idle left
-
-	sprites->Add(10012, 60, 0, 60 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);		// walk
-	sprites->Add(10013, 120, 0, 120 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10014, 180, 0, 180 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-
-	sprites->Add(10099, 215, 120, 215 + SIMON_SPRITE_WIDTH, 120 + SIMON_SPRITE_HEIGHT, texSimon);		// die 
-
-	//// sit
-	sprites->Add(10021, 600, 198 + 18, 600 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit right
-
-	sprites->Add(10031, 300, 198 + 18, 300 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT, texSimon);			// sit left
-
-	////// jump
-	//sprites->Add(10041, 540, 198, 540 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT - 18, texSimon);			// jump right
-
-	//sprites->Add(10051, 360, 198, 360 + SIMON_SPRITE_WIDTH, 198 + SIMON_SPRITE_HEIGHT - 18, texSimon);			// jump left
-
-
-	//// SITTING ATTACK 
-	sprites->Add(10022, 480, 66 + 18, 480 + SIMON_SPRITE_WIDTH, 66 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK right
-	sprites->Add(10023, 900, 132 + 18, 900 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10024, 840, 132 + 18, 840 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	sprites->Add(10032, 420, 66 + 18, 420 + SIMON_SPRITE_WIDTH, 66 + SIMON_SPRITE_HEIGHT, texSimon);			// SIT ATTACK left		
-	sprites->Add(10033, 0, 132 + 18, 0 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10034, 60, 132 + 18, 60 + SIMON_SPRITE_WIDTH, 132 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	//// ATTACK
-	sprites->Add(10061, 300, 0, 300 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK right
-	sprites->Add(10062, 360, 0, 360 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10063, 420, 0, 420 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	sprites->Add(10064, 600, 0, 600 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);			// ATTACK left		
-	sprites->Add(10065, 540, 0, 540 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-	sprites->Add(10066, 480, 0, 480 + SIMON_SPRITE_WIDTH, 0 + SIMON_SPRITE_HEIGHT, texSimon);
-
-	LPANIMATION ani;
-
-	ani = new CAnimation(100);	// idle right
-	ani->Add(10001);
-	animations->Add(400, ani);
-
-	ani = new CAnimation(100);	// idle left
-	ani->Add(10011);
-	animations->Add(401, ani);
-
-	ani = new CAnimation(100);	// sit right
-	ani->Add(10021);
-	animations->Add(402, ani);
-
-	ani = new CAnimation(100);	// sit left
-	ani->Add(10031);
-	animations->Add(403, ani);
-
-	ani = new CAnimation(100);	// jump right
-	ani->Add(10021);
-	animations->Add(404, ani);
-
-	ani = new CAnimation(100);	// jump left
-	ani->Add(10031);
-	animations->Add(405, ani);
-
-	ani = new CAnimation(100);	// walk right 
-	ani->Add(10001);
-	ani->Add(10002);
-	ani->Add(10003);
-	ani->Add(10004);
-	animations->Add(500, ani);
-
-	ani = new CAnimation(100);	// // walk left 
-	ani->Add(10011);
-	ani->Add(10012);
-	ani->Add(10013);
-	ani->Add(10014);
-	animations->Add(501, ani);
-
-	ani = new CAnimation(100);	// // ATTACK right 
-	ani->Add(10064);
-	ani->Add(10065);
-	ani->Add(10066);
-	ani->Add(10001);
-	animations->Add(502, ani);
-
-	ani = new CAnimation(100);	// // ATTACK left 
-	ani->Add(10061);
-	ani->Add(10062);
-	ani->Add(10063);
-	ani->Add(10011);
-	animations->Add(503, ani);
-
-
-	ani = new CAnimation(100);	// // SIT ATTACK right 
-	ani->Add(10022);
-	ani->Add(10023);
-	ani->Add(10024);
-	ani->Add(10021);
-	animations->Add(504, ani);
-
-	ani = new CAnimation(100);	// // SIT ATTACK left 
-	ani->Add(10032);
-	ani->Add(10033);
-	ani->Add(10034);
-	ani->Add(10031);
-	animations->Add(505, ani);
-
-
-	ani = new CAnimation(100);		// Simon die
-	ani->Add(10099);
-	animations->Add(599, ani);
-
-	AddAnimation(400);		// idle right
-	AddAnimation(401);		// idle left
-
-	AddAnimation(402);		// sit right
-	AddAnimation(403);		// sit left
-
-	AddAnimation(500);		// walk right big
-	AddAnimation(501);		// walk left big
-
-	AddAnimation(404);		// jump right
-	AddAnimation(405);		// jump left
-
-	AddAnimation(599);		// die
-
-	AddAnimation(502);		// ATTACK right
-	AddAnimation(503);		// ATTACK left
-
-	AddAnimation(504);		// SIT ATTACK right
-	AddAnimation(505);		// SIT ATTACK left
+	if (loadedSrc) return;
+	loadedSrc = true;
+	//xếp thứ tự add animation phải trùng với cái define ko là toi
+	AddAnimation(100);		// idle right
+	AddAnimation(101);		// idle left
+	AddAnimation(102);		// sit right
+	AddAnimation(103);		// sit left
+	AddAnimation(104);		// jump right
+	AddAnimation(105);		// jump left
+	AddAnimation(106);		// walk right 
+	AddAnimation(107);		// walk left 
+	AddAnimation(108);		// ATTACK right
+	AddAnimation(109);		// ATTACK left
+	AddAnimation(110);		// SIT ATTACK right
+	AddAnimation(111);		// SIT ATTACK left
+	AddAnimation(112);		// die
 }

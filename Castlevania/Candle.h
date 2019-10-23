@@ -4,7 +4,7 @@
 #include "debug.h"
 #include "Item.h"
 
-#define ID_TEX_CANDLE	35
+#define ID_TEX_CANDLE	3
 
 #define CANDLE_BIG		0
 #define CANDLE_SMALL	1

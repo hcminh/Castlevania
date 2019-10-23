@@ -8,7 +8,7 @@
 //#include "Scenes.h"
 
 // Whip
-#define ID_TEX_WHIP		5
+#define ID_TEX_WHIP		1
 
 #define NORMAL_WHIP		0
 #define SHORT_CHAIN		1

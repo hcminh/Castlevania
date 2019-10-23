@@ -16,32 +16,15 @@
 #include "Candle.h"
 #include "Item.h"
 #include "Ground.h"
-
+#include "define.h"
 #include "tilemap.h"
 
-#define WINDOW_CLASS_NAME L"SampleWindow"
-#define MAIN_WINDOW_TITLE L"Castlevania"
-
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
-
-#define MAX_FRAME_RATE 120
-
-#define ID_TEX_SIMON	0
-#define ID_TEX_WHIP		5
-#define ID_TEX_ENEMY	20
-#define ID_TEX_MISC		30
-#define ID_TEX_CANDLE	35
-#define ID_TEX_ITEM		40
-#define ID_TEX_GROUND	45
-
+#include<iostream>
+#include<fstream>
+#include<vector>
+using namespace std;
 
 CGame *game;
-CScenes *scenes;
-
-CCandle *candle;
-//CItem *item;
-
-CMaps * cmaps = CMaps::GetInstance();
 
 class CSampleKeyHander : public CKeyEventHandler
 {
@@ -126,99 +109,147 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void LoadResources()
+wchar_t* ConvertToWideChar(char* p) // hàm này covert string sang wchar_t*, coppy trên mạng
+{
+	wchar_t *r;
+	r = new wchar_t[strlen(p) + 1];
+
+	char *tempsour = p;
+	wchar_t *tempdest = r;
+	while (*tempdest++ = *tempsour++);
+
+	return r;
+}
+
+void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
 {
 	CTextures * textures = CTextures::GetInstance();
 	CSprites * sprites = CSprites::GetInstance();
-	CAnimations * animations = CAnimations::GetInstance();
-
-	textures->Add(ID_TEX_BBOX, L"textures\\bbox.png", D3DCOLOR_XRGB(255, 255, 255));
-	cmaps->Add(SCENE_1, L"textures\\scene1.png", L"textures\\scene1_map.txt");
-	LPDIRECT3DTEXTURE9 texMisc = textures->Get(ID_TEX_MISC);
-	sprites->Add(20001, 408, 225, 424, 241, texMisc);
-
-
-	LPANIMATION ani;
-
-	////////////////////////// Item ///////////////////////////
-	textures->Add(ID_TEX_ITEM, L"textures\\Items.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texItem = textures->Get(ID_TEX_ITEM);
-	sprites->Add(60000, 16, 0, 40, 20, texItem);	// big heart
-	sprites->Add(60001, 0, 0, 16, 16, texItem);	// small heart
-	sprites->Add(60002, 130, 0, 162, 32, texItem);	// whip
-	sprites->Add(60003, 162, 0, 194, 18, texItem);	// knife
-
-	ani = new CAnimation(100);	// big heart
-	ani->Add(60000);
-	animations->Add(900, ani);
-
-	ani = new CAnimation(100);	// small heart
-	ani->Add(60001);
-	animations->Add(901, ani);
-
-	ani = new CAnimation(100);	// whip
-	ani->Add(60002);
-	animations->Add(902, ani);
-
-	ani = new CAnimation(100);	// knife
-	ani->Add(60003);
-	animations->Add(903, ani);
-
-	////////////////////////// Item ///////////////////////////
-
-	//////////////////////////  Weapon  ///////////////////////////
-
-	textures->Add(ID_TEX_SUB_WEAPON, L"textures\\weapons-full.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texWeapon = textures->Get(ID_TEX_SUB_WEAPON);
-	// knife
-	sprites->Add(40020, 204, 32, 238, 50, texWeapon);		// right
-	sprites->Add(40021, 204, 0, 238, 18, texWeapon);		// left
-
-	//knife
-	ani = new CAnimation(100);	// right 
-	ani->Add(40020);
-	animations->Add(806, ani);
-
-	ani = new CAnimation(100);	// left 
-	ani->Add(40021);
-	animations->Add(807, ani);
-	//////////////////////////  Weapon  ///////////////////////////
-
-	//simon
-	scenes->pushObject(CSimon::GetInstance());
-
-	//////////////////////////  GROUND  ///////////////////////////
-	textures->Add(ID_TEX_GROUND, L"textures\\scene1.png", D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 texGround = textures->Get(ID_TEX_GROUND);
-	sprites->Add(20001, 320, 96, 320 + 32, 96 + 32, texGround);		// GROUND
-	ani = new CAnimation(100);		// brick
-	ani->Add(20001);
-	animations->Add(601, ani);
-	for (int i = 0; i < 48; i++)
+	textures->Add(idTex, ConvertToWideChar((char*)filepathtotex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
+	LPDIRECT3DTEXTURE9 tex = textures->Get(idTex);
+	fstream fs;
+	fs.open(filepathtosprite, ios::in);
+	if (fs.fail())
 	{
-		CGround *ground = new CGround();
-		ground->SetPosition(i * 32.0f, SCREEN_HEIGHT - 114);
-		scenes->pushObject(ground);
+		DebugOut(L"[ERROR] Load file sprite lỗi");
+		fs.close();
 	}
-	//////////////////////////  GROUND  ///////////////////////////
+	string line;
+	while (!fs.eof())
+	{
+		getline(fs, line);
+		stringstream ss(line);
+		int sprite, left, top, right, bottom;
+		while (ss >> sprite >> left >> top >> right >> bottom)
+		{
+			sprites->Add(sprite, left, top, right, bottom, tex);
+		}
+	}
+	fs.close();
+}
 
+void loadAnimations(string filepath, int idTex = 0) {
+	CAnimations * animations = CAnimations::GetInstance();
+	LPANIMATION ani;
+	fstream fs;
+	fs.open(filepath, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load file animation lỗi");
+		fs.close();
+	}
+	string line;
+	while (!fs.eof())
+	{
+		getline(fs, line);
+		stringstream ss(line);
+		int id;
+		int sprite1 = -1, sprite2 = -1, sprite3 = -1, sprite4 = -1;
+		while (ss >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4)
+		{
+			ani = new CAnimation(100);
+			if (sprite1 > -1)ani->Add(sprite1);
+			if (sprite2 > -1)ani->Add(sprite2);
+			if (sprite3 > -1)ani->Add(sprite3);
+			if (sprite4 > -1)ani->Add(sprite4);
+			animations->Add(id, ani);
+		}
+		sprite1 = -1;
+		sprite2 = -1;
+		sprite3 = -1;
+		sprite4 = -1;
+	}
+	fs.close();
 
-	//candle 1
-	candle = new CCandle(160.0, 304.0, ItemType::BIG_HEART);
-	scenes->pushObject(candle);
-	//candle 2
-	candle = new CCandle(448.0, 304.0, ItemType::WHIP);
-	scenes->pushObject(candle);
-	//candle 3
-	candle = new CCandle(672.0, 304.0, ItemType::WHIP);
-	scenes->pushObject(candle);
-	//candle 4
-	candle = new CCandle(960.0, 304.0, ItemType::BIG_HEART);
-	scenes->pushObject(candle);
-	//candle 5
-	candle = new CCandle(1216.0, 304.0, ItemType::KNIFE);
-	scenes->pushObject(candle);
+}
 
+void loadObject(string filepath) {
+	fstream fs;
+	fs.open(filepath, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load file obecject lỗi");
+		fs.close();
+	}
+	int id;
+	int item;
+	float x, y;
+	while (!fs.eof())
+	{
+		fs >> id >> x >> y >> item;
+		switch (id)
+		{
+		case ID_CANDLE:
+		{
+			CCandle *candle = new CCandle(x, y, ItemType(item));
+			CScenes::GetInstance()->pushObject(candle);
+			break;
+		}
+		case ID_GROUND:
+		{
+			CGround *ground = new CGround(x, y);
+			CScenes::GetInstance()->pushObject(ground);
+			break;
+		}
+		}
+	}
+	fs.close();
+}
+
+void LoadResources()
+{
+	fstream fs;
+	fs.open("textures\\index.txt", ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load file sprite lỗi");
+		fs.close();
+	}
+	while (!fs.eof())
+	{
+		int id;
+		string tex, sprite, animation;
+		fs >> id >> tex >> sprite >> animation;
+		if (id == ID_TEX_BBOX) {
+			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)tex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
+		}
+		else if (id == SCENE_1)
+		{
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id);
+		}
+		else if (id == OBJECT_SCENE_1)
+		{
+			loadObject(sprite);
+		}
+		else 
+		{
+			loadSprites(sprite, tex, id);
+			loadAnimations(animation);
+		}
+	}
+	fs.close();
+	//simon
+	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
 }
 
 void Update(DWORD dt)
@@ -226,7 +257,7 @@ void Update(DWORD dt)
 	Update world status for this frame
 	dt: time period between beginning of last frame and beginning of this frame
 */
-	scenes->Update(dt);
+	CScenes::GetInstance()->Update(dt);
 }
 
 void Render()
@@ -242,7 +273,7 @@ void Render()
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
-		scenes->Render();
+		CScenes::GetInstance()->Render();
 
 		spriteHandler->End();
 		d3ddv->EndScene();
@@ -348,8 +379,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	keyHandler = new CSampleKeyHander();
 	game->InitKeyboard(keyHandler);
 
-
-	scenes = CScenes::GetInstance();
 	LoadResources();
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);

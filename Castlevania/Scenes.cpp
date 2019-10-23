@@ -36,9 +36,14 @@ void CScenes::Render()
 	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
 
-void CScenes::pushObject(LPGAMEOBJECT objects)
+void CScenes::pushObject(LPGAMEOBJECT object)
 {
-	this->objects.push_back(objects);
+	this->objects.push_back(object);
+}
+
+void CScenes::insertObject(LPGAMEOBJECT object)
+{
+	this->objects.insert(objects.begin(), object);
 }
 
 void CScenes::putItem(ItemType type, float x, float y)

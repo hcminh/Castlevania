@@ -8,7 +8,7 @@
 //#include "Scenes.h"
 
 // ID
-#define ID_TEX_SUB_WEAPON		50
+#define ID_TEX_WEAPON			2
 
 #define KNIFE_BBOX_WIDTH		55
 #define KNIFE_BBOX_HEIGHT		20

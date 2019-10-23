@@ -66,7 +66,7 @@ class CMaps
 	unordered_map<int, LPTILEMAP> tilemaps;
 
 public:
-	void Add(int ID, LPCWSTR filePath_tex, LPCWSTR filePath_data);
+	void Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID);
 	LPTILEMAP Get(int ID) { return tilemaps[ID]; }
 
 	static CMaps * GetInstance();

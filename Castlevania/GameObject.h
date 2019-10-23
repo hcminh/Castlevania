@@ -17,7 +17,8 @@ enum ObjectType
 	BRICK,
 	ITEM,
 	WEAPON,
-	GROUND
+	GROUND,
+	DOOR
 };
 
 enum ItemType

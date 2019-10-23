@@ -10,15 +10,13 @@ CWeapon::CWeapon() : CGameObject()
 {
 	type = ObjectType::WEAPON;
 	isFlying = false;
+	LoadResources();
 }
 
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isFlying) return;
-	if(direct == 0)
-		vx = KNIFE_FLYING_SPEED;
-	else if (direct == 1)
-		vx = -KNIFE_FLYING_SPEED;
+	vx = KNIFE_FLYING_SPEED * nx;
 	CGameObject::Update(dt, coObjects);
 
 	x += dx;
@@ -30,43 +28,41 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	for (UINT i = 0; i < coObjects->size(); i++)
+	{
+		if (coObjects->at(i)->type == ObjectType::BRICK) continue;
+		float top, left, bottom, right;
+		coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
+		if (isCollision(left, top, right, bottom))
 		{
-			if (coObjects->at(i)->type == ObjectType::BRICK) continue;
-			float top, left, bottom, right;
-			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
-			if (isCollision(left, top, right, bottom))
+			if (coObjects->at(i)->type == ObjectType::CANDLE);
 			{
-				if (coObjects->at(i)->type == ObjectType::CANDLE);
-				{
-					coObjects->at(i)->SetState(CANDLE_DESTROYED);
-					//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
-				}
-
-				isFlying = false;
+				coObjects->at(i)->SetState(CANDLE_DESTROYED);
+				//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
 			}
+
+			isFlying = false;
 		}
+	}
 }
 
 void CWeapon::Render()
 {
 	if (!isFlying) return;
-	if (direct < 0) return;
-	int ani = direct; // level bang gia tri cua loai roi, direct = -1 -> ko danh, direct = 0 danh phai, direct = 1 danh trai
+	int ani = ((nx > 0) ? 0 : 1);
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 
 void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
-		left = x;
-		top = y + 10;
-		right = left + KNIFE_BBOX_WIDTH;
-		bottom = top + KNIFE_BBOX_HEIGHT;
+	left = x;
+	top = y + 10;
+	right = left + KNIFE_BBOX_WIDTH;
+	bottom = top + KNIFE_BBOX_HEIGHT;
 }
 
-void CWeapon::setPosition(float x, float y, int direct)
+void CWeapon::setPosition(float x, float y)
 {
-	this->direct = direct;
 	this->x = x;
 	this->y = y;
 }

@@ -1,13 +1,12 @@
 ﻿#pragma once
 #include "GameObject.h"
-#include "Textures.h"
 #include "Whip.h"
 #include "Item.h"
 #include "Weapon.h"
 
 #define ID_TEX_SIMON 0
 
-#define SIMON_WALKING_SPEED		0.1f 
+#define SIMON_WALKING_SPEED		0.15f 
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -69,19 +68,18 @@ public:
 	//biến để kiểm tra Simon đang làm việc khác
 	bool isJumping = false;
 	bool isAttacking = false;
-	bool isAttackWithSub = false;
+	bool isUseSubWeapon = false;
 	bool isSitting = false;
 	bool isMoving = false;
 	bool unTouch = false;
 
 	CWhip *whip;
-	//vector<CWeapon*> subWeapon;
 	CWeapon *subWeapon = NULL;
 
 	CSimon() : CGameObject()
 	{
 		LoadResources();
-		SetPosition(0, 50.0f);
+		SetPosition(0, 200.0f);
 		whip = new CWhip();
 		whip->LoadResources();
 	}

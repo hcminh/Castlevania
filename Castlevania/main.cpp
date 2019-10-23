@@ -49,6 +49,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->SetSpeed(0, 0);
 		break;
 	case DIK_A: // ATTACK
+		CSimon::GetInstance()->isUseSubWeapon = false;
 		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
 	case DIK_Q:
@@ -58,12 +59,9 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->whip->levelDown();
 		break;
 	case DIK_Z: //sub attack
-		if (CSimon::GetInstance()->subWeapon != NULL && CSimon::GetInstance()->subWeapon->isFlying) {
-			CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
-			return;
-		}
-
-		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK_WITH_SUB);
+		if (CSimon::GetInstance()->subWeapon == NULL || CSimon::GetInstance()->subWeapon->isFlying) return;
+		CSimon::GetInstance()->isUseSubWeapon = true;
+		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
 	}
 }
@@ -71,12 +69,6 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 void CSampleKeyHander::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-	switch (KeyCode)
-	{
-	case DIK_DOWN:
-		CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
-		break;
-	}
 }
 
 void CSampleKeyHander::KeyState(BYTE *states)
@@ -93,7 +85,10 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	else if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
 	else
+	{
+		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
 		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+	}
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

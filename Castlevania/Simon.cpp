@@ -4,10 +4,14 @@
 #include "Simon.h"
 #include "Game.h"
 #include <math.h>
-//#include "Goomba.h"
 
 
 CSimon * CSimon::__instance = NULL;
+CSimon *CSimon::GetInstance()
+{
+	if (__instance == NULL) __instance = new CSimon();
+	return __instance;
+}
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
@@ -15,13 +19,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	accuTime += dt;
 	if (unTouch && accuTime <= SIMON_UP_LEVEL_TIME) {
 		return;
-	} 
+	}
 	unTouch = false;
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	whip->Update(dt, coObjects);
-	if(subWeapon != NULL) subWeapon->Update(dt, coObjects);
+	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// Simple fall down
 	vy += SIMON_GRAVITY * dt;
 	vector<LPCOLLISIONEVENT> coEvents;
@@ -99,122 +103,72 @@ void CSimon::Render()
 {
 	int ani;
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
-	if (state == SIMON_STATE_DIE)
-	{
-		ani = SIMON_ANI_DIE;
-	}
+	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
 	else if (unTouch) {
 		if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
 		else ani = SIMON_ANI_IDLE_LEFT;
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
 	}
-	else if (isAttacking && isJumping)
+	else if (isAttacking && isSitting)
 	{
-		if (nx > 0) {
-			ani = SIMON_ANI_ATTACK_RIGHT;
-			whip->setPosition(x - 24, y - 3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
-		}
-		else
-		{
-			ani = SIMON_ANI_ATTACK_LEFT;
-			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
-		}
+		if (nx > 0) ani = SIMON_ANI_SIT_ATTACK_RIGHT;
+		else ani = SIMON_ANI_SIT_ATTACK_LEFT;
+	}
+	else if (isAttacking)
+	{
+		if (nx > 0) ani = SIMON_ANI_ATTACK_RIGHT;
+		else ani = SIMON_ANI_ATTACK_LEFT;
 	}
 	else if (isJumping)
 	{
 		if (nx > 0) ani = SIMON_ANI_JUMP_RIGHT;
 		else ani = SIMON_ANI_JUMP_LEFT;
 	}
-	else if (isAttacking && isSitting)
-	{
-		if (nx > 0) {
-			ani = SIMON_ANI_SIT_ATTACK_RIGHT;
-			whip->setPosition(x - 24, y -3, 0);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
-		}
-		else
-		{
-			ani = SIMON_ANI_SIT_ATTACK_LEFT;
-			whip->setPosition(x - 54 - 24, y - 3, 1); //khi nao ngoi xuong thi y - 3 vi xuong bi hut px
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
-		}
-	}
-	else if (isAttackWithSub)
-	{
-		if (nx > 0) {
-			ani = SIMON_ANI_ATTACK_RIGHT;
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 0);
-		} 
-		else
-		{
-			ani = SIMON_ANI_ATTACK_LEFT;
-			if (subWeapon != NULL) subWeapon->setPosition(x, y, 1);
-		}
-	}
-	else if (isAttacking)
-	{
-		if (nx > 0) {
-			ani = SIMON_ANI_ATTACK_RIGHT;
-			whip->setPosition(x - 24, y, 0); //direct = 0 khi danh ben phai
-		}
-		else
-		{
-			ani = SIMON_ANI_ATTACK_LEFT;
-			whip->setPosition(x - 54 - 24, y, 1);
-		}
-	}
 	else if (isSitting)
 	{
 		if (nx > 0) ani = SIMON_ANI_SIT_RIGHT;
 		else ani = SIMON_ANI_SIT_LEFT;
 	}
-	else 
+	else
 	{
-			if (vx == 0)
-			{
-				if (state == SIMON_STATE_SIT) {
-					if (nx > 0) ani = SIMON_ANI_SIT_RIGHT;
-					else ani = SIMON_ANI_SIT_LEFT;
-			}
-				else
-				{
-					if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
-					else ani = SIMON_ANI_IDLE_LEFT;
-				}
-			}
-			else if (vx > 0)
-				ani = SIMON_ANI_WALKING_RIGHT;
-			else ani = SIMON_ANI_WALKING_LEFT;
+		if (vx == 0)
+		{
+			if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
+			else ani = SIMON_ANI_IDLE_LEFT;
+		}
+		else if (vx > 0)
+			ani = SIMON_ANI_WALKING_RIGHT;
+		else ani = SIMON_ANI_WALKING_LEFT;
 	}
 
 	animations[ani]->Render(x, y, color);
 
-	if (subWeapon != NULL) subWeapon->Render();
-	whip->Render();
 
+	//xử lý render sau khi đã bấm nút
+	if (subWeapon != NULL) subWeapon->Render();
+
+	//xử lý render vũ khí khi vừa bấm nút
+	if (isAttacking)
+	{
+		if (subWeapon != NULL && isUseSubWeapon)
+		{
+			subWeapon->isFlying = true;
+			subWeapon->Render();
+		}
+		else if(!isUseSubWeapon) whip->Render();
+	}
+	//nếu là frame đánh cuói cùng thì tắt isAttacking
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
 	{
-		if (subWeapon != NULL) subWeapon->isFlying = true;
 		isAttacking = false;
-		isAttackWithSub = false;
-		whip->setPosition(x - 54 - 24, y - 3, -1); //dat direct gia tri bang -1 de ko danh
 	}
-
 	//RenderBoundingBox();
-}
-
-CSimon *CSimon::GetInstance()
-{
-	if (__instance == NULL) __instance = new CSimon();
-	return __instance;
 }
 
 void CSimon::SetState(int state)
 {
 	CGameObject::SetState(state);
-	//if (isAttacking) return;
+	if (isAttacking) return;
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
@@ -246,15 +200,21 @@ void CSimon::SetState(int state)
 
 	case SIMON_STATE_ATTACK:
 		if (isAttacking)return;
+		vx = 0;
 		isAttacking = true;
-		break;
-	case SIMON_STATE_ATTACK_WITH_SUB:
-		if (isAttacking && isAttackWithSub) return;
-		isAttackWithSub = true;
-		isAttacking = true;
+		if (isUseSubWeapon)
+		{
+			subWeapon->isFlying = true;
+			subWeapon->nx = nx;
+			subWeapon->setPosition(x, y);
+		}
+		else {
+			whip->nx = nx;
+			if (nx > 0) whip->setPosition(x - 24, y - 2);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+			else whip->setPosition(x - 54 - 24, y - 2); // trừ y đi 2 vì sai số giữa 2 cái sprite
+		}
 		break;
 	case SIMON_STATE_IDLE:
-		//unTouch = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:
@@ -300,7 +260,7 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		{
 			left = x + 13;
 			top = y;
-			right = x + SIMON_BBOX_WIDTH -16;
+			right = x + SIMON_BBOX_WIDTH - 16;
 			bottom = top + SIMON_SIT_BBOX_HEIGHT;
 		}
 		/*else if (isJumping)
@@ -318,7 +278,7 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 			bottom = top + SIMON_BBOX_HEIGHT;
 		}
 	}
-	
+
 }
 
 bool CSimon::isColisionItem(CItem *item)
@@ -350,7 +310,6 @@ void CSimon::colisionItem(CItem *item)
 		break;
 	case ItemType::KNIFE:
 		subWeapon = new CWeapon();
-		subWeapon->LoadResources();
 		break;
 	default:
 		break;

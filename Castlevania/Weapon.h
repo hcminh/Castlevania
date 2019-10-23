@@ -27,7 +27,6 @@ enum WeaponType {
 
 class CWeapon : public CGameObject
 {
-	int direct = -1; //derect = 0 simon quay phai, direct = 1 simon quay trai
 	int ani;
 public:
 	bool isFlying = false;
@@ -38,7 +37,7 @@ public:
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 
-	void setPosition(float x, float y, int direct);
+	void setPosition(float x, float y);
 	bool isCollision(float obj_left, float obj_top, float obj_right, float obj_bottom);
 	void LoadResources();
 };

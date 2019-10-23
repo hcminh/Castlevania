@@ -14,15 +14,24 @@ CSimon *CSimon::GetInstance()
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-
+	//upgrade whip level
 	accuTime += dt;
-	if (unTouch && accuTime <= SIMON_UP_LEVEL_TIME) {
+	if (levelUpgrade && accuTime <= SIMON_UP_LEVEL_TIME) {
 		return;
 	}
-	unTouch = false;
+	levelUpgrade = false;
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
+
+	//go to X, when touch door
+	if (isAutoGoX && (x > destinationX + 5 || x < destinationX - 5))
+	{
+		x += dx;
+		return;
+	}
+	isAutoGoX = false;
+
 	whip->Update(dt, coObjects);
 	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// Simple fall down
@@ -59,7 +68,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		//if (nx != 0) vx = 0;
+		if (nx != 0) vx = 0;
 		if (ny != 0) {
 			vy = 0;
 			isJumping = false;
@@ -70,12 +79,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			LPCOLLISIONEVENT e = coEventsResult[i];
 			if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR
 			{
+				autoGotoX(1385.0);
 				DebugOut(L"[DOOR] DOOR NOW OPEN \n ");
 				//xử lý qua màn
 			}
 		}
 	}
-
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -85,7 +94,7 @@ void CSimon::Render()
 	int ani;
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
-	else if (unTouch) {
+	else if (levelUpgrade) {
 		if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
 		else ani = SIMON_ANI_IDLE_LEFT;
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
@@ -136,7 +145,7 @@ void CSimon::Render()
 			subWeapon->isFlying = true;
 			subWeapon->Render();
 		}
-		else if(!isUseSubWeapon) whip->Render();
+		else if (!isUseSubWeapon) whip->Render();
 	}
 	//nếu là frame đánh cuói cùng thì tắt isAttacking
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
@@ -149,7 +158,7 @@ void CSimon::Render()
 void CSimon::SetState(int state)
 {
 	CGameObject::SetState(state);
-	if (isAttacking) return;
+	if (isAttacking || isAutoGoX) return;
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
@@ -179,20 +188,12 @@ void CSimon::SetState(int state)
 		vy = -SIMON_JUMP_SPEED_Y;
 		break;
 	case SIMON_STATE_ATTACK:
-		if (isAttacking)return;
-		if(!isJumping) vx = 0;
-		isAttacking = true;
-		if (isUseSubWeapon)
-		{
-			subWeapon->isFlying = true;
-			subWeapon->nx = nx;
-			subWeapon->setPosition(x, y);
-		}
-		else {
-			whip->nx = nx;
-			if (nx > 0) whip->setPosition(x - 24, y - 2);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
-			else whip->setPosition(x - 54 - 24, y - 2); // trừ y đi 2 vì sai số giữa 2 cái sprite
-		}
+		if (CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && subWeapon->isFlying) return;
+		else if(CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && !subWeapon->isFlying)
+			isUseSubWeapon = true;
+		else isUseSubWeapon = false;
+		if (!isJumping) vx = 0;
+		attack();
 		break;
 	case SIMON_STATE_IDLE:
 		vx = 0;
@@ -201,10 +202,14 @@ void CSimon::SetState(int state)
 		vy = -SIMON_DIE_DEFLECT_SPEED;
 		break;
 	case SIMON_STATE_LEVEL_UP:
-		if (unTouch) return;
+		if (levelUpgrade) return;
 		whip->levelUp();
-		unTouch = true;
+		levelUpgrade = true;
 		accuTime = 0;
+		break;
+	case SIMON_STATE_AUTO_GO:
+		if (isAutoGoX) return;
+		autoGotoX(1385.0);
 		break;
 	}
 }
@@ -293,6 +298,31 @@ void CSimon::colisionItem(CItem *item)
 		break;
 	default:
 		break;
+	}
+}
+
+void CSimon::autoGotoX(float x)
+{
+	destinationX = x;
+	isAutoGoX = true;
+	accuTime = 0;
+	nx = (destinationX - this->x > 0) ? 1 : -1;
+	vx = SIMON_AUTO_GO_SPEED * nx;
+}
+
+void CSimon::attack()
+{
+	isAttacking = true;
+	if (isUseSubWeapon)
+	{
+		subWeapon->isFlying = true;
+		subWeapon->nx = nx;
+		subWeapon->setPosition(x, y);
+	}
+	else {
+		whip->nx = nx;
+		if (nx > 0) whip->setPosition(x - 24, y - 2);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
+		else whip->setPosition(x - 54 - 24, y - 2); // trừ y đi 2 vì sai số giữa 2 cái sprite
 	}
 }
 

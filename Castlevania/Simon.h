@@ -6,7 +6,8 @@
 
 #define ID_TEX_SIMON 0
 
-#define SIMON_WALKING_SPEED		0.4f	//0.15f 
+#define SIMON_WALKING_SPEED		0.15f 	
+#define SIMON_AUTO_GO_SPEED		0.02f
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -21,6 +22,7 @@
 #define SIMON_STATE_ATTACK				600
 #define SIMON_STATE_ATTACK_WITH_SUB		700
 #define SIMON_STATE_LEVEL_UP			800
+#define SIMON_STATE_AUTO_GO				900
 
 #define SIMON_ANI_IDLE_RIGHT			0
 #define SIMON_ANI_IDLE_LEFT				1
@@ -62,7 +64,7 @@ class CSimon : public CGameObject
 
 	DWORD accuTime = 0; //thời gian tích lũy được
 	DWORD untouchable_start;
-
+	float destinationX;
 
 public:
 	//biến để kiểm tra Simon đang làm việc khác
@@ -71,7 +73,8 @@ public:
 	bool isUseSubWeapon = false;
 	bool isSitting = false;
 	bool isMoving = false;
-	bool unTouch = false;
+	bool levelUpgrade = false;
+	bool isAutoGoX = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -79,7 +82,7 @@ public:
 	CSimon() : CGameObject()
 	{
 		LoadResources();
-		SetPosition(0, 200.0f);
+		SetPosition(0, 300.0f);
 		whip = new CWhip();
 		whip->LoadResources();
 	}
@@ -92,6 +95,7 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	bool isColisionItem(CItem *item);
 	void colisionItem(CItem *item);
-	//void isColisionWithDoor();
+	void autoGotoX(float x);
+	void attack();
 	void LoadResources();
 };

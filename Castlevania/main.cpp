@@ -50,7 +50,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->SetSpeed(0, 0);
 		break;
 	case DIK_A: // ATTACK
-		CSimon::GetInstance()->isUseSubWeapon = false;
+		//if (CSimon::GetInstance()->subWeapon == NULL || CSimon::GetInstance()->subWeapon->isFlying) return;
 		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
 	//case DIK_DOWN: // sit
@@ -62,10 +62,8 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_W:
 		CSimon::GetInstance()->whip->levelDown();
 		break;
-	case DIK_Z: //sub attack
-		if (CSimon::GetInstance()->subWeapon == NULL || CSimon::GetInstance()->subWeapon->isFlying) return;
-		CSimon::GetInstance()->isUseSubWeapon = true;
-		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
+	case DIK_X: //auto go X
+		CSimon::GetInstance()->SetState(SIMON_STATE_AUTO_GO);
 		break;
 	}
 }
@@ -81,6 +79,7 @@ void CSampleKeyHander::KeyState(BYTE *states)
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
 	//disable when jump
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_JUMP && CSimon::GetInstance()->isJumping) return;
+	if (CSimon::GetInstance()->isAutoGoX) return;
 
 	if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);

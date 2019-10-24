@@ -3,7 +3,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 
-#define DIRECTINPUT_VERSION 0x0800
+#define directinput_version 0x0800
 #include <dinput.h>
 
 #define KEYBOARD_BUFFER_SIZE 1024

@@ -75,7 +75,7 @@ void CGameObject::CalcPotentialCollisions(
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		if (!coObjects->at(i)->isEnable) continue;
-		if (coObjects->at(i)->type == ObjectType::CANDLE) continue;
+		//if (coObjects->at(i)->type == ObjectType::CANDLE) continue;
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 		if (e->t > 0 && e->t <= 1.0f)

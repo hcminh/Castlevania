@@ -50,12 +50,8 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->SetSpeed(0, 0);
 		break;
 	case DIK_A: // ATTACK
-		//if (CSimon::GetInstance()->subWeapon == NULL || CSimon::GetInstance()->subWeapon->isFlying) return;
 		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
-	//case DIK_DOWN: // sit
-	//	CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
-	//	break;
 	case DIK_Q:
 		CSimon::GetInstance()->whip->levelUp();
 		break;
@@ -75,9 +71,7 @@ void CSampleKeyHander::OnKeyUp(int KeyCode)
 
 void CSampleKeyHander::KeyState(BYTE *states)
 {
-	// disable control key when Simon die 
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
-	//disable when jump
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_JUMP && CSimon::GetInstance()->isJumping) return;
 	if (CSimon::GetInstance()->isAutoGoX) return;
 
@@ -132,16 +126,11 @@ void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
 		DebugOut(L"[ERROR] Load file sprite lỗi");
 		fs.close();
 	}
-	string line;
 	while (!fs.eof())
 	{
-		getline(fs, line);
-		stringstream ss(line);
 		int sprite, left, top, right, bottom;
-		while (ss >> sprite >> left >> top >> right >> bottom)
-		{
-			sprites->Add(sprite, left, top, right, bottom, tex);
-		}
+		fs >> sprite >> left >> top >> right >> bottom;
+		sprites->Add(sprite, left, top, right, bottom, tex);
 	}
 	fs.close();
 }
@@ -156,29 +145,19 @@ void loadAnimations(string filepath, int idTex = 0) {
 		DebugOut(L"[ERROR] Load file animation lỗi");
 		fs.close();
 	}
-	string line;
 	while (!fs.eof())
 	{
-		getline(fs, line);
-		stringstream ss(line);
 		int id;
 		int sprite1 = -1, sprite2 = -1, sprite3 = -1, sprite4 = -1;
-		while (ss >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4)
-		{
-			ani = new CAnimation(100);
-			if (sprite1 > -1)ani->Add(sprite1);
-			if (sprite2 > -1)ani->Add(sprite2);
-			if (sprite3 > -1)ani->Add(sprite3);
-			if (sprite4 > -1)ani->Add(sprite4);
-			animations->Add(id, ani);
-		}
-		sprite1 = -1;
-		sprite2 = -1;
-		sprite3 = -1;
-		sprite4 = -1;
+		fs >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4;
+		ani = new CAnimation(100);
+		if (sprite1 > -1)ani->Add(sprite1);
+		if (sprite2 > -1)ani->Add(sprite2);
+		if (sprite3 > -1)ani->Add(sprite3);
+		if (sprite4 > -1)ani->Add(sprite4);
+		animations->Add(id, ani);
 	}
 	fs.close();
-
 }
 
 void loadObject(string filepath) {
@@ -245,14 +224,14 @@ void LoadResources()
 		{
 			loadObject(sprite);
 		}
-		else 
+		else
 		{
 			loadSprites(sprite, tex, id);
 			loadAnimations(animation);
 		}
 	}
 	fs.close();
-	//simon
+	//nhét con simon vào đầu mảng cho dễ xử lý 
 	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
 }
 

@@ -40,7 +40,7 @@ void CWhip::Render()
 	if (level == LEVEL_MAX)
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 200, rand() % 255 + 200, rand() % 255 + 200);
 	animations[ani]->Render(x, y, color);
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bottom)

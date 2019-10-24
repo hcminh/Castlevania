@@ -65,7 +65,7 @@ class CSimon : public CGameObject
 	DWORD accuTime = 0; //thời gian tích lũy được
 	DWORD untouchable_start;
 	float destinationX;
-
+	int ani;
 public:
 	//biến để kiểm tra Simon đang làm việc khác
 	bool isJumping = false;

@@ -26,7 +26,7 @@ enum ItemType
 	BIG_HEART,
 	SMALL_HEART,
 	WHIP,
-	KNIFE
+	KNIFE,
 };
 
 class CGameObject; 

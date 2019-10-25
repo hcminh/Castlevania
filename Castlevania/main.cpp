@@ -13,7 +13,7 @@
 #include "Brick.h"
 #include "Goomba.h"
 #include "Whip.h"
-#include "Candle.h"
+//#include "Candle.h"
 #include "Item.h"
 #include "Ground.h"
 #include "define.h"
@@ -176,10 +176,11 @@ void loadObject(string filepath) {
 		fs >> id >> x >> y >> item;
 		switch (id)
 		{
-		case ID_CANDLE:
+		case ID_ITEM:
 		{
-			CCandle *candle = new CCandle(x, y, ItemType(item));
-			CScenes::GetInstance()->pushObject(candle);
+			CItem *cItem = new CItem(ItemType(item), ItemState::STATE_BIG_CANDLE);
+			cItem->SetPosition(x, y);
+			CScenes::GetInstance()->pushObject(cItem);
 			break;
 		}
 		case ID_GROUND:

@@ -74,9 +74,6 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files\item</Filter>
     </ClInclude>
-    <ClInclude Include="Candle.h">
-      <Filter>Header Files\item</Filter>
-    </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Header Files\weapon</Filter>
     </ClInclude>
@@ -128,9 +125,6 @@
       <Filter>Source Files\framework</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
-      <Filter>Source Files\item</Filter>
-    </ClCompile>
-    <ClCompile Include="Candle.cpp">
       <Filter>Source Files\item</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">

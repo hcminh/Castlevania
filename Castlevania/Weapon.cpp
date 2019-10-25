@@ -34,10 +34,9 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 		if (isCollision(left, top, right, bottom))
 		{
-			if (coObjects->at(i)->type == ObjectType::CANDLE);
+			if (coObjects->at(i)->type == ObjectType::ITEM);
 			{
-				coObjects->at(i)->SetState(CANDLE_DESTROYED);
-				//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
+				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 			}
 
 			isFlying = false;

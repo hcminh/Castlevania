@@ -21,9 +21,9 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 			if (isCollision(left, top, right, bottom))
 			{
-				if (coObjects->at(i)->type == ObjectType::CANDLE);
+				if (coObjects->at(i)->type == ObjectType::ITEM);
 				{
-					coObjects->at(i)->SetState(CANDLE_DESTROYED);
+					coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 					//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
 				}
 			}

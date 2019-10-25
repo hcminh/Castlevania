@@ -4,7 +4,6 @@
 #include "debug.h"
 
 #include "Game.h"
-#include "Candle.h"
 //#include "Scenes.h"
 
 // Whip

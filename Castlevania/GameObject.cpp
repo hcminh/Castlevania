@@ -13,6 +13,7 @@ CGameObject::CGameObject()
 	x = y = 0;
 	vx = vy = 0;
 	nx = 1;	
+	isEnable = false;
 }
 
 void CGameObject::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
@@ -70,12 +71,12 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 */
 void CGameObject::CalcPotentialCollisions( vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents)
 {
-	for (UINT i = 0; i < coObjects->size(); i++)
-	{
-		if (!coObjects->at(i)->isEnable) continue;
-		if (coObjects->at(i)->type == ObjectType::ITEM) continue;
-		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
+	coEvents.clear();
+	UINT coObjectSize = coObjects->size();
+	for (UINT i = 0; i < coObjectSize; i++)
+	{
+		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 		if (e->t > 0 && e->t <= 1.0f)
 			coEvents.push_back(e);
 		else
@@ -96,10 +97,11 @@ void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT> &coEvents, vector<LPC
 	ny = 0.0f;
 
 	coEventsResult.clear();
-
-	for (UINT i = 0; i < coEvents.size(); i++)
+	LPCOLLISIONEVENT c;
+	UINT coEventSize = coEvents.size();
+	for (UINT i = 0; i < coEventSize; i++)
 	{
-		LPCOLLISIONEVENT c = coEvents[i];
+		c = coEvents[i];
 
 		if (c->t < min_tx && c->nx != 0) {
 			min_tx = c->t;
@@ -117,7 +119,6 @@ void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT> &coEvents, vector<LPC
 	if (min_ix>=0) coEventsResult.push_back(coEvents[min_ix]);
 	if (min_iy>=0) coEventsResult.push_back(coEvents[min_iy]);
 }
-
 
 void CGameObject::RenderBoundingBox()
 {

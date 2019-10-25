@@ -9,6 +9,7 @@ CSimon * CSimon::__instance = NULL;
 CSimon *CSimon::GetInstance()
 {
 	if (__instance == NULL) __instance = new CSimon();
+	__instance->isEnable = true;
 	return __instance;
 }
 
@@ -24,19 +25,24 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
-	//update weapon
-	whip->Update(dt, coObjects);
-	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// Simple fall down
 	vy += SIMON_GRAVITY * dt;
+
+
+	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
+	listObject.clear();
+	for (UINT i = 0; i < coObjects->size(); i++) {
+		if (coObjects->at(i)->type == ObjectType::GROUND)
+			listObject.push_back(coObjects->at(i));
+	}
+
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
-	coEvents.clear();
 
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
-		CalcPotentialCollisions(coObjects, coEvents);
+		CalcPotentialCollisions(&listObject, coEvents);
 
 	// reset untouchable timer if untouchable time has passed
 	//if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
@@ -64,7 +70,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (nx != 0) 
 		{
 			vx = 0;
-			DebugOut(L"[DOOR] X of door, %f \n", x);
+			DebugOut(L"[COLISION ON X] CHẠM VỚI CÁI GÌ TẠI: %f \n", x);
+
 			//Collision logic with DOOR
 			//for (UINT i = 0; i < coEventsResult.size(); i++)
 			//{
@@ -277,6 +284,8 @@ void CSimon::LoadResources()
 {
 	if (loadedSrc) return;
 	loadedSrc = true;
+
+	subWeapon = new CWeapon();
 	//xếp thứ tự add animation phải trùng với cái define ko là toi
 	AddAnimation(100);		// idle right
 	AddAnimation(101);		// idle left

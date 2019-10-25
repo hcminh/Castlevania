@@ -11,28 +11,25 @@ CScenes::~CScenes()
 }
 
 void CScenes::Update(DWORD dt)
-{	
-	vector<LPGAMEOBJECT> coObjects;
+{
+	//vector<LPGAMEOBJECT> coObjects;
+	onCamObjects.clear();
 	for (int i = 1; i < objects.size(); i++)
-	{
-		coObjects.push_back(objects[i]);
-	}
+		if (objects[i]->isEnable && objects[i]->x >= CGame::GetInstance()->getBorderCamLeft() && objects[i]->x <= CGame::GetInstance()->getBorderCamRight())
+			onCamObjects.push_back(objects[i]);
 
 	for (int i = 0; i < objects.size(); i++)
-	{
-		objects[i]->Update(dt, &coObjects);
-	}
-
+		if (objects[i]->isEnable && objects[i]->x >= CGame::GetInstance()->getBorderCamLeft() && objects[i]->x <= CGame::GetInstance()->getBorderCamRight())
+			objects[i]->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
 }
 
 void CScenes::Render()
 {
-	CMaps::GetInstance()->Get(SCENE_1)->Draw(CGame::GetInstance()->getCamPos());
-	for (int i = 1; i < objects.size(); i++)
-		objects[i]->Render();
-
+	CMaps::GetInstance()->Get(currentScene)->Draw(CGame::GetInstance()->getCamPos());
+	for (int i = 0; i < onCamObjects.size(); i++)
+		onCamObjects[i]->Render();
 	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
 
@@ -46,6 +43,11 @@ void CScenes::insertObject(LPGAMEOBJECT object)
 	this->objects.insert(objects.begin(), object);
 }
 
+void CScenes::clearAllObject()
+{
+	objects.clear();
+}
+
 void CScenes::putItem(ItemType type, float x, float y)
 {
 	CItem *item = new CItem(type);
@@ -56,14 +58,12 @@ void CScenes::putItem(ItemType type, float x, float y)
 void CScenes::updateCamPos()
 {
 	float xSimon = CSimon::GetInstance()->x + SIMON_SPRITE_WIDTH;
+	int mapWidth = CMaps::GetInstance()->Get(currentScene)->GetMapWidth();
 	if (xSimon > SCREEN_WIDTH / 2 &&
-		xSimon + SCREEN_WIDTH / 2 < CMaps::GetInstance()->Get(SCENE_1)->GetMapWidth())
+		xSimon + SCREEN_WIDTH / 2 < mapWidth)
 	{
-
-		CMap * map = CMaps::GetInstance()->Get(SCENE_1);
-
-		if (xSimon >= MAP_1_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
-			xSimon <= MAP_1_MAX_COL * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
+		if (xSimon >= MAP_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
+			xSimon <= mapWidth * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))
 		{
 			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
 		}

@@ -105,9 +105,9 @@ void CMap::Draw(D3DXVECTOR3 camPosition)
 	}
 }
 
-void CMaps::Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID)
+void CMaps::Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID, int map_width, int map_height)
 {
-	LPTILEMAP tilemap = new CMap(ID, filePath_tex, filePath_data, MAP_1_WITDH, MAP_1_HEIGHT);
+	LPTILEMAP tilemap = new CMap(ID, filePath_tex, filePath_data, map_width, map_height);
 	tilemaps[ID] = tilemap;
 }
 

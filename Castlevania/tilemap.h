@@ -16,14 +16,19 @@
 #define MAP_1_WITDH			1536
 #define MAP_1_HEIGHT		320
 
+#define MAP_2_WITDH			5632
+#define MAP_2_HEIGHT		352
+
 #define TILE_WIDTH		32
 #define TILE_HEIGHT		32
 
-#define MAP_1_MIN_COL	0
+#define MAP_MIN_COL	0
 #define MAP_1_MAX_COL	47
+#define MAP_2_MAX_COL	177
 
 // Scene
 #define SCENE_1			1000
+#define SCENE_2			2000
 using namespace std;
 
 class CMap
@@ -66,7 +71,7 @@ class CMaps
 	unordered_map<int, LPTILEMAP> tilemaps;
 
 public:
-	void Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID);
+	void Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID, int map_width, int map_height);
 	LPTILEMAP Get(int ID) { return tilemaps[ID]; }
 
 	static CMaps * GetInstance();

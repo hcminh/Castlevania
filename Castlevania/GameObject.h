@@ -18,7 +18,7 @@ enum ObjectType
 	ITEM,
 	WEAPON,
 	GROUND,
-	DOOR
+	DOOR,
 };
 
 enum ItemType

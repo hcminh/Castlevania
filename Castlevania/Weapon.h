@@ -16,7 +16,7 @@
 #define KNIFE_HEIGHT			68
 #define KNIFE_WIDTH				160
 
-#define KNIFE_FLYING_SPEED		0.4f
+#define KNIFE_FLYING_SPEED		0.5f
 
 #define KNIFE_ANI_RIGHT			0
 #define KNIFE_ANI_LEFT			1

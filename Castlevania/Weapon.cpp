@@ -36,10 +36,10 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		{
 			if (coObjects->at(i)->type == ObjectType::ITEM);
 			{
+				DebugOut(L"[KNIFE] CHẠM VỚI CÁI GÌ TẠI: %f \n", x);
 				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
+				isFlying = false;
 			}
-
-			isFlying = false;
 		}
 	}
 }

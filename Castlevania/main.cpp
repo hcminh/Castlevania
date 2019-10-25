@@ -26,7 +26,7 @@
 using namespace std;
 
 CGame *game;
-
+void loadObject(string filepath);
 class CSampleKeyHander : public CKeyEventHandler
 {
 	virtual void KeyState(BYTE *states);
@@ -58,8 +58,13 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_W:
 		CSimon::GetInstance()->whip->levelDown();
 		break;
-	case DIK_X: //auto go X
-		CSimon::GetInstance()->SetState(SIMON_STATE_AUTO_GO);
+	case DIK_1: //qua scene 2
+		CScenes::GetInstance()->setCurrentScene(SCENE_1);
+		loadObject("textures\\map\\scene1-objects.txt");
+		break;
+	case DIK_2: //qua scene 2
+		CScenes::GetInstance()->setCurrentScene(SCENE_2);
+		loadObject("textures\\map\\scene2-objects.txt");
 		break;
 	}
 }
@@ -161,6 +166,9 @@ void loadAnimations(string filepath, int idTex = 0) {
 }
 
 void loadObject(string filepath) {
+	CScenes::GetInstance()->clearAllObject();
+	//nhét con simon vào đầu mảng cho dễ xử lý 
+	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
 	fstream fs;
 	fs.open(filepath, ios::in);
 	if (fs.fail())
@@ -219,7 +227,11 @@ void LoadResources()
 		}
 		else if (id == SCENE_1)
 		{
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id);
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_1_WITDH, MAP_1_HEIGHT);
+		}
+		else if (id == SCENE_2)
+		{
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_2_WITDH, MAP_2_HEIGHT);
 		}
 		else if (id == OBJECT_SCENE_1)
 		{
@@ -232,8 +244,6 @@ void LoadResources()
 		}
 	}
 	fs.close();
-	//nhét con simon vào đầu mảng cho dễ xử lý 
-	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
 }
 
 void Update(DWORD dt)

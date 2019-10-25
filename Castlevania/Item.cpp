@@ -7,6 +7,7 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 	type = ObjectType::ITEM;
 	this->itemState = itemState;
 	item = itemType;
+	isEnable = true;
 	isDestroyed = false;
 	isDestroying = false;
 	timeDisplayed = 0;

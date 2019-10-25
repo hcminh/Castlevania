@@ -7,7 +7,7 @@ CDoor::CDoor(float x, float y)
 	type = ObjectType::DOOR;
 	this->x = x;
 	this->y = y;
-	
+	isEnable = true;
 }
 
 void CDoor::Render()

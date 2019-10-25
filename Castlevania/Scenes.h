@@ -17,6 +17,10 @@ class CScenes
 
 	vector<LPGAMEOBJECT> objects; //các object của map
 
+	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
+
+	int currentScene = SCENE_1; // mặc định là scene 1
+
 public:
 
 	CScenes();
@@ -29,9 +33,11 @@ public:
 	// Get, Set
 	void pushObject(LPGAMEOBJECT object);
 	void insertObject(LPGAMEOBJECT object);
+	void clearAllObject();
 	int getListObjectSize() { return objects.size(); };
 	void putItem(ItemType type, float x, float y);
-
+	int getCurrentScene() { return currentScene; };
+	void setCurrentScene(int id) { currentScene = id; };
 	void updateCamPos();
 	static CScenes * GetInstance();
 

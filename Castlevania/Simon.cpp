@@ -141,70 +141,6 @@ void CSimon::Render()
 	//RenderBoundingBox();
 }
 
-//void CSimon::Render()
-//{
-//	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
-//	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
-//	else if (levelUpgrade) {
-//		if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
-//		else ani = SIMON_ANI_IDLE_LEFT;
-//		color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-//	}
-//	else if (isAttacking && isSitting)
-//	{
-//		if (nx > 0) ani = SIMON_ANI_SIT_ATTACK_RIGHT;
-//		else ani = SIMON_ANI_SIT_ATTACK_LEFT;
-//	}
-//	else if (isAttacking)
-//	{
-//		if (nx > 0) ani = SIMON_ANI_ATTACK_RIGHT;
-//		else ani = SIMON_ANI_ATTACK_LEFT;
-//	}
-//	else if (isJumping)
-//	{
-//		if (nx > 0) ani = SIMON_ANI_JUMP_RIGHT;
-//		else ani = SIMON_ANI_JUMP_LEFT;
-//	}
-//	else if (isSitting)
-//	{
-//		if (nx > 0) ani = SIMON_ANI_SIT_RIGHT;
-//		else ani = SIMON_ANI_SIT_LEFT;
-//	}
-//	else
-//	{
-//		if (vx == 0)
-//		{
-//			if (nx > 0) ani = SIMON_ANI_IDLE_RIGHT;
-//			else ani = SIMON_ANI_IDLE_LEFT;
-//		}
-//		else if (vx > 0)
-//			ani = SIMON_ANI_WALKING_RIGHT;
-//		else ani = SIMON_ANI_WALKING_LEFT;
-//	}
-//
-//	animations[ani]->Render(x, y, color);
-//
-//	//xử lý render sau khi đã bấm nút
-//	if (subWeapon != NULL) subWeapon->Render();
-//
-//	//xử lý render vũ khí khi vừa bấm nút
-//	if (isAttacking)
-//	{
-//		if (subWeapon != NULL && isUseSubWeapon)
-//		{
-//			subWeapon->isFlying = true;
-//			subWeapon->Render();
-//		}
-//		else if (!isUseSubWeapon) whip->Render();
-//	}
-//	//nếu là frame đánh cuói cùng thì tắt isAttacking
-//	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
-//	{
-//		isAttacking = false;
-//	}
-//	RenderBoundingBox();
-//}
-
 void CSimon::SetState(int state)
 {
 	CGameObject::SetState(state);
@@ -262,7 +198,7 @@ void CSimon::SetState(int state)
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-		if (isSitting || isJumping)
+		if (isSitting || (isJumping && !isAttacking))
 		{
 			left = x + 16;
 			top = y;

@@ -68,14 +68,12 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 	coObjects: the list of colliable objects
 	coEvents: list of potential collisions
 */
-void CGameObject::CalcPotentialCollisions(
-	vector<LPGAMEOBJECT> *coObjects, 
-	vector<LPCOLLISIONEVENT> &coEvents)
+void CGameObject::CalcPotentialCollisions( vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents)
 {
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		if (!coObjects->at(i)->isEnable) continue;
-		//if (coObjects->at(i)->type == ObjectType::CANDLE) continue;
+		if (coObjects->at(i)->type == ObjectType::CANDLE) continue;
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
 
 		if (e->t > 0 && e->t <= 1.0f)
@@ -87,11 +85,7 @@ void CGameObject::CalcPotentialCollisions(
 	std::sort(coEvents.begin(), coEvents.end(), CCollisionEvent::compare);
 }
 
-void CGameObject::FilterCollision(
-	vector<LPCOLLISIONEVENT> &coEvents,
-	vector<LPCOLLISIONEVENT> &coEventsResult,
-	float &min_tx, float &min_ty, 
-	float &nx, float &ny)
+void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT> &coEvents, vector<LPCOLLISIONEVENT> &coEventsResult, float &min_tx, float &min_ty,  float &nx, float &ny)
 {
 	min_tx = 1.0f;
 	min_ty = 1.0f;

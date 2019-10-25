@@ -24,14 +24,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 
-	//go to X, when touch door
-	if (isAutoGoX && (x > destinationX + 5 || x < destinationX - 5))
-	{
-		x += dx;
-		return;
-	}
-	isAutoGoX = false;
-
+	//update weapon
 	whip->Update(dt, coObjects);
 	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// Simple fall down
@@ -71,6 +64,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (nx != 0) 
 		{
 			vx = 0;
+			DebugOut(L"[DOOR] X of door, %f \n", x);
 			//Collision logic with DOOR
 			//for (UINT i = 0; i < coEventsResult.size(); i++)
 			//{
@@ -96,6 +90,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 	}
+
+	//update weapon
+	whip->Update(dt, coObjects);
+	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }

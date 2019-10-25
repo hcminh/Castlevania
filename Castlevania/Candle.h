@@ -24,7 +24,7 @@
 
 #define CANDLE_DESTROYED	999
 
-#define TIME_DESTROY_MAX 250
+#define TIME_DESTROY_MAX 300
 
 class CCandle : public CGameObject
 {

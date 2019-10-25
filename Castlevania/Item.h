@@ -14,7 +14,7 @@
 #define ITEM_WHIP			2
 #define ITEM_KNIFE			3
 
-#define TIME_DELAY_ITEM		300
+#define TIME_DELAY_ITEM		350
 #define TIME_APPEAR_ITEM	5000
 
 class CItem : public CGameObject

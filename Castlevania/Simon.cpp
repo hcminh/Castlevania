@@ -91,10 +91,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (ny != 0) {
 			vy = 0;
 			if (isJumping) {
-				/*isSitting = false;
-				isJumping = false;
-				y -= 18;
-				vx = 0;*/
 				SetState(SIMON_STATE_STANDUP);
 				isJumping = false;
 			}

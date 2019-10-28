@@ -139,7 +139,7 @@ void CSimon::Render()
 	{
 		isAttacking = false;
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -201,16 +201,16 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 {
 		if (isSitting || (isJumping && !isAttacking))
 		{
-			left = x + 16;
+			left = x + PADDING;
 			top = y;
-			right = x + SIMON_BBOX_WIDTH - 14;
+			right = x + SIMON_BBOX_WIDTH - PADDING;
 			bottom = top + SIMON_SIT_BBOX_HEIGHT;
 		} 
 		else
 		{
-			left = x + 16;
+			left = x + PADDING;
 			top = y;
-			right = x + SIMON_BBOX_WIDTH - 14;
+			right = x + SIMON_BBOX_WIDTH - PADDING;
 			bottom = top + SIMON_BBOX_HEIGHT;
 		}
 }

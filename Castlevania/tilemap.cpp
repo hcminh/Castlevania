@@ -93,7 +93,7 @@ void CMap::Draw(D3DXVECTOR3 camPosition)
 
 	for (UINT i = 0; i < nums_row; i++)
 	{
-		for (UINT j = start_col_to_draw; j <= MAP_1_MAX_COL; j++)
+		for (UINT j = start_col_to_draw; j < nums_col; j++)
 		{
 			// +camPosition.x để luôn giữ camera ở chính giữa, vì trong hàm Game::Draw() có trừ cho camPosition.x làm các object đều di chuyển theo
 			// +(int)camPosition.x % 32 để giữ cho camera chuyển động mượt

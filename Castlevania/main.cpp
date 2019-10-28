@@ -63,6 +63,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->setCurrentScene(SCENE_2);
 		loadObject("textures\\map\\scene2-objects.txt");
+		CSimon::GetInstance()->SetPosition(32.0f, 300);
 		break;
 	}
 }

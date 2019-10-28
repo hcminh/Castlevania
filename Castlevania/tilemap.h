@@ -19,6 +19,9 @@
 #define MAP_2_WITDH			5632
 #define MAP_2_HEIGHT		352
 
+#define MAP_3_WITDH			1056
+#define MAP_3_HEIGHT		352
+
 #define TILE_WIDTH		32
 #define TILE_HEIGHT		32
 
@@ -27,6 +30,7 @@
 // Scene
 #define SCENE_1			1000
 #define SCENE_2			2000
+#define SCENE_3			3000
 using namespace std;
 
 class CMap

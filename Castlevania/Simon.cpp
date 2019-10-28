@@ -139,7 +139,7 @@ void CSimon::Render()
 	{
 		isAttacking = false;
 	}
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)

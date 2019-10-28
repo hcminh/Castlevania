@@ -6,4 +6,5 @@
 4       textures\\item-full.png        textures\\item-sprite.txt          textures\\item-animation.txt
 1000    textures\\map\\scene1.png           textures\\map\\scene1-map.txt           null
 2000    textures\\map\\scene2.png           textures\\map\\scene2-map.txt           null
+3000    textures\\map\\scene3.png           textures\\map\\scene3-map.txt           null
 -999	null				textures\\map\\scene1-objects.txt	null

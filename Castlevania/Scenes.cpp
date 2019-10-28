@@ -66,7 +66,7 @@ void CScenes::updateCamPos()
 		if (xSimon >= MAP_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2) &&
 			xSimon <= mapWidth * TILE_WIDTH - (SCREEN_WIDTH / 2))
 		{
-			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 - 16 , 0); //-16 để dấu ô vuông cuối đi 
+			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); //-16 để dấu ô vuông cuối đi 
 		}
 	}
 }

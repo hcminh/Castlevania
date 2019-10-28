@@ -65,6 +65,11 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		loadObject("textures\\map\\scene2-objects.txt");
 		CSimon::GetInstance()->SetPosition(32.0f, 300);
 		break;
+	case DIK_3: //qua scene 3
+		CScenes::GetInstance()->setCurrentScene(SCENE_3);
+		loadObject("textures\\map\\scene3-objects.txt");
+		CSimon::GetInstance()->SetPosition(609.0f, 100);
+		break;
 	}
 }
 
@@ -176,16 +181,16 @@ void loadObject(string filepath) {
 		fs.close();
 	}
 	int id;
-	int item, width, height;
+	int item, width, height, state;
 	float x, y;
 	while (!fs.eof())
 	{
-		fs >> id >> x >> y >> item >> width >> height;
+		fs >> id >> x >> y >> item >> state >> width >> height;
 		switch (id)
 		{
 		case ID_ITEM:
 		{
-			CItem *cItem = new CItem(ItemType(item), ItemState::STATE_BIG_CANDLE);
+			CItem *cItem = new CItem(ItemType(item), ItemState(state));
 			cItem->SetPosition(x, y);
 			CScenes::GetInstance()->pushObject(cItem);
 			break;
@@ -231,6 +236,10 @@ void LoadResources()
 		else if (id == SCENE_2)
 		{
 			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_2_WITDH, MAP_2_HEIGHT);
+		}
+		else if (id == SCENE_3)
+		{
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_3_WITDH, MAP_3_HEIGHT);
 		}
 		else if (id == OBJECT_SCENE_1)
 		{

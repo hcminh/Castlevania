@@ -10,10 +10,8 @@
 #include "Scenes.h"
 
 #include "Simon.h"
-#include "Brick.h"
 #include "Goomba.h"
 #include "Whip.h"
-//#include "Candle.h"
 #include "Item.h"
 #include "Ground.h"
 #include "define.h"
@@ -177,11 +175,11 @@ void loadObject(string filepath) {
 		fs.close();
 	}
 	int id;
-	int item;
+	int item, width, height;
 	float x, y;
 	while (!fs.eof())
 	{
-		fs >> id >> x >> y >> item;
+		fs >> id >> x >> y >> item >> width >> height;
 		switch (id)
 		{
 		case ID_ITEM:
@@ -193,7 +191,7 @@ void loadObject(string filepath) {
 		}
 		case ID_GROUND:
 		{
-			CGround *ground = new CGround(x, y);
+			CGround *ground = new CGround(x, y, width, height);
 			CScenes::GetInstance()->pushObject(ground);
 			break;
 		}
@@ -244,6 +242,7 @@ void LoadResources()
 		}
 	}
 	fs.close();
+
 }
 
 void Update(DWORD dt)

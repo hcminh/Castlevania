@@ -77,9 +77,6 @@
     <ClInclude Include="Weapon.h">
       <Filter>Header Files\weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Brick.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
     <ClInclude Include="Ground.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
@@ -129,9 +126,6 @@
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files\weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="Brick.cpp">
-      <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="Ground.cpp">
       <Filter>Source Files\scene</Filter>

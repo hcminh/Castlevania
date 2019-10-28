@@ -14,7 +14,6 @@ using namespace std;
 enum ObjectType
 {
 	CANDLE,
-	BRICK,
 	ITEM,
 	WEAPON,
 	GROUND,

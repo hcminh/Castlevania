@@ -32,4 +32,4 @@
 //SubWEAPON DÙNG ANI CỦA SỐ TỪ 200 đến 250, sprite từ 10051 đến 10101 (lại dư thêm tới 10150)
 //CANDLE DÙNG ANI CỦA SỐ TỪ 250 đến 300, sprite từ 10151 đến 10155 (lại dư thêm tới 10200)
 //ITEM DÙNG ANI CỦA SỐ TỪ 300 đến 350, sprite từ 10201 đến 10155 (lại dư thêm tới 10250)
-//GROUND DÙNG ANI CỦA SỐ TỪ 350 đến 400, sprite từ 10251 đến 10251 (lại dư thêm tới 10300)
+//GROUND DÙNG ANI CỦA SỐ TỪ 350 đến 400, sprite từ 10251 đến 10251 (lại dư thêm tới 10300) -> ko dùng cách này nữa nên bỏ

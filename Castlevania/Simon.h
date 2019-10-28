@@ -83,8 +83,7 @@ public:
 	{
 		LoadResources();
 		SetPosition(0, 300.0f);
-		whip = new CWhip();
-		whip->LoadResources();
+		whip = new CWhip(x, y, nx);
 	}
 
 	static CSimon * GetInstance();

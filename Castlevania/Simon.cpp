@@ -272,9 +272,6 @@ void CSimon::attack()
 	else
 	{
 		isUseSubWeapon = false;
-		whip->nx = nx;
-		if (nx > 0) whip->setPosition(x - 24, y - 2);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
-		else whip->setPosition(x - 54 - 24, y - 2); // trừ y đi 2 vì sai số giữa 2 cái sprite
 	}
 	if (!isJumping) vx = 0;
 	isAttacking = true;

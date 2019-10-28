@@ -15,11 +15,11 @@ void CScenes::Update(DWORD dt)
 	//vector<LPGAMEOBJECT> coObjects;
 	onCamObjects.clear();
 	for (int i = 1; i < objects.size(); i++)
-		if (objects[i]->isEnable && objects[i]->x >= CGame::GetInstance()->getBorderCamLeft() && objects[i]->x <= CGame::GetInstance()->getBorderCamRight())
+		if (objects[i]->isEnable)
 			onCamObjects.push_back(objects[i]);
 
 	for (int i = 0; i < objects.size(); i++)
-		if (objects[i]->isEnable && objects[i]->x >= CGame::GetInstance()->getBorderCamLeft() && objects[i]->x <= CGame::GetInstance()->getBorderCamRight())
+		if (objects[i]->isEnable)
 			objects[i]->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
@@ -59,8 +59,9 @@ void CScenes::updateCamPos()
 {
 	float xSimon = CSimon::GetInstance()->x + SIMON_SPRITE_WIDTH;
 	int mapWidth = CMaps::GetInstance()->Get(currentScene)->GetMapWidth();
+
 	if (xSimon > SCREEN_WIDTH / 2 &&
-		xSimon + SCREEN_WIDTH / 2 < mapWidth)
+		xSimon + SCREEN_WIDTH / 2 < mapWidth - 32)
 	{
 		if (xSimon >= MAP_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2 - 16) &&
 			xSimon <= mapWidth * TILE_WIDTH - (SCREEN_WIDTH / 2 - 16))

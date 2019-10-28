@@ -2,21 +2,20 @@
 #include "Textures.h"
 #include "Simon.h"
 
-CWhip::CWhip() : CGameObject()
+CWhip::CWhip(float &x, float &y, int &nx) : CGameObject()
 {
+	xSimon = &x;
+	ySimon = &y;
+	nxSimon = &nx;
+	LoadResources();
 }
 
 void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-
-	if (nx > 0) setPosition(CSimon::GetInstance()->x - 24, CSimon::GetInstance()->y - 2);//-24 là trừ cái vị trí từ giữa con simon ra cái tay của nó lúc đưa ra sau (quay phải) quay trái thì trừ thêm -54
-	else setPosition(CSimon::GetInstance()->x - 54 - 24, CSimon::GetInstance()->y - 2); // trừ y đi 2 vì sai số giữa 2 cái sprite
-
 	if (animations[ani]->getCurrentFrame() == 2)
-	{	
+	{
 		for (UINT i = 0; i < coObjects->size(); i++)
 		{
-			if (coObjects->at(i)->type == ObjectType::BRICK) continue;
 			float top, left, bottom, right;
 			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 			if (isCollision(left, top, right, bottom))
@@ -24,7 +23,6 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				if (coObjects->at(i)->type == ObjectType::ITEM);
 				{
 					coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
-					//CScenes::GetInstance()->putItem(coObjects->at(i)->item);
 				}
 			}
 
@@ -35,36 +33,30 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWhip::Render()
 {
-	ani = level + nx + ((nx > 0) ? 1 : 0);
+	ani = level + *nxSimon + ((*nxSimon > 0) ? 1 : 0);
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (level == LEVEL_MAX)
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 200, rand() % 255 + 200, rand() % 255 + 200);
-	animations[ani]->Render(x, y, color);
+	animations[ani]->Render(*xSimon - 80, *ySimon, color);
 	//RenderBoundingBox();
 }
 
 void CWhip::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
-	if(nx == 1)
+	if (level < LEVEL_MAX)
 	{
-		left = x + RANGE_OF_WHIP_SIMON_X + 32; //32 là khoảng cách từ x simon (biên bên trái) tới vị trí tay của simon (biên bên phải)
-		top = y + 15; //từ đầu xuống tay của con simon là 15
-		right = left + ((level >= 3) ? LONG_CHAIN_BBOX_WIDTH : WHIP_BBOX_WIDTH); //cái này kiểm tra nếu level của whip >= 3 (Long chain) thì witdh dài hơn, chỉ kiểm tra 2 trường hợp vì short chain = normal whip
+		left = *xSimon + X_SIMON_TO_HAND*(*nxSimon);
+		top = *ySimon + Y_SIMON_TO_HAND;
+		right = left + WHIP_BBOX_WIDTH;
 		bottom = top + WHIP_BBOX_HEIGHT;
 	}
-	else if(nx == -1)
+	else
 	{
-		left = x + RANGE_OF_WHIP_SIMON_X - 7 - ((level >= 3) ? RANGE_OF_LONG_NORMAL : 0); //7 là sai số khi dịch x lại gần biên bên trái của simon (vì nó chìa cái tay ra nữa)
-		top = y + 15; //từ đầu xuống tay của con simon là 15
-		right = left + ((level >= 3) ? LONG_CHAIN_BBOX_WIDTH : WHIP_BBOX_WIDTH);
+		left = *xSimon + (((*nxSimon) > 0) ? X_SIMON_TO_HAND : X_SIMON_TO_HAND_LONG) * (*nxSimon);
+		top = *ySimon + Y_SIMON_TO_HAND;
+		right = left + LONG_CHAIN_BBOX_WIDTH;
 		bottom = top + WHIP_BBOX_HEIGHT;
 	}
-}
-
-void CWhip::setPosition(float x, float y)
-{
-	this->x = x ; 
-	this->y = y;
 }
 
 bool CWhip::isCollision(float obj_left, float obj_top, float obj_right, float obj_bottom)

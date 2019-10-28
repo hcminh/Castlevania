@@ -29,7 +29,6 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	for (UINT i = 0; i < coObjects->size(); i++)
 	{
-		if (coObjects->at(i)->type == ObjectType::BRICK) continue;
 		float top, left, bottom, right;
 		coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 		if (isCollision(left, top, right, bottom))

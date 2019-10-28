@@ -2,14 +2,16 @@
 #include "GameObject.h"
 #include "debug.h"
 
-#define GROUND_BBOX		32
+enum BrickType {
+	BGROUND
+};
 
 class CGround : public CGameObject
 {
+	int width, height;
 public:
-	CGround(float x, float y);
+	CGround(float x, float y, int width, int height);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-	void LoadResources();
 	
 };

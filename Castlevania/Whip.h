@@ -26,14 +26,18 @@
 #define WHIP_HEIGHT			68
 #define WHIP_WIDTH			160
 
-#define RANGE_OF_WHIP_SIMON_X			40
+#define X_SIMON_TO_HAND			50
+#define X_SIMON_TO_HAND_LONG	75
+#define Y_SIMON_TO_HAND			17
 
 class CWhip : public CGameObject
 {
 	int level = 1;
 	int ani;
+	float *xSimon, *ySimon;
+	int *nxSimon;
 public:
-	CWhip();
+	CWhip(float &x, float &y, int &nx);
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);
 	virtual void Render();
@@ -42,7 +46,6 @@ public:
 
 	void levelUp() { level += (level == LEVEL_MAX) ? 0 : 1; };
 	void levelDown() { level -= (level == LEVEL_MIN) ? 0 : 1; };
-	void setPosition(float x, float y);
 	bool isCollision(float obj_left, float obj_top, float obj_right, float obj_bottom);
 	void LoadResources();
 };

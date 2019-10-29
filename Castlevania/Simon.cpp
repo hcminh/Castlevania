@@ -26,8 +26,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt);
 
 	// Simple fall down
-	vy += SIMON_GRAVITY * dt;
+	if(!isOnStair)
+		vy += SIMON_GRAVITY * dt;
 
+	//nếu là frame đánh cuói cùng thì tắt isAttacking
+	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+	{
+		isAttacking = false;
+	}
+	if (isUseSubWeapon)
+	{
+		subWeapon->isFlying = true;
+	}
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
@@ -112,6 +122,11 @@ void CSimon::Render()
 
 	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
 	else if (levelUpgrade) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
+	else if (isOnStair)
+	{
+		if (state == SIMON_STATE_GO_UP_STAIR) ani = SIMON_ANI_UP_STAIR_RIGHT;
+		else if(state == SIMON_STATE_IDLE_UP_STAIR) ani = SIMON_ANI_IDLE_UP_STAIR_RIGHT;
+	}
 	else if (isAttacking && isSitting)  ani = SIMON_ANI_SIT_ATTACK_RIGHT;
 	else if (isAttacking)				ani = SIMON_ANI_ATTACK_RIGHT;
 	else if (isJumping)					ani = SIMON_ANI_JUMP_RIGHT;
@@ -125,19 +140,9 @@ void CSimon::Render()
 	if (subWeapon != NULL && subWeapon->isFlying) subWeapon->Render();
 
 	//xử lý render vũ khí khi vừa bấm nút
-	if (isAttacking)
+	if (isAttacking && !isUseSubWeapon)
 	{
-		if (isUseSubWeapon)
-		{
-			subWeapon->isFlying = true;
-			subWeapon->Render();
-		}
-		else whip->Render();
-	}
-	//nếu là frame đánh cuói cùng thì tắt isAttacking
-	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
-	{
-		isAttacking = false;
+		whip->Render();
 	}
 	//RenderBoundingBox();
 }
@@ -179,6 +184,11 @@ void CSimon::SetState(int state)
 		attack();
 		break;
 	case SIMON_STATE_IDLE:
+		isOnStair = false;
+		vx = 0;
+		break;
+	case SIMON_STATE_IDLE_UP_STAIR:
+		vy = 0;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:
@@ -193,6 +203,12 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_AUTO_GO:
 		if (isAutoGoX) return;
 		autoGotoX(1385.0);
+		break;
+	case SIMON_STATE_GO_UP_STAIR:
+		vx = SIMON_WALKING_SPEED;
+		vy = -SIMON_WALKING_SPEED;
+		isOnStair = true;
+		nx = 1;
 		break;
 	}
 }
@@ -296,5 +312,11 @@ void CSimon::LoadResources()
 	AddAnimation(109);		// ATTACK left
 	AddAnimation(110);		// SIT ATTACK right
 	AddAnimation(111);		// SIT ATTACK left
+	AddAnimation(113);		// UP STAIR RIGHT
+	AddAnimation(114);		// UP STAIR LEFT
+	AddAnimation(115);		// IDLE UP STAIR RIGHT
+	AddAnimation(116);		// IDLE UP STAIR LEFT
+
+
 	AddAnimation(112);		// die
 }

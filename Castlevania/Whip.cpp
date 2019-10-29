@@ -37,7 +37,9 @@ void CWhip::Render()
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (level == LEVEL_MAX)
 		color = D3DCOLOR_ARGB(255, rand() % 255 + 200, rand() % 255 + 200, rand() % 255 + 200);
-	animations[ani]->Render(*xSimon - 80, *ySimon, color);
+	if(CSimon::GetInstance()->isSitting)
+		animations[ani]->Render(*xSimon - 80, *ySimon - 5, color);
+	else animations[ani]->Render(*xSimon - 80, *ySimon, color);
 	//RenderBoundingBox();
 }
 

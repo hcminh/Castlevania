@@ -8,7 +8,7 @@
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 
-#define MAX_FRAME_RATE 150
+#define MAX_FRAME_RATE 120
 
 #define ID_TEX_BBOX		-1
 #define ID_TEX_SIMON	0

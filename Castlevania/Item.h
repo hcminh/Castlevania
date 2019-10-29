@@ -4,12 +4,18 @@
 #include "define.h"
 
 #define BIG_HEART_BBOX  23
-#define BIG_HEART_GRAVITY 0.002f
+#define SMALL_HEART_BBOX  15
+#define BIG_HEART_GRAVITY 0.2f
+#define SMALL_HEART_GRAVITY 0.02f
 
-#define CANDLE_BIG_BBOX_WIDTH  32
-#define CANDLE_BIG_BBOX_HEIGHT 64
+#define CANDLE_BIG_BBOX_WIDTH		 32
+#define CANDLE_BIG_BBOX_HEIGHT		 64
+#define CANDLE_SMALL_BBOX_WIDTH		 20
+#define CANDLE_SMALL_BBOX_HEIGHT     40
 
-
+#define ITEM_ANI_STATE			0
+#define ITEM_ANI_ITEM			1
+#define ITEM_ANI_DETROY			2
 
 #define ITEM_BIG_CANDLE			0
 #define ITEM_SMALL_CANDLE		1
@@ -19,6 +25,8 @@
 #define ITEM_WHIP				5
 #define ITEM_KNIFE				6
 
+#define ITEM_FALLING_SPEED_X			0.15f
+#define ITEM_FALLING_SPEED_X_VARIATION	0.007f
 
 #define CANDLE_STATE_DESTROYING		999
 #define CANDLE_STATE_DESTROYED		-999
@@ -44,6 +52,9 @@ class CItem : public CGameObject
 	bool isDestroyed = false;
 	bool isDestroying = false;
 	bool isTouchGround = false;
+	float velocityVariation_x;
+	int width, heigth, widthState, heigthState;
+
 public:
 	CItem(ItemType type, ItemState itemState = ItemState::STATE_NONE);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
@@ -51,5 +62,4 @@ public:
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 
 	void SetState(int state);
-	void LoadResources();
 };

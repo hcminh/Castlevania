@@ -10,9 +10,55 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 	isEnable = true;
 	isDestroyed = false;
 	isDestroying = false;
-	timeDisplayed = 0;
-	timeWaited = 0;
-	LoadResources();
+	//state of obj
+	switch (itemState)
+	{
+	case STATE_NONE:
+		break;
+	case STATE_BIG_CANDLE:
+		widthState = CANDLE_BIG_BBOX_WIDTH;
+		heigthState = CANDLE_BIG_BBOX_HEIGHT;
+		AddAnimation(250);		// big CANDLE
+		break;
+	case STATE_SMALL_CANDLE:
+		widthState = CANDLE_SMALL_BBOX_WIDTH;
+		heigthState = CANDLE_SMALL_BBOX_HEIGHT;
+		AddAnimation(251);		// small CANDLE
+		break;
+	case STATE_BRICK:
+		break;
+	case STATE_WALL:
+		break;
+	default:
+		break;
+	}
+	//item that obj holding
+	switch (item)
+	{
+	case BIG_HEART:
+		AddAnimation(300);		// big heart
+		vy = BIG_HEART_GRAVITY;
+		width = BIG_HEART_BBOX;
+		heigth = BIG_HEART_BBOX;
+		break;
+	case SMALL_HEART:
+		AddAnimation(301);		// small heart
+		velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+		vy = SMALL_HEART_GRAVITY;
+		width = SMALL_HEART_BBOX;
+		heigth = SMALL_HEART_BBOX;
+		break;
+	case WHIP:
+		AddAnimation(302);		// whip
+		break;
+	case KNIFE:
+		AddAnimation(303);		// knife
+		break;
+	default:
+		break;
+	}
+
+	AddAnimation(252);		// DESTROY
 }
 
 void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
@@ -33,8 +79,14 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	if (!isDestroyed) return;
-	// Simple fall down
-	vy += BIG_HEART_GRAVITY * dt;
+	//
+	if (item == ItemType::SMALL_HEART && vy != 0)
+	{
+		vx += velocityVariation_x;
+		if (vx >= ITEM_FALLING_SPEED_X || vx <= -ITEM_FALLING_SPEED_X)
+			velocityVariation_x *= -1; // đổi chiều
+	}
+	// 
 
 	if (CSimon::GetInstance()->isColisionItem(this))
 	{
@@ -42,6 +94,7 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		CSimon::GetInstance()->colisionItem(this);
 	}
 	if (isTouchGround) return;
+
 	vector<LPGAMEOBJECT> listObject_Ground;
 	listObject_Ground.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
@@ -56,6 +109,7 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
+		x += dx;
 		y += dy;
 	}
 	else
@@ -71,35 +125,18 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	for (UINT i = 0; i < coEvents.size(); i++)
 		delete coEvents[i];
+
 }
 
 void CItem::Render()
 {
 	if (!isEnable) return;
-
 	int ani;
-	if (isDestroying)
-		ani = ITEM_CANDLE_DESTROYED;
-	else if (!isDestroyed)
-	{
-		if (itemState == ItemState::STATE_BIG_CANDLE)
-			ani = ITEM_BIG_CANDLE;
-		if (itemState == ItemState::STATE_SMALL_CANDLE)
-			ani = ITEM_SMALL_CANDLE;
-	}
-	else
-	{
-		if (item == ItemType::BIG_HEART)
-			ani = ITEM_BIG_HEART;
-		else if (item == ItemType::SMALL_HEART)
-			ani = ITEM_SMALL_HEART;
-		else if (item == ItemType::WHIP)
-			ani = ITEM_WHIP;
-		else if (item == ItemType::KNIFE)
-			ani = ITEM_KNIFE;
-	}
+	if (isDestroying) ani = ITEM_ANI_DETROY;
+	else if (!isDestroyed) ani = ITEM_ANI_STATE;
+	else ani = ITEM_ANI_ITEM;
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CItem::GetBoundingBox(float &l, float &t, float &r, float &b)
@@ -108,15 +145,15 @@ void CItem::GetBoundingBox(float &l, float &t, float &r, float &b)
 	{
 		l = x;
 		t = y;
-		r = x + CANDLE_BIG_BBOX_WIDTH;
-		b = y + CANDLE_BIG_BBOX_HEIGHT;
+		r = x + widthState;
+		b = y + heigthState;
 	}
 	else
 	{
 		l = x;
 		t = y;
-		r = x + BIG_HEART_BBOX;
-		b = y + BIG_HEART_BBOX;
+		r = x + width;
+		b = y + heigth;
 	}
 }
 
@@ -141,18 +178,3 @@ void CItem::SetState(int state)
 	}
 }
 
-void CItem::LoadResources()
-{
-	if (loadedSrc) return;
-	loadedSrc = true;
-
-	AddAnimation(250);		// big CANDLE
-	AddAnimation(251);		// small CANDLE
-	AddAnimation(252);		// CANDLE DESTROY
-
-	AddAnimation(300);		// big heart
-	AddAnimation(301);		// small heart
-	AddAnimation(302);		// whip
-	AddAnimation(303);		// knife
-
-}

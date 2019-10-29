@@ -63,7 +63,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->setCurrentScene(SCENE_2);
 		loadObject("textures\\map\\scene2-objects.txt");
-		CSimon::GetInstance()->SetPosition(32.0f, 300);
+		CSimon::GetInstance()->SetPosition(1200.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->setCurrentScene(SCENE_3);
@@ -90,10 +90,15 @@ void CSampleKeyHander::KeyState(BYTE *states)
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
+	else if (game->IsKeyDown(DIK_U))
+		CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);
+	else if (game->IsKeyDown(DIK_I))
+		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	else
 	{
 		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
-		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+		else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
+		else CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	}
 }
 

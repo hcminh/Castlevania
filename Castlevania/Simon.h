@@ -14,15 +14,17 @@
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
 
 #define SIMON_STATE_IDLE				0
-#define SIMON_STATE_WALKING_RIGHT		100
-#define SIMON_STATE_WALKING_LEFT		200
-#define SIMON_STATE_JUMP				300
-#define SIMON_STATE_DIE					400
-#define SIMON_STATE_SIT					500
-#define SIMON_STATE_ATTACK				600
-#define SIMON_STATE_ATTACK_WITH_SUB		700
-#define SIMON_STATE_LEVEL_UP			800
-#define SIMON_STATE_AUTO_GO				900
+#define SIMON_STATE_WALKING_RIGHT		1
+#define SIMON_STATE_WALKING_LEFT		2
+#define SIMON_STATE_JUMP				3
+#define SIMON_STATE_DIE					4
+#define SIMON_STATE_SIT					5
+#define SIMON_STATE_ATTACK				6
+#define SIMON_STATE_ATTACK_WITH_SUB		7
+#define SIMON_STATE_LEVEL_UP			8
+#define SIMON_STATE_AUTO_GO				9
+#define SIMON_STATE_GO_UP_STAIR			10
+#define SIMON_STATE_IDLE_UP_STAIR		11
 
 #define SIMON_ANI_IDLE_RIGHT			0
 #define SIMON_ANI_IDLE_LEFT				1
@@ -36,8 +38,11 @@
 #define SIMON_ANI_ATTACK_LEFT			9
 #define SIMON_ANI_SIT_ATTACK_RIGHT		10
 #define SIMON_ANI_SIT_ATTACK_LEFT		11
-#define SIMON_ANI_DIE					12
-#define SIMON_ANI_LEVEL_UP				13
+#define SIMON_ANI_UP_STAIR_RIGHT		12
+#define SIMON_ANI_UP_STAIR_LEFT			13
+#define SIMON_ANI_IDLE_UP_STAIR_RIGHT	14
+#define SIMON_ANI_IDLE_UP_STAIR_LEFT	15
+#define SIMON_ANI_DIE					16
 
 #define MAX_ATTACK_FRAME				3
 
@@ -75,6 +80,7 @@ public:
 	bool isMoving = false;
 	bool levelUpgrade = false;
 	bool isAutoGoX = false;
+	bool isOnStair = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;

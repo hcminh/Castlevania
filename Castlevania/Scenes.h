@@ -39,6 +39,8 @@ public:
 	int getCurrentScene() { return currentScene; };
 	void setCurrentScene(int id) { currentScene = id; };
 	void updateCamPos();
+	void changeScene();
+	void loadObject(string path);
 	static CScenes * GetInstance();
 
 

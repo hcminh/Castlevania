@@ -50,9 +50,15 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 		break;
 	case WHIP:
 		AddAnimation(302);		// whip
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = WEAPON_BBOX;
 		break;
 	case KNIFE:
 		AddAnimation(303);		// knife
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = BIG_HEART_BBOX;
 		break;
 	default:
 		break;
@@ -163,7 +169,7 @@ void CItem::SetState(int state)
 	switch (state)
 	{
 	case CANDLE_STATE_DESTROYING:
-		if (isDestroying) return;
+		if (isDestroying || isDestroyed) return;
 		isDestroying = true;
 		timeWaited = 0;
 		break;

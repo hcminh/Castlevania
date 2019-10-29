@@ -12,6 +12,7 @@
 #define CANDLE_BIG_BBOX_HEIGHT		 64
 #define CANDLE_SMALL_BBOX_WIDTH		 20
 #define CANDLE_SMALL_BBOX_HEIGHT     40
+#define WEAPON_BBOX					 32
 
 #define ITEM_ANI_STATE			0
 #define ITEM_ANI_ITEM			1

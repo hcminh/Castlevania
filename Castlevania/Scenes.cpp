@@ -1,4 +1,6 @@
 ﻿#include "Scenes.h"
+#include "Ground.h"
+#include "Door.h"
 
 CScenes * CScenes::__instance = NULL;
 
@@ -69,6 +71,75 @@ void CScenes::updateCamPos()
 			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); //-16 để dấu ô vuông cuối đi 
 		}
 	}
+}
+
+void CScenes::changeScene()
+{
+	if (currentScene == SCENE_1)
+	{
+		currentScene = SCENE_2;
+		loadObject("textures\\map\\scene2-objects.txt");
+		CSimon::GetInstance()->SetPosition(0.0f, 300);
+		CGame::GetInstance()->SetCamPos(0, 0); 
+	}
+	else if (currentScene == SCENE_2)
+	{
+		currentScene = SCENE_3;
+		loadObject("textures\\map\\scene3-objects.txt");
+		CSimon::GetInstance()->SetPosition(0.0f, 100);
+		CGame::GetInstance()->SetCamPos(0, 0);
+	}
+	else if (currentScene == SCENE_3)
+	{
+		currentScene = SCENE_2;
+		loadObject("textures\\map\\scene2-objects.txt");
+		CSimon::GetInstance()->SetPosition(3000.0f, 300);
+		updateCamPos();
+	}
+}
+
+void CScenes::loadObject(string path)
+{
+	clearAllObject();
+	//nhét con simon vào đầu mảng cho dễ xử lý 
+	insertObject(CSimon::GetInstance());
+	fstream fs;
+	fs.open(path, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load file obecject lỗi");
+		fs.close();
+	}
+	int id;
+	int item, width, height, state;
+	float x, y;
+	while (!fs.eof())
+	{
+		fs >> id >> x >> y >> item >> state >> width >> height;
+		switch (id)
+		{
+		case ID_ITEM:
+		{
+			CItem *cItem = new CItem(ItemType(item), ItemState(state));
+			cItem->SetPosition(x, y);
+			pushObject(cItem);
+			break;
+		}
+		case ID_GROUND:
+		{
+			CGround *ground = new CGround(x, y, width, height);
+			pushObject(ground);
+			break;
+		}
+		case ID_DOOR:
+		{
+			CDoor *door = new CDoor(x, y);
+			pushObject(door);
+			break;
+		}
+		}
+	}
+	fs.close();
 }
 
 CScenes * CScenes::GetInstance()

@@ -24,7 +24,7 @@
 using namespace std;
 
 CGame *game;
-void loadObject(string filepath);
+//void loadObject(string filepath);
 class CSampleKeyHander : public CKeyEventHandler
 {
 	virtual void KeyState(BYTE *states);
@@ -56,18 +56,18 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_W:
 		CSimon::GetInstance()->whip->levelDown();
 		break;
-	case DIK_1: //qua scene 2
+	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->setCurrentScene(SCENE_1);
-		loadObject("textures\\map\\scene1-objects.txt");
+		CScenes::GetInstance()->loadObject("textures\\map\\scene1-objects.txt");
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->setCurrentScene(SCENE_2);
-		loadObject("textures\\map\\scene2-objects.txt");
+		CScenes::GetInstance()->loadObject("textures\\map\\scene2-objects.txt");
 		CSimon::GetInstance()->SetPosition(1200.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->setCurrentScene(SCENE_3);
-		loadObject("textures\\map\\scene3-objects.txt");
+		CScenes::GetInstance()->loadObject("textures\\map\\scene3-objects.txt");
 		CSimon::GetInstance()->SetPosition(609.0f, 100);
 		break;
 	}
@@ -174,48 +174,48 @@ void loadAnimations(string filepath, int idTex = 0) {
 	fs.close();
 }
 
-void loadObject(string filepath) {
-	CScenes::GetInstance()->clearAllObject();
-	//nhét con simon vào đầu mảng cho dễ xử lý 
-	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
-	fstream fs;
-	fs.open(filepath, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load file obecject lỗi");
-		fs.close();
-	}
-	int id;
-	int item, width, height, state;
-	float x, y;
-	while (!fs.eof())
-	{
-		fs >> id >> x >> y >> item >> state >> width >> height;
-		switch (id)
-		{
-		case ID_ITEM:
-		{
-			CItem *cItem = new CItem(ItemType(item), ItemState(state));
-			cItem->SetPosition(x, y);
-			CScenes::GetInstance()->pushObject(cItem);
-			break;
-		}
-		case ID_GROUND:
-		{
-			CGround *ground = new CGround(x, y, width, height);
-			CScenes::GetInstance()->pushObject(ground);
-			break;
-		}
-		case ID_DOOR:
-		{
-			CDoor *door = new CDoor(x, y);
-			CScenes::GetInstance()->pushObject(door);
-			break;
-		}
-		}
-	}
-	fs.close();
-}
+//void loadObject(string filepath) {
+//	CScenes::GetInstance()->clearAllObject();
+//	//nhét con simon vào đầu mảng cho dễ xử lý 
+//	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
+//	fstream fs;
+//	fs.open(filepath, ios::in);
+//	if (fs.fail())
+//	{
+//		DebugOut(L"[ERROR] Load file obecject lỗi");
+//		fs.close();
+//	}
+//	int id;
+//	int item, width, height, state;
+//	float x, y;
+//	while (!fs.eof())
+//	{
+//		fs >> id >> x >> y >> item >> state >> width >> height;
+//		switch (id)
+//		{
+//		case ID_ITEM:
+//		{
+//			CItem *cItem = new CItem(ItemType(item), ItemState(state));
+//			cItem->SetPosition(x, y);
+//			CScenes::GetInstance()->pushObject(cItem);
+//			break;
+//		}
+//		case ID_GROUND:
+//		{
+//			CGround *ground = new CGround(x, y, width, height);
+//			CScenes::GetInstance()->pushObject(ground);
+//			break;
+//		}
+//		case ID_DOOR:
+//		{
+//			CDoor *door = new CDoor(x, y);
+//			CScenes::GetInstance()->pushObject(door);
+//			break;
+//		}
+//		}
+//	}
+//	fs.close();
+//}
 
 void LoadResources()
 {
@@ -248,7 +248,7 @@ void LoadResources()
 		}
 		else if (id == OBJECT_SCENE_1)
 		{
-			loadObject(sprite);
+			CScenes::GetInstance()->loadObject(sprite);
 		}
 		else
 		{

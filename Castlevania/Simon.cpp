@@ -3,6 +3,7 @@
 
 #include "Simon.h"
 #include "Game.h"
+#include "Scenes.h"
 #include <math.h>
 
 CSimon * CSimon::__instance = NULL;
@@ -42,7 +43,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type == ObjectType::GROUND)
+		if (coObjects->at(i)->type == ObjectType::GROUND || coObjects->at(i)->type == ObjectType::DOOR)
 			listObject.push_back(coObjects->at(i));
 	}
 
@@ -80,24 +81,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (nx != 0) 
 		{
 			vx = 0;
-			DebugOut(L"[COLISION ON X] CHẠM VỚI CÁI GÌ TẠI: %f \n", x);
 
 			//Collision logic with DOOR
-			//for (UINT i = 0; i < coEventsResult.size(); i++)
-			//{
-			//	LPCOLLISIONEVENT e = coEventsResult[i];
-			//	if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR
-			//	{
-			//		if(x + SIMON_BBOX_WIDTH < 1378.0)
-			//			autoGotoX(1385.0);
-			//		else if(x >= 1385.0)
-			//		{
-			//			autoGotoX(1250.0);
-			//			//autoGotoX(1385.0);
-			//		}
-			//		//xử lý qua màn
-			//	}
-			//}
+			for (UINT i = 0; i < coEventsResult.size(); i++)
+			{
+				LPCOLLISIONEVENT e = coEventsResult[i];
+				if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR
+				{
+					DebugOut(L"Qua màn mới nè!!!");
+					CScenes::GetInstance()->changeScene();
+				}
+			}
 		}
 		if (ny != 0) {
 			vy = 0;

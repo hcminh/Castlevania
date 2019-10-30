@@ -142,7 +142,7 @@ void CItem::Render()
 	else if (!isDestroyed) ani = ITEM_ANI_STATE;
 	else ani = ITEM_ANI_ITEM;
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CItem::GetBoundingBox(float &l, float &t, float &r, float &b)

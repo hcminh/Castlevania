@@ -30,15 +30,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if(!isOnStair)
 		vy += SIMON_GRAVITY * dt;
 
-	//nếu là frame đánh cuói cùng thì tắt isAttacking
-	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
-	{
-		isAttacking = false;
-	}
-	if (isUseSubWeapon)
-	{
-		subWeapon->isFlying = true;
-	}
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
@@ -105,6 +96,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	//update weapon
 	whip->Update(dt, coObjects);
 	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
+
+	//nếu là frame đánh cuói cùng thì tắt isAttacking
+	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+	{
+		isAttacking = false;
+		isUseSubWeapon = false;
+	}
 	// clean up collision events
 	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 }
@@ -278,6 +276,7 @@ void CSimon::attack()
 		subWeapon->isFlying = true;
 		subWeapon->nx = nx;
 		subWeapon->setPosition(x, y);
+		subWeapon->SetState(subWeapon->state);
 	}
 	else
 	{
@@ -292,7 +291,6 @@ void CSimon::LoadResources()
 	if (loadedSrc) return;
 	loadedSrc = true;
 
-	subWeapon = new CWeapon();
 	//xếp thứ tự add animation phải trùng với cái define ko là toi
 	AddAnimation(100);		// idle right
 	AddAnimation(101);		// idle left

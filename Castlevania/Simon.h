@@ -90,6 +90,9 @@ public:
 		LoadResources();
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
+		subWeapon = new CWeapon();
+		//subWeapon->SetState(WeaponType::KNIFE_WEAPON);
+		subWeapon->SetState(WeaponType::AXE_WEAPON);
 	}
 
 	static CSimon * GetInstance();

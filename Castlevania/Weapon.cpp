@@ -4,7 +4,6 @@
 #include "Textures.h"
 #include "debug.h"
 
-//#include "Scenes.h"
 
 CWeapon::CWeapon() : CGameObject()
 {
@@ -16,14 +15,21 @@ CWeapon::CWeapon() : CGameObject()
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
 	if (!isFlying) return;
-	vx = KNIFE_FLYING_SPEED * nx;
-	CGameObject::Update(dt, coObjects);
 
+	switch (state)
+	{
+	case WeaponType::AXE_WEAPON:
+		vy += AXE_GRAVITY * dt;
+		break;
+	}
+
+	CGameObject::Update(dt, coObjects);
 	x += dx;
 	y += dy;
 
-	//DebugOut(L"[KNIFE] x là : %d\n", x);
-	if (x > CGame::GetInstance()->getCamPosX() + SCREEN_WIDTH || x < CGame::GetInstance()->getCamPosX()) {
+	if (x > CGame::GetInstance()->getCamPosX() + SCREEN_WIDTH || x < CGame::GetInstance()->getCamPosX()
+		|| y > SCREEN_HEIGHT)
+	{
 		isFlying = false;
 	}
 
@@ -39,6 +45,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 				isFlying = false;
 			}
+			break;
 		}
 	}
 }
@@ -46,17 +53,47 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 void CWeapon::Render()
 {
 	if (!isFlying) return;
-	int ani = ((nx > 0) ? 0 : 1);
+	if (state == WeaponType::KNIFE_WEAPON) ani = KNIFE_ANI_RIGHT;
+	else if (state == WeaponType::AXE_WEAPON) ani = AXE_ANI_RIGHT;
+	ani += ((nx > 0) ? 0 : 1);
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
 }
 
 void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
-	left = x;
-	top = y + 10;
-	right = left + KNIFE_BBOX_WIDTH;
-	bottom = top + KNIFE_BBOX_HEIGHT;
+	switch (state)
+	{
+	case WeaponType::AXE_WEAPON:
+		left = x;
+		top = y;
+		right = left + AXE_BBOX;
+		bottom = top + AXE_BBOX;
+		break;
+	case WeaponType::KNIFE_WEAPON:
+		left = x;
+		top = y;
+		right = left + KNIFE_BBOX_WIDTH;
+		bottom = top + KNIFE_BBOX_HEIGHT;
+		break;
+	}
+}
+
+void CWeapon::SetState(int state)
+{
+	CGameObject::SetState(state);
+
+	switch (state)
+	{
+	case WeaponType::KNIFE_WEAPON:
+		vx = KNIFE_FLYING_SPEED * nx;
+		vy = 0;
+		break;
+	case WeaponType::AXE_WEAPON:
+		vx = AXE_SPEED_X * nx;
+		vy = -AXE_SPEED_Y;
+		break;
+	}
 }
 
 void CWeapon::setPosition(float x, float y)
@@ -84,6 +121,10 @@ void CWeapon::LoadResources()
 
 	AddAnimation(200);		// knife right
 	AddAnimation(201);		// knife left
+
+
+	AddAnimation(202);		// knife right
+	AddAnimation(203);		// knife left
 }
 
 

@@ -84,6 +84,7 @@ public:
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
+	WeaponType typeSubWeapon = WeaponType::NONE;
 
 	CSimon() : CGameObject()
 	{
@@ -91,8 +92,8 @@ public:
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
 		subWeapon = new CWeapon();
-		//subWeapon->SetState(WeaponType::KNIFE_WEAPON);
-		subWeapon->SetState(WeaponType::AXE_WEAPON);
+		typeSubWeapon = WeaponType::HOLY_WATER;
+		subWeapon->SetState(typeSubWeapon);
 	}
 
 	static CSimon * GetInstance();

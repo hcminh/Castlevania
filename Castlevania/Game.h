@@ -74,6 +74,7 @@ public:
 	D3DXVECTOR3 getCamPos() { return D3DXVECTOR3(cam_x, cam_y, 0); };
 
 	float getCamPosX() { return cam_x; };
+	float getCamPosY() { return cam_y; };
 
 	float getBorderCamLeft() { return cam_x - 32; };
 	float getBorderCamRight() { return cam_x + SCREEN_WIDTH + 32; };

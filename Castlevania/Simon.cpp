@@ -275,8 +275,8 @@ void CSimon::attack()
 		isUseSubWeapon = true;
 		subWeapon->isFlying = true;
 		subWeapon->nx = nx;
-		subWeapon->setPosition(x, y);
-		subWeapon->SetState(subWeapon->state);
+		subWeapon->SetPosition(x, y);
+		subWeapon->SetState(typeSubWeapon);
 	}
 	else
 	{

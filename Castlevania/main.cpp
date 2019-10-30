@@ -174,49 +174,6 @@ void loadAnimations(string filepath, int idTex = 0) {
 	fs.close();
 }
 
-//void loadObject(string filepath) {
-//	CScenes::GetInstance()->clearAllObject();
-//	//nhét con simon vào đầu mảng cho dễ xử lý 
-//	CScenes::GetInstance()->insertObject(CSimon::GetInstance());
-//	fstream fs;
-//	fs.open(filepath, ios::in);
-//	if (fs.fail())
-//	{
-//		DebugOut(L"[ERROR] Load file obecject lỗi");
-//		fs.close();
-//	}
-//	int id;
-//	int item, width, height, state;
-//	float x, y;
-//	while (!fs.eof())
-//	{
-//		fs >> id >> x >> y >> item >> state >> width >> height;
-//		switch (id)
-//		{
-//		case ID_ITEM:
-//		{
-//			CItem *cItem = new CItem(ItemType(item), ItemState(state));
-//			cItem->SetPosition(x, y);
-//			CScenes::GetInstance()->pushObject(cItem);
-//			break;
-//		}
-//		case ID_GROUND:
-//		{
-//			CGround *ground = new CGround(x, y, width, height);
-//			CScenes::GetInstance()->pushObject(ground);
-//			break;
-//		}
-//		case ID_DOOR:
-//		{
-//			CDoor *door = new CDoor(x, y);
-//			CScenes::GetInstance()->pushObject(door);
-//			break;
-//		}
-//		}
-//	}
-//	fs.close();
-//}
-
 void LoadResources()
 {
 	fstream fs;

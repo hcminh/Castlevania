@@ -14,7 +14,17 @@ CScenes::~CScenes()
 
 void CScenes::Update(DWORD dt)
 {
-	//vector<LPGAMEOBJECT> coObjects;
+	if (isStopWatchInUse)
+	{
+		accutime += dt;
+		if (accutime >= MAX_TIME_STOP_WATCH)
+		{
+			CSimon::GetInstance()->subWeapon->isStopWatch = false;
+			CSimon::GetInstance()->isUseSubWeapon = false;
+			CSimon::GetInstance()->subWeapon->isFlying = false;
+			isStopWatchInUse = false;
+		}
+	}
 	onCamObjects.clear();
 	for (int i = 1; i < objects.size(); i++)
 		if (objects[i]->isEnable)
@@ -65,10 +75,10 @@ void CScenes::updateCamPos()
 	if (xSimon > SCREEN_WIDTH / 2 &&
 		xSimon + SCREEN_WIDTH / 2 < mapWidth)
 	{
-		if (xSimon >= MAP_MIN_COL * TILE_WIDTH + (SCREEN_WIDTH / 2) &&
-			xSimon <= mapWidth * TILE_WIDTH - (SCREEN_WIDTH / 2))
+		if (xSimon >= SCREEN_WIDTH / 2 &&
+			xSimon <= mapWidth - (SCREEN_WIDTH / 2))
 		{
-			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); //-16 để dấu ô vuông cuối đi 
+			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); 
 		}
 	}
 }
@@ -148,5 +158,9 @@ CScenes * CScenes::GetInstance()
 	return __instance;
 }
 
-
+void CScenes::stopObject()
+{
+	isStopWatchInUse = true;
+	accutime = 0;
+}
 

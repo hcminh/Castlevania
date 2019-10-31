@@ -60,6 +60,30 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
+	case AXE:
+		AddAnimation(304);		// AXE
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = BIG_HEART_BBOX;
+		break;
+	case STOP_WATCH:
+		AddAnimation(305);		// AXE
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = BIG_HEART_BBOX;
+		break;
+	case INVISIBLE:
+		AddAnimation(306);		// AXE
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = BIG_HEART_BBOX;
+		break;
+	case HOLY_WATER:
+		AddAnimation(307);		// AXE
+		vy = BIG_HEART_GRAVITY;
+		width = WEAPON_BBOX;
+		heigth = BIG_HEART_BBOX;
+		break;
 	default:
 		break;
 	}

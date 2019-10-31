@@ -35,7 +35,6 @@ using namespace std;
 
 class CMap
 {
-	CSprites * sprites = CSprites::GetInstance();
 	vector<vector<LPSPRITE>> tilemap;
 
 	int map_Width;					// chiều rộng của map

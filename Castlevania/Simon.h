@@ -60,7 +60,7 @@
 #define SIMON_STATE_STANDUP		30
 
 #define SIMON_UNTOUCHABLE_TIME	 5000
-#define SIMON_UP_LEVEL_TIME		700
+#define SIMON_UP_LEVEL_TIME		 700
 
 
 class CSimon : public CGameObject
@@ -68,6 +68,7 @@ class CSimon : public CGameObject
 	static CSimon * __instance; // Singleton Patern
 
 	DWORD accuTime = 0; //thời gian tích lũy được
+	DWORD accuTimeStopWatch = 0; //thời gian tích lũy được
 	DWORD untouchable_start;
 	float destinationX;
 	int ani;
@@ -76,6 +77,7 @@ public:
 	bool isJumping = false;
 	bool isAttacking = false;
 	bool isUseSubWeapon = false;
+	bool isUsingStopWatch = false;
 	bool isSitting = false;
 	bool isMoving = false;
 	bool levelUpgrade = false;
@@ -92,7 +94,7 @@ public:
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
 		subWeapon = new CWeapon();
-		typeSubWeapon = WeaponType::HOLY_WATER;
+		typeSubWeapon = WeaponType::NONE;
 		subWeapon->SetState(typeSubWeapon);
 	}
 

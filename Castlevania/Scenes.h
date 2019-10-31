@@ -6,13 +6,14 @@
 
 #include "Simon.h"
 #include "tilemap.h"
-
 #include <map>
+
+#define MAX_TIME_STOP_WATCH 5000
 using namespace std;
+
 
 class CScenes
 {
-
 	static CScenes * __instance; // Singleton Patern
 
 	vector<LPGAMEOBJECT> objects; //các object của map
@@ -20,9 +21,9 @@ class CScenes
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
 
 	int currentScene = SCENE_1; // mặc định là scene 1
-
+	DWORD accutime = 0;
 public:
-
+	bool isStopWatchInUse = false;
 	CScenes();
 	~CScenes();
 
@@ -42,7 +43,7 @@ public:
 	void changeScene();
 	void loadObject(string path);
 	static CScenes * GetInstance();
-
+	void stopObject();
 
 };
 

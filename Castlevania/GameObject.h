@@ -26,6 +26,12 @@ enum ItemType
 	SMALL_HEART,
 	WHIP,
 	KNIFE,
+	STOP_WATCH,
+	AXE,
+	HOLY_WATER,
+	HOLY_CROSS,
+	INVISIBLE,
+	FOOD
 };
 
 class CGameObject; 

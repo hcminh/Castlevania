@@ -39,8 +39,8 @@ enum WeaponType {
 	NONE,
 	KNIFE_WEAPON,
 	AXE_WEAPON,
-	HOLY_WATER,
-	STOP_WATCH,
+	HOLY_WATER_WEAPON,
+	STOP_WATCH_WEAPON,
 	FIRER
 };
 
@@ -51,6 +51,7 @@ class CWeapon : public CGameObject
 public:
 	bool isFlying  = false;
 	bool isBurning = false;
+	bool isStopWatch = false;
 	CWeapon();
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects = NULL);

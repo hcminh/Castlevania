@@ -129,7 +129,7 @@ void CSimon::Render()
 	animations[ani]->Render(x, y, color);
 
 	//xử lý render sau khi đã bấm nút
-	if (subWeapon != NULL && subWeapon->isFlying) subWeapon->Render();
+	if (typeSubWeapon != WeaponType::NONE && subWeapon->isFlying) subWeapon->Render();
 
 	//xử lý render vũ khí khi vừa bấm nút
 	if (isAttacking && !isUseSubWeapon)
@@ -251,7 +251,16 @@ void CSimon::colisionItem(CItem *item)
 		SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	case ItemType::KNIFE:
-		subWeapon = new CWeapon();
+		typeSubWeapon = WeaponType::KNIFE_WEAPON;
+		break;
+	case ItemType::AXE:
+		typeSubWeapon = WeaponType::AXE_WEAPON;
+		break;
+	case ItemType::HOLY_WATER:
+		typeSubWeapon = WeaponType::HOLY_WATER_WEAPON;
+		break;
+	case ItemType::STOP_WATCH:
+		typeSubWeapon = WeaponType::STOP_WATCH_WEAPON;
 		break;
 	default:
 		break;
@@ -269,8 +278,8 @@ void CSimon::autoGotoX(float x)
 
 void CSimon::attack()
 {
-	if (CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && subWeapon->isFlying) return;
-	else if (CGame::GetInstance()->IsKeyDown(DIK_UP) && subWeapon != NULL && !subWeapon->isFlying)
+	if (CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && subWeapon->isFlying) return;
+	else if (CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && !subWeapon->isFlying)
 	{
 		isUseSubWeapon = true;
 		subWeapon->isFlying = true;

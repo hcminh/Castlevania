@@ -1,6 +1,6 @@
 ﻿#include "Weapon.h"
 #include "Simon.h"
-
+#include "Scenes.h"
 #include "Textures.h"
 #include "debug.h"
 
@@ -14,7 +14,7 @@ CWeapon::CWeapon() : CGameObject()
 
 void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 {
-	if (!isFlying) return;
+	if (!isFlying || isStopWatch) return;
 	accutime += dt;
 	if (isBurning && (accutime >= FIRER_TIME_DISPLAY))
 	{
@@ -27,7 +27,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	case WeaponType::AXE_WEAPON:
 		vy += AXE_GRAVITY * dt;
 		break;
-	case WeaponType::HOLY_WATER:
+	case WeaponType::HOLY_WATER_WEAPON:
 		vy += HOLY_WATER_GRAVITY * dt;
 		break;
 	}
@@ -55,11 +55,11 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 			}
-			if (state == WeaponType::HOLY_WATER)
+			if (state == WeaponType::HOLY_WATER_WEAPON)
 			{
 				SetState(WeaponType::FIRER);
 			}
-			//else isFlying = false;
+			else if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
 			break;
 		}
 	}
@@ -67,11 +67,11 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 void CWeapon::Render()
 {
-	if (!isFlying) return;
+	if (!isFlying || isStopWatch) return;
 	if (isBurning) ani = FIRE_ANI;
 	else if (state == WeaponType::KNIFE_WEAPON) ani = KNIFE_ANI_RIGHT;
 	else if (state == WeaponType::AXE_WEAPON)	ani = AXE_ANI_RIGHT;
-	else if (state == WeaponType::HOLY_WATER)	ani = HOLY_WATER_ANI_RIGHT;
+	else if (state == WeaponType::HOLY_WATER_WEAPON)	ani = HOLY_WATER_ANI_RIGHT;
 	ani += ((nx > 0) ? 0 : 1);
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
@@ -93,7 +93,7 @@ void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & b
 		right = left + KNIFE_BBOX_WIDTH;
 		bottom = top + KNIFE_BBOX_HEIGHT;
 		break;
-	case WeaponType::HOLY_WATER:
+	case WeaponType::HOLY_WATER_WEAPON:
 		left = x;
 		top = y;
 		right = left + HOLY_WATER_BBOX;
@@ -122,9 +122,14 @@ void CWeapon::SetState(int state)
 		vx = AXE_SPEED_X * nx;
 		vy = -AXE_SPEED_Y;
 		break;
-	case WeaponType::HOLY_WATER:
+	case WeaponType::HOLY_WATER_WEAPON:
 		vx = HOLY_WATER_SPEED_X * nx;
 		vy = -HOLY_WATER_SPEED_Y;
+		break;
+	case WeaponType::STOP_WATCH_WEAPON:
+		if (isStopWatch) return;
+		isStopWatch = true;
+		CScenes::GetInstance()->stopObject();
 		break;
 	case WeaponType::FIRER:
 		vx = 0;

@@ -22,6 +22,7 @@ CMap::CMap(int ID, LPCWSTR filePath_tex, LPCWSTR filePath_data, int map_width, i
 
 void CMap::LoadResources()
 {
+	CSprites * sprites = CSprites::GetInstance();
 	CTextures * texture = CTextures::GetInstance();
 
 	texture->Add(ID, filePath_tex, TILEMAP_TRANSPARENT_COLOR);
@@ -53,6 +54,7 @@ void CMap::LoadResources()
 
 void CMap::LoadMap()
 {
+	CSprites * sprites = CSprites::GetInstance();
 	fstream fs;
 	fs.open(filePath_data, ios::in);
 

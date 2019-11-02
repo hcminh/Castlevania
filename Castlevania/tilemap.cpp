@@ -3,33 +3,26 @@
 
 CMaps * CMaps::_instance = NULL;
 
-CMap::CMap(int ID, LPCWSTR filePath_tex, LPCWSTR filePath_data, int map_width, int map_height)
+CMap::CMap(int ID, LPCWSTR texPath, LPCWSTR dataPath, int width, int height)
 {
 	this->ID = ID;
+	this->width = width;
+	this->height = height;
 
-	this->filePath_tex = filePath_tex;
-	this->filePath_data = filePath_data;
-
-	this->map_Width = map_width;
-	this->map_Height = map_height;
-
-	nums_row = map_Height / TILE_HEIGHT;
-	nums_col = map_Width / TILE_WIDTH;
-
-	LoadResources();
-	LoadMap();
+	LoadResources(texPath);
+	LoadMap(dataPath);
 }
 
-void CMap::LoadResources()
+void CMap::LoadResources(LPCWSTR texPath)
 {
 	CSprites * sprites = CSprites::GetInstance();
 	CTextures * texture = CTextures::GetInstance();
 
-	texture->Add(ID, filePath_tex, TILEMAP_TRANSPARENT_COLOR);
+	texture->Add(ID, texPath, TILEMAP_TRANSPARENT_COLOR);
 
 	LPDIRECT3DTEXTURE9 texTileMap = texture->Get(ID);
 
-	// lấy thông tin về kích thước của texture lưu các block tiles (filePath_tex)
+	// lấy thông tin về kích thước của texture lưu các block tiles (texPath)
 	D3DSURFACE_DESC surfaceDesc;
 	int level = 0;
 	texTileMap->GetLevelDesc(level, &surfaceDesc);
@@ -45,18 +38,18 @@ void CMap::LoadResources()
 	{
 		for (UINT j = 0; j < nums_colToRead; j++)
 		{
-			int idTile = ID * 1000 + id_sprite;
+			int idTile = ID + id_sprite;
 			sprites->Add(idTile, TILE_WIDTH * j, TILE_HEIGHT * i, TILE_WIDTH * (j + 1), TILE_HEIGHT * (i + 1), texTileMap);
 			id_sprite = id_sprite + 1;
 		}
 	}
 }
 
-void CMap::LoadMap()
+void CMap::LoadMap(LPCWSTR dataPath)
 {
 	CSprites * sprites = CSprites::GetInstance();
 	fstream fs;
-	fs.open(filePath_data, ios::in);
+	fs.open(dataPath, ios::in);
 
 	if (fs.fail())
 	{
@@ -78,7 +71,7 @@ void CMap::LoadMap()
 
 		while (ss >> n)
 		{
-			int idTile = ID * 1000 + n;
+			int idTile = ID + n;
 			spriteline.push_back(sprites->Get(idTile));
 		}
 
@@ -90,26 +83,27 @@ void CMap::LoadMap()
 
 void CMap::Draw(D3DXVECTOR3 camPosition)
 {
-	int start_col_to_draw = (int)camPosition.x / 32;
-	int end_col_to_draw = start_col_to_draw + SCREEN_WIDTH / 32;
+	int startCol = (int)camPosition.x / 32;
+	int endCol = startCol + SCREEN_WIDTH / 32;
+	int numOfRow = tilemap.size();
 
-	for (UINT i = 0; i < nums_row; i++)
+	for (int i = 0; i < numOfRow; i++)
 	{
-		for (UINT j = start_col_to_draw; j <= end_col_to_draw; j++)
+		for (int j = startCol; j <= endCol; j++)
 		{
 			// +camPosition.x để luôn giữ camera ở chính giữa, vì trong hàm Game::Draw() có trừ cho camPosition.x làm các object đều di chuyển theo
 			// +(int)camPosition.x % 32 để giữ cho camera chuyển động mượt
-			float x = TILE_WIDTH* (j - start_col_to_draw) + camPosition.x - (int)camPosition.x % 32;
-			float y = TILE_HEIGHT* i + 80;
+			float x = TILE_WIDTH* (j - startCol) + camPosition.x - (int)camPosition.x % 32;
+			float y = TILE_HEIGHT* i + LAYOUT_HEIGHT;
 
 			tilemap[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
 }
 
-void CMaps::Add(LPCWSTR filePath_data, LPCWSTR filePath_tex, int ID, int map_width, int map_height)
+void CMaps::Add(LPCWSTR dataPath, LPCWSTR texPath, int ID, int width, int height)
 {
-	LPTILEMAP tilemap = new CMap(ID, filePath_tex, filePath_data, map_width, map_height);
+	LPTILEMAP tilemap = new CMap(ID, texPath, dataPath, width, height);
 	tilemaps[ID] = tilemap;
 }
 

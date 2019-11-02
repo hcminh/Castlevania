@@ -33,3 +33,29 @@
 //CANDLE DÙNG ANI CỦA SỐ TỪ 250 đến 300, sprite từ 10151 đến 10155 (lại dư thêm tới 10200)
 //ITEM DÙNG ANI CỦA SỐ TỪ 300 đến 350, sprite từ 10201 đến 10155 (lại dư thêm tới 10250)
 //GROUND DÙNG ANI CỦA SỐ TỪ 350 đến 400, sprite từ 10251 đến 10251 (lại dư thêm tới 10300) -> ko dùng cách này nữa nên bỏ
+
+
+#define MAP_1_WITDH			1536
+#define MAP_1_HEIGHT		320
+
+#define MAP_2_WITDH			5632
+#define MAP_2_HEIGHT		352
+
+#define MAP_3_WITDH			1056
+#define MAP_3_HEIGHT		352
+
+#define TILE_WIDTH		32
+#define TILE_HEIGHT		32
+
+#define MAP_MIN_COL	0
+
+// Scene
+//SCENE_1 sprite từ 1001 đến 1999
+//SCENE_2 sprite từ 2001 đến 2999
+//SCENE_3 sprite từ 3001 đến 3999
+#define SCENE_1			1000
+#define SCENE_2			2000
+#define SCENE_3			3000
+
+//layout
+#define LAYOUT_HEIGHT 80

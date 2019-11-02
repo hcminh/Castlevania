@@ -13,59 +13,32 @@
 
 #define TILEMAP_TRANSPARENT_COLOR		D3DCOLOR_XRGB(5,5,5)
 
-#define MAP_1_WITDH			1536
-#define MAP_1_HEIGHT		320
 
-#define MAP_2_WITDH			5632
-#define MAP_2_HEIGHT		352
-
-#define MAP_3_WITDH			1056
-#define MAP_3_HEIGHT		352
-
-#define TILE_WIDTH		32
-#define TILE_HEIGHT		32
-
-#define MAP_MIN_COL	0
-
-// Scene
-#define SCENE_1			1000
-#define SCENE_2			2000
-#define SCENE_3			3000
 using namespace std;
 
 class CMap
 {
 	vector<vector<LPSPRITE>> tilemap;
 
-	int map_Width;					// chiều rộng của map
-	int map_Height;					// chiều cao của map
+	int width;					// chiều rộng của map
+	int height;					// chiều cao của map			
 
-	int nums_row;					// số hàng của map
-	int nums_col;					// số cột của map
-
-	LPCWSTR filePath_tex;			// filepath texture (chứa các ô tile)
-	LPCWSTR filePath_data;			// filepath data (chứa ma trận map)
-
-	int ID;							// ID của tile map, dùng để tạo class quản lí CMaps sau này.
+	int ID;							// ID map để gọi cho dễ
 
 public:
-	int index = 0;							 // index hiện tại của min_max_col_to_draw
 
 	CMap() {}
-	CMap(int ID, LPCWSTR filePath_tex, LPCWSTR filePath_data, int map_width, int map_height);
+	CMap(int ID, LPCWSTR texPath, LPCWSTR dataPath, int map_width, int map_height);
 
-	void LoadResources();			// load tất cả các ô tile lưu vào sprites
-	void LoadMap();					// load ma trận map 
+	void LoadResources(LPCWSTR texPath);			// load tất cả các ô tile lưu vào sprites
+	void LoadMap(LPCWSTR dataPath);					// load ma trận map 
 	void Draw(D3DXVECTOR3 camPosition);	// vẽ tất cả các tile nằm trong camera
-
-	int GetMapWidth() { return map_Width; }
+	int GetMapWidth() { return width; }
 };
 
 typedef CMap * LPTILEMAP;
 
-/*
-	Class quản lí danh sách các Tilemap
-*/
+
 class CMaps
 {
 	static CMaps * _instance;

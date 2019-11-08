@@ -44,6 +44,7 @@
 //SCENE_1 sprite từ 1001 đến 1999
 //SCENE_2 sprite từ 2001 đến 2999
 //SCENE_3 sprite từ 3001 đến 3999
+
 #define SCENE_1			1000
 #define SCENE_2			2000
 #define SCENE_3			3000

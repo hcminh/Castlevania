@@ -26,7 +26,7 @@ void CMap::LoadMap(LPCWSTR dataPath)
 	string line;
 	getline(fs, line);
 	stringstream ss(line);
-	ss >> this->width >> this->height;
+	ss >> this->width >> this->height; //đọc độ dài rộng của map
 	while (!fs.eof())
 	{
 		getline(fs, line);

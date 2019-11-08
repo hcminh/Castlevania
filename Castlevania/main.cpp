@@ -192,20 +192,10 @@ void LoadResources()
 		{
 			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)tex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
 		}
-		else if (id == SCENE_1)
+		else if (id == SCENE_1 || id == SCENE_2 || id == SCENE_3)
 		{
 			loadSprites(sprite, tex, id);
 			CMaps::GetInstance()->Add(ConvertToWideChar((char*)animation.c_str()), id);
-		}
-		else if (id == SCENE_2)
-		{
-			loadSprites(sprite, tex, id);
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)animation.c_str()), id);
-		}
-		else if (id == SCENE_3)
-		{
-			loadSprites(sprite, tex, id);
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), id);
 		}
 		else if (id == OBJECT_SCENE_1)
 		{

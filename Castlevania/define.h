@@ -30,19 +30,10 @@
 //SIMON DÙNG ANI CỦA SỐ TỪ 100 đến 112, sprite từ 10001 đến 10023 (lại dư thêm tới 10050)
 //WHIP DÙNG ANI CỦA SỐ TỪ 150 đến 155, sprite từ 10051 đến 10069 (lại dư thêm tới 10100)
 //SubWEAPON DÙNG ANI CỦA SỐ TỪ 200 đến 250, sprite từ 10051 đến 10101 (lại dư thêm tới 10150)
-//CANDLE DÙNG ANI CỦA SỐ TỪ 250 đến 300, sprite từ 10151 đến 10155 (lại dư thêm tới 10200)
-//ITEM DÙNG ANI CỦA SỐ TỪ 300 đến 350, sprite từ 10201 đến 10155 (lại dư thêm tới 10250)
+//CANDLE DÙNG ANI CỦA SỐ TỪ 250 đến 300, sprite từ 10151 đến 10155 (lại dư thêm tới 10200) -> ko dùng nữa
+//ITEM DÙNG ANI CỦA SỐ TỪ 250 đến 300, sprite từ 10151 đến 10155 (lại dư thêm tới 10200)
 //GROUND DÙNG ANI CỦA SỐ TỪ 350 đến 400, sprite từ 10251 đến 10251 (lại dư thêm tới 10300) -> ko dùng cách này nữa nên bỏ
 
-
-#define MAP_1_WITDH			1536
-#define MAP_1_HEIGHT		320
-
-#define MAP_2_WITDH			5632
-#define MAP_2_HEIGHT		352
-
-#define MAP_3_WITDH			1056
-#define MAP_3_HEIGHT		352
 
 #define TILE_WIDTH		32
 #define TILE_HEIGHT		32
@@ -53,6 +44,7 @@
 //SCENE_1 sprite từ 1001 đến 1999
 //SCENE_2 sprite từ 2001 đến 2999
 //SCENE_3 sprite từ 3001 đến 3999
+
 #define SCENE_1			1000
 #define SCENE_2			2000
 #define SCENE_3			3000

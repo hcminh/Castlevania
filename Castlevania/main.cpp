@@ -137,7 +137,7 @@ void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
 	fs.open(filepathtosprite, ios::in);
 	if (fs.fail())
 	{
-		DebugOut(L"[ERROR] Load file sprite lỗi");
+		DebugOut(L"[ERROR] Load file sprite lỗi Ở ID: %d \n", idTex);
 		fs.close();
 	}
 	while (!fs.eof())
@@ -188,20 +188,24 @@ void LoadResources()
 		int id;
 		string tex, sprite, animation;
 		fs >> id >> tex >> sprite >> animation;
-		if (id == ID_TEX_BBOX) {
+		if (id == ID_TEX_BBOX)
+		{
 			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)tex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
 		}
 		else if (id == SCENE_1)
 		{
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_1_WITDH, MAP_1_HEIGHT);
+			loadSprites(sprite, tex, id);
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)animation.c_str()), id);
 		}
 		else if (id == SCENE_2)
 		{
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_2_WITDH, MAP_2_HEIGHT);
+			loadSprites(sprite, tex, id);
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)animation.c_str()), id);
 		}
 		else if (id == SCENE_3)
 		{
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), ConvertToWideChar((char*)tex.c_str()), id, MAP_3_WITDH, MAP_3_HEIGHT);
+			loadSprites(sprite, tex, id);
+			CMaps::GetInstance()->Add(ConvertToWideChar((char*)sprite.c_str()), id);
 		}
 		else if (id == OBJECT_SCENE_1)
 		{

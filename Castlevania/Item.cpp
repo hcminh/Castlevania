@@ -36,50 +36,50 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 	switch (item)
 	{
 	case BIG_HEART:
-		AddAnimation(300);		// big heart
+		AddAnimation(253);		// big heart
 		vy = BIG_HEART_GRAVITY;
 		width = BIG_HEART_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case SMALL_HEART:
-		AddAnimation(301);		// small heart
+		AddAnimation(254);		// small heart
 		velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
 		vy = SMALL_HEART_GRAVITY;
 		width = SMALL_HEART_BBOX;
 		heigth = SMALL_HEART_BBOX;
 		break;
 	case WHIP:
-		AddAnimation(302);		// whip
+		AddAnimation(255);		// whip
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = WEAPON_BBOX;
 		break;
 	case KNIFE:
-		AddAnimation(303);		// knife
+		AddAnimation(256);		// knife
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case AXE:
-		AddAnimation(304);		// AXE
+		AddAnimation(257);		// AXE
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case STOP_WATCH:
-		AddAnimation(305);		// AXE
+		AddAnimation(258);		// AXE
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case INVISIBLE:
-		AddAnimation(306);		// AXE
+		AddAnimation(259);		// AXE
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case HOLY_WATER:
-		AddAnimation(307);		// AXE
+		AddAnimation(260);		// AXE
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
@@ -109,14 +109,14 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 
 	if (!isDestroyed) return;
-	//
+
 	if (item == ItemType::SMALL_HEART && vy != 0)
 	{
 		vx += velocityVariation_x;
 		if (vx >= ITEM_FALLING_SPEED_X || vx <= -ITEM_FALLING_SPEED_X)
 			velocityVariation_x *= -1; // đổi chiều
 	}
-	// 
+	
 
 	if (CSimon::GetInstance()->isColisionItem(this))
 	{

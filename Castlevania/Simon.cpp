@@ -84,13 +84,16 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				}
 			}
 		}
-		if (ny != 0) {
+		if (ny < 0) {
+			DebugOut(L"[COLLISION] NY: %f \n", ny);
 			vy = 0;
 			if (isJumping) {
 				SetState(SIMON_STATE_STANDUP);
 				isJumping = false;
 			}
 		}
+		else if (ny > 0)
+			y += dy;
 	}
 
 	//update weapon

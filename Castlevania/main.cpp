@@ -58,6 +58,8 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->setCurrentScene(SCENE_1);
+		CSimon::GetInstance()->SetPosition(10.0f, 300);
+		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
 		CScenes::GetInstance()->loadObject("textures\\map\\scene1-objects.txt");
 		break;
 	case DIK_2: //qua scene 2

@@ -1,6 +1,7 @@
 ﻿#include "Scenes.h"
 #include "Ground.h"
 #include "Door.h"
+#include "Enemy.h"
 
 CScenes * CScenes::__instance = NULL;
 
@@ -113,6 +114,12 @@ void CScenes::loadObject(string path)
 	clearAllObject();
 	//nhét con simon vào đầu mảng cho dễ xử lý 
 	insertObject(CSimon::GetInstance());
+
+	CEnemy *enemy = new CEnemy(EnemyType::GHOST);
+	enemy->SetPosition(250.0f, 303.0f);
+	enemy->nx = 1;
+	pushObject(enemy);
+
 	fstream fs;
 	fs.open(path, ios::in);
 	if (fs.fail())
@@ -150,6 +157,7 @@ void CScenes::loadObject(string path)
 		}
 	}
 	fs.close();
+
 }
 
 CScenes * CScenes::GetInstance()

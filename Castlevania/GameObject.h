@@ -20,19 +20,6 @@ enum ObjectType
 	DOOR,
 };
 
-enum ItemType
-{
-	BIG_HEART,
-	SMALL_HEART,
-	WHIP,
-	KNIFE,
-	STOP_WATCH,
-	AXE,
-	HOLY_WATER,
-	HOLY_CROSS,
-	INVISIBLE,
-	FOOD
-};
 
 class CGameObject; 
 typedef CGameObject * LPGAMEOBJECT;
@@ -74,7 +61,6 @@ public:
 
 	DWORD dt; 
 	ObjectType type;
-	ItemType item;
 	vector<LPANIMATION> animations;
 
 public: 

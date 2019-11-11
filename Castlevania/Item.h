@@ -6,13 +6,14 @@
 #define BIG_HEART_BBOX  23
 #define SMALL_HEART_BBOX  15
 #define BIG_HEART_GRAVITY 0.2f
-#define SMALL_HEART_GRAVITY 0.02f
+#define SMALL_HEART_GRAVITY 0.0001f
 
 #define CANDLE_BIG_BBOX_WIDTH		 32
 #define CANDLE_BIG_BBOX_HEIGHT		 64
-#define CANDLE_SMALL_BBOX_WIDTH		 20
+#define CANDLE_SMALL_BBOX_WIDTH		 15
 #define CANDLE_SMALL_BBOX_HEIGHT     40
 #define WEAPON_BBOX					 32
+#define PACKAGE_BBOX				 28
 
 #define ITEM_ANI_STATE			0
 #define ITEM_ANI_ITEM			1
@@ -44,12 +45,31 @@ enum ItemState
 	STATE_WALL
 };
 
+enum ItemType
+{
+	TYPE_NONE,
+	BIG_HEART,
+	SMALL_HEART,
+	WHIP,
+	KNIFE,
+	STOP_WATCH,
+	AXE,
+	HOLY_WATER,
+	HOLY_CROSS,
+	INVISIBLE,
+	FOOD,
+	POINT_400,
+	POINT_700,
+	POINT_1000,
+	DOUBLE_SHOT,
+	TRIPLE_SHOT
+};
+
 class CItem : public CGameObject
 {
 	DWORD timeDisplayed; // Thời gian đã hiển thị.
 
 	DWORD timeWaited; // Thời gian đã chờ trước khi hiển thị
-	ItemState itemState;
 	bool isDestroyed = false;
 	bool isDestroying = false;
 	bool isTouchGround = false;
@@ -57,6 +77,8 @@ class CItem : public CGameObject
 	int width, heigth, widthState, heigthState;
 
 public:
+	ItemState itemState;
+	ItemType item;
 	CItem(ItemType type, ItemState itemState = ItemState::STATE_NONE);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();

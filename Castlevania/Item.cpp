@@ -26,8 +26,14 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 		AddAnimation(251);		// small CANDLE
 		break;
 	case STATE_BRICK:
+		widthState = 32;
+		heigthState = 32;
+		AddAnimation(261);		// brick item
 		break;
 	case STATE_WALL:
+		widthState = 32;
+		heigthState = 32;
+		AddAnimation(262);		// wall item
 		break;
 	default:
 		break;
@@ -35,6 +41,12 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 	//item that obj holding
 	switch (item)
 	{
+	case TYPE_NONE:
+		AddAnimation(267);		// big heart
+		//vy = BIG_HEART_GRAVITY;
+		width = 0;
+		heigth = 0;
+		break;
 	case BIG_HEART:
 		AddAnimation(253);		// big heart
 		vy = BIG_HEART_GRAVITY;
@@ -67,22 +79,52 @@ CItem::CItem(ItemType itemType, ItemState itemState)
 		heigth = BIG_HEART_BBOX;
 		break;
 	case STOP_WATCH:
-		AddAnimation(258);		// AXE
+		AddAnimation(258);		// STOP_WATCH
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case INVISIBLE:
-		AddAnimation(259);		// AXE
+		AddAnimation(259);		// INVISIBLE
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
 		break;
 	case HOLY_WATER:
-		AddAnimation(260);		// AXE
+		AddAnimation(260);		// HOLY_WATER
 		vy = BIG_HEART_GRAVITY;
 		width = WEAPON_BBOX;
 		heigth = BIG_HEART_BBOX;
+		break;
+	case POINT_400:
+		AddAnimation(263);		// túi xanh
+		vy = BIG_HEART_GRAVITY;
+		width = PACKAGE_BBOX;
+		heigth = PACKAGE_BBOX;
+		break;
+	case POINT_700:
+		AddAnimation(264);		// túi vàng
+		vy = BIG_HEART_GRAVITY;
+		width = PACKAGE_BBOX;
+		heigth = PACKAGE_BBOX;
+		break;
+	case POINT_1000:
+		AddAnimation(265);		// túi đỏ
+		vy = BIG_HEART_GRAVITY;
+		width = PACKAGE_BBOX;
+		heigth = PACKAGE_BBOX;
+		break;
+	case FOOD:
+		AddAnimation(266);		// GÀ NƯỚNG
+		vy = BIG_HEART_GRAVITY;
+		width = PACKAGE_BBOX;
+		heigth = PACKAGE_BBOX;
+		break;
+	case DOUBLE_SHOT:
+		AddAnimation(268);		// double shot
+		vy = BIG_HEART_GRAVITY;
+		width = PACKAGE_BBOX;
+		heigth = PACKAGE_BBOX;
 		break;
 	default:
 		break;
@@ -113,10 +155,10 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	if (item == ItemType::SMALL_HEART && vy != 0)
 	{
 		vx += velocityVariation_x;
+		vy += SMALL_HEART_GRAVITY * dt;
 		if (vx >= ITEM_FALLING_SPEED_X || vx <= -ITEM_FALLING_SPEED_X)
 			velocityVariation_x *= -1; // đổi chiều
 	}
-	
 
 	if (CSimon::GetInstance()->isColisionItem(this))
 	{
@@ -166,7 +208,7 @@ void CItem::Render()
 	else if (!isDestroyed) ani = ITEM_ANI_STATE;
 	else ani = ITEM_ANI_ITEM;
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CItem::GetBoundingBox(float &l, float &t, float &r, float &b)

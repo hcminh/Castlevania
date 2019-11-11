@@ -53,8 +53,8 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_Q:
 		CSimon::GetInstance()->whip->levelUp();
 		break;
-	case DIK_W:
-		CSimon::GetInstance()->whip->levelDown();
+	case DIK_X:
+		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->setCurrentScene(SCENE_1);
@@ -63,7 +63,7 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->setCurrentScene(SCENE_2);
 		CScenes::GetInstance()->loadObject("textures\\map\\scene2-objects.txt");
-		CSimon::GetInstance()->SetPosition(1200.0f, 300);
+		CSimon::GetInstance()->SetPosition(3500.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->setCurrentScene(SCENE_3);

@@ -240,9 +240,9 @@ bool CSimon::isColisionItem(CItem *item)
 	return res;
 }
 
-void CSimon::colisionItem(CItem *item)
+void CSimon::colisionItem(CItem *it)
 {
-	switch (item->item)
+	switch (it->item)
 	{
 	case ItemType::BIG_HEART:
 		DebugOut(L"[COLISION] chạm vào tim to bự nè: %d\n");

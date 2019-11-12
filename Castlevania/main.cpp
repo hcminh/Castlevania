@@ -24,7 +24,8 @@
 using namespace std;
 
 CGame *game;
-//void loadObject(string filepath);
+void loadSprites(string filepathtosprite, string filepathtotex, int idTex);
+void loadAnimations(string filepath, int idTex = 0);
 class CSampleKeyHander : public CKeyEventHandler
 {
 	virtual void KeyState(BYTE *states);
@@ -57,19 +58,16 @@ void CSampleKeyHander::OnKeyDown(int KeyCode)
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);
 		break;
 	case DIK_1: //qua scene 1
-		CScenes::GetInstance()->setCurrentScene(SCENE_1);
+		CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
 		CSimon::GetInstance()->SetPosition(10.0f, 300);
 		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
-		CScenes::GetInstance()->loadObject("textures\\map\\scene1-objects.txt");
 		break;
 	case DIK_2: //qua scene 2
-		CScenes::GetInstance()->setCurrentScene(SCENE_2);
-		CScenes::GetInstance()->loadObject("textures\\map\\scene2-objects.txt");
-		CSimon::GetInstance()->SetPosition(3500.0f, 300);
+		CScenes::GetInstance()->changeScene(SceneID::SCENEID_2);
+		CSimon::GetInstance()->SetPosition(1200.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
-		CScenes::GetInstance()->setCurrentScene(SCENE_3);
-		CScenes::GetInstance()->loadObject("textures\\map\\scene3-objects.txt");
+		CScenes::GetInstance()->changeScene(SceneID::SCENEID_3);
 		CSimon::GetInstance()->SetPosition(609.0f, 100);
 		break;
 	}
@@ -129,6 +127,65 @@ wchar_t* ConvertToWideChar(char* p) // hàm này covert string sang wchar_t*, co
 	return r;
 }
 
+void loadScenes(string path)
+{
+	fstream fs;
+	fs.open(path, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load file scene lỗi \n");
+		fs.close();
+	}
+	while (!fs.eof())
+	{
+		int sceneID, mapID;
+		string linkObjs;
+		fs >> sceneID >> mapID >> linkObjs;
+		CScenes::GetInstance()->Add(SceneID(sceneID), mapID, linkObjs);
+	}
+	fs.close();
+}
+
+void loadMaps(string path)
+{
+	fstream fs;
+	fs.open(path, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load map lỗi \n");
+		fs.close();
+	}
+	while (!fs.eof())
+	{
+		int mapID;
+		string mapTex, mapSprite, mapMatrix;
+		fs >> mapID >> mapTex >> mapSprite >> mapMatrix;
+		loadSprites(mapSprite, mapTex, mapID);
+		CMaps::GetInstance()->Add(ConvertToWideChar((char*)mapMatrix.c_str()), mapID);
+	}
+	fs.close();
+}
+
+void loadObject(string path)
+{
+	fstream fs;
+	fs.open(path, ios::in);
+	if (fs.fail())
+	{
+		DebugOut(L"[ERROR] Load sprite, animation của object lỗi \n");
+		fs.close();
+	}
+	while (!fs.eof())
+	{
+		int objID;
+		string tex, sprite, animation;
+		fs >> objID >> tex >> sprite >> animation;
+		loadSprites(sprite, tex, objID);
+		loadAnimations(animation);
+	}
+	fs.close();
+}
+
 void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
 {
 	CTextures * textures = CTextures::GetInstance();
@@ -151,7 +208,7 @@ void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
 	fs.close();
 }
 
-void loadAnimations(string filepath, int idTex = 0) {
+void loadAnimations(string filepath, int idTex) {
 	CAnimations * animations = CAnimations::GetInstance();
 	LPANIMATION ani;
 	fstream fs;
@@ -188,30 +245,35 @@ void LoadResources()
 	while (!fs.eof())
 	{
 		int id;
-		string tex, sprite, animation;
-		fs >> id >> tex >> sprite >> animation;
-		if (id == ID_TEX_BBOX)
+		string path;
+		fs >> id >> path;
+		switch (id)
 		{
-			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)tex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
-		}
-		else if (id == SCENE_1 || id == SCENE_2 || id == SCENE_3)
-		{
-			loadSprites(sprite, tex, id);
-			CMaps::GetInstance()->Add(ConvertToWideChar((char*)animation.c_str()), id);
-		}
-		else if (id == OBJECT_SCENE_1)
-		{
-			CScenes::GetInstance()->loadObject(sprite);
-		}
-		else
-		{
-			loadSprites(sprite, tex, id);
-			loadAnimations(animation);
+		case ID_BBOX:
+			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)path.c_str()), D3DCOLOR_XRGB(255, 0, 255));
+			break;	
+		case ID_MAP:
+			loadMaps(path);
+			break;
+		case ID_SCENE:
+			loadScenes(path);
+			break;
+		case ID_OBJECT:
+			loadObject(path);
+			break;
+		default:
+			break;
 		}
 	}
 	fs.close();
 
 
+}
+
+void init()
+{
+	LoadResources();
+	CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
 }
 
 void Update(DWORD dt)
@@ -341,7 +403,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	keyHandler = new CSampleKeyHander();
 	game->InitKeyboard(keyHandler);
 
-	LoadResources();
+	init();
 
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 

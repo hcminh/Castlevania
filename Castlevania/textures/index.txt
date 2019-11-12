@@ -1,10 +1,4 @@
--1      textures\\bbox.png             null                               null
-0       textures\\simon.png            textures\\simon-sprite.txt         textures\\simon-animation.txt   
-1       textures\\whip.png             textures\\whip-sprite.txt          textures\\whip-animation.txt
-2       textures\\weapons.png          textures\\weapon-sprite.txt        textures\\weapon-animation.txt   
-3       textures\\item.png 	           textures\\item-sprite.txt          textures\\item-animation.txt
-4       textures\\enemy.png 	       textures\\enemy-sprite.txt         textures\\enemy-animation.txt
-1000    textures\\map\\scene1.png      textures\\map\\scene1-sprite.txt   textures\\map\\scene1-map.txt
-2000    textures\\map\\scene2.png      textures\\map\\scene2-sprite.txt   textures\\map\\scene2-map.txt
-3000    textures\\map\\scene3.png      textures\\map\\scene3-sprite.txt   textures\\map\\scene3-map.txt
--999	null		                   textures\\map\\scene1-objects.txt	null
+-1          textures\\bbox.png
+3           textures\\objects\\objects.txt
+2           textures\\map\\maps.txt
+1           textures\\scenes\\scenes.txt

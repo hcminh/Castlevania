@@ -2,16 +2,10 @@
 #include "Ground.h"
 #include "Door.h"
 #include "Enemy.h"
+#include "Stairs.h"
 
 CScenes * CScenes::__instance = NULL;
 
-CScenes::CScenes()
-{
-}
-
-CScenes::~CScenes()
-{
-}
 
 void CScenes::Update(DWORD dt)
 {
@@ -40,10 +34,19 @@ void CScenes::Update(DWORD dt)
 
 void CScenes::Render()
 {
-	CMaps::GetInstance()->Get(currentScene)->Draw(CGame::GetInstance()->getCamPos());
+	CMaps::GetInstance()->Get(curentMap)->Draw(CGame::GetInstance()->getCamPos());
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
 	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
+
+	//render stair ra nhìn thôi, mốt xóa
+	CStairs::GetInstance()->Render();
+}
+
+void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
+{
+	LPSCENE scene = new CScene(sceneID, mapID, linkObjects);
+	scenes[sceneID] = scene;
 }
 
 void CScenes::pushObject(LPGAMEOBJECT object)
@@ -71,7 +74,7 @@ void CScenes::putItem(ItemType type, float x, float y)
 void CScenes::updateCamPos()
 {
 	float xSimon = CSimon::GetInstance()->x + SIMON_SPRITE_WIDTH;
-	int mapWidth = CMaps::GetInstance()->Get(currentScene)->GetMapWidth();
+	int mapWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
 
 	if (xSimon > SCREEN_WIDTH / 2 &&
 		xSimon + SCREEN_WIDTH / 2 < mapWidth)
@@ -86,27 +89,37 @@ void CScenes::updateCamPos()
 
 void CScenes::changeScene()
 {
-	if (currentScene == SCENE_1)
+	if (currentScene == SceneID::SCENEID_1)
 	{
-		currentScene = SCENE_2;
-		loadObject("textures\\map\\scene2-objects.txt");
+		currentScene = SceneID::SCENEID_2;
+		curentMap = scenes[currentScene]->mapID;
+		loadObject(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 300);
 		CGame::GetInstance()->SetCamPos(0, 0); 
 	}
-	else if (currentScene == SCENE_2)
+	else if (currentScene == SceneID::SCENEID_2)
 	{
-		currentScene = SCENE_3;
-		loadObject("textures\\map\\scene3-objects.txt");
+		currentScene = SceneID::SCENEID_3;
+		curentMap = scenes[currentScene]->mapID;
+		loadObject(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 100);
 		CGame::GetInstance()->SetCamPos(0, 0);
 	}
-	else if (currentScene == SCENE_3)
+	else if (currentScene == SceneID::SCENEID_3)
 	{
-		currentScene = SCENE_2;
-		loadObject("textures\\map\\scene2-objects.txt");
+		currentScene = SceneID::SCENEID_2;
+		curentMap = scenes[currentScene]->mapID;
+		loadObject(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(3000.0f, 300);
 		updateCamPos();
 	}
+}
+
+void CScenes::changeScene(SceneID newScene)
+{
+	currentScene = newScene;
+	curentMap = scenes[currentScene]->mapID;
+	loadObject(scenes[currentScene]->linkObjects);
 }
 
 void CScenes::loadObject(string path)
@@ -114,11 +127,6 @@ void CScenes::loadObject(string path)
 	clearAllObject();
 	//nhét con simon vào đầu mảng cho dễ xử lý 
 	insertObject(CSimon::GetInstance());
-
-	CEnemy *enemy = new CEnemy(EnemyType::GHOST);
-	enemy->SetPosition(250.0f, 303.0f);
-	enemy->nx = 1;
-	pushObject(enemy);
 
 	fstream fs;
 	fs.open(path, ios::in);
@@ -133,22 +141,22 @@ void CScenes::loadObject(string path)
 	while (!fs.eof())
 	{
 		fs >> id >> x >> y >> item >> state >> width >> height;
-		switch (id)
+		switch (ObjectType(id))
 		{
-		case ID_ITEM:
+		case ITEM:
 		{
 			CItem *cItem = new CItem(ItemType(item), ItemState(state));
 			cItem->SetPosition(x, y);
 			pushObject(cItem);
 			break;
 		}
-		case ID_GROUND:
+		case GROUND:
 		{
 			CGround *ground = new CGround(x, y, width, height);
 			pushObject(ground);
 			break;
 		}
-		case ID_DOOR:
+		case DOOR:
 		{
 			CDoor *door = new CDoor(x, y);
 			pushObject(door);
@@ -157,7 +165,6 @@ void CScenes::loadObject(string path)
 		}
 	}
 	fs.close();
-
 }
 
 CScenes * CScenes::GetInstance()
@@ -172,3 +179,9 @@ void CScenes::stopObject()
 	accutime = 0;
 }
 
+CScene::CScene(SceneID sceneID, int mapID, string link)
+{
+	this->sceneID = sceneID;
+	this->mapID = mapID;
+	this->linkObjects = link;
+}

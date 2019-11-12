@@ -36,7 +36,7 @@ void CWhip::Render()
 	ani = level + *nxSimon + ((*nxSimon > 0) ? 1 : 0);
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 	if (level == LEVEL_MAX)
-		color = D3DCOLOR_ARGB(255, rand() % 255 + 200, rand() % 255 + 200, rand() % 255 + 200);
+		color = D3DCOLOR_ARGB(255, rand() % 255 + 245, rand() % 255 + 245, rand() % 255 + 245);
 	if(CSimon::GetInstance()->isSitting)
 		animations[ani]->Render(*xSimon - 80, *ySimon - 5, color);
 	else animations[ani]->Render(*xSimon - 80, *ySimon, color);

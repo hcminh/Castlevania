@@ -10,7 +10,6 @@
 
 #define MAX_FRAME_RATE 120
 
-#define ID_TEX_BBOX		-1
 
 //định nghĩa load file index.txt
 /*
@@ -21,7 +20,13 @@
 3 item
 4 enemy
 */
-//define id của obj
+//define id để loadfile
+#define ID_BBOX		     -1
+#define ID_SCENE		 1
+#define ID_MAP		     2
+#define ID_OBJECT	     3
+
+//
 #define OBJECT_SCENE_1 -999
 #define ID_SIMON	0
 #define ID_WHIP		1

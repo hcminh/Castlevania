@@ -1,0 +1,5 @@
+0       textures\\objects\\simon.png            textures\\objects\\simon-sprite.txt         textures\\objects\\simon-animation.txt   
+1       textures\\objects\\whip.png             textures\\objects\\whip-sprite.txt          textures\\objects\\whip-animation.txt
+2       textures\\objects\\weapons.png          textures\\objects\\weapon-sprite.txt        textures\\objects\\weapon-animation.txt   
+3       textures\\objects\\item.png 	        textures\\objects\\item-sprite.txt          textures\\objects\\item-animation.txt
+4       textures\\objects\\enemy.png 	        textures\\objects\\enemy-sprite.txt         textures\\objects\\enemy-animation.txt

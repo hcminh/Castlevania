@@ -95,7 +95,7 @@
     <ClInclude Include="Zombie.h">
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Stair.h">
+    <ClInclude Include="Stairs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -154,7 +154,7 @@
     <ClCompile Include="Zombie.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
-    <ClCompile Include="Stair.cpp">
+    <ClCompile Include="Stairs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

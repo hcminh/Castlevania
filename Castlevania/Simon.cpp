@@ -34,7 +34,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type == ObjectType::GROUND || coObjects->at(i)->type == ObjectType::DOOR)
+		if(coObjects->at(i)->type != ObjectType::ITEM)
 			listObject.push_back(coObjects->at(i));
 	}
 
@@ -71,7 +71,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 		if (nx != 0) 
 		{
-			vx = 0;
+			//vx = 0;
 
 			//Collision logic with DOOR
 			for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -85,7 +85,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 		if (ny < 0) {
-			DebugOut(L"[COLLISION] NY: %f \n", ny);
 			vy = 0;
 			if (isJumping) {
 				SetState(SIMON_STATE_STANDUP);
@@ -99,9 +98,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	//update weapon
 	whip->Update(dt, coObjects);
 	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
-
-	//nếu là frame đánh cuói cùng thì tắt isAttacking
-	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME)
+	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME) //nếu là frame đánh cuói cùng thì tắt isAttacking
 	{
 		isAttacking = false;
 		isUseSubWeapon = false;
@@ -281,7 +278,7 @@ void CSimon::autoGotoX(float x)
 
 void CSimon::attack()
 {
-	if (CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && subWeapon->isFlying) return;
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && subWeapon->isFlying)|| levelUpgrade) return;
 	else if (CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && !subWeapon->isFlying)
 	{
 		isUseSubWeapon = true;

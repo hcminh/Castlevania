@@ -18,6 +18,7 @@ enum ObjectType
 	WEAPON,
 	GROUND,
 	DOOR,
+	STAIR,
 };
 
 

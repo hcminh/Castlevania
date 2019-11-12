@@ -139,7 +139,7 @@
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Simon.h" />
     <ClInclude Include="Sprites.h" />
-    <ClInclude Include="Stair.h" />
+    <ClInclude Include="Stairs.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="tilemap.h" />
     <ClInclude Include="Weapon.h" />
@@ -160,7 +160,7 @@
     <ClCompile Include="Scenes.cpp" />
     <ClCompile Include="Simon.cpp" />
     <ClCompile Include="Sprites.cpp" />
-    <ClCompile Include="Stair.cpp" />
+    <ClCompile Include="Stairs.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="tilemap.cpp" />
     <ClCompile Include="Weapon.cpp" />

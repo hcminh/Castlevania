@@ -3,6 +3,8 @@
 #define WINDOW_CLASS_NAME L"SampleWindow"
 #define MAIN_WINDOW_TITLE L"Castlevania"
 
+#define RESOURCE_PATH "textures\\index.txt"
+
 #define SCREEN_WIDTH 512
 #define SCREEN_HEIGHT 480
 

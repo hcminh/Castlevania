@@ -3,103 +3,94 @@
 #include <d3dx9.h>
 
 #include "define.h"
-#include "debug.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "Textures.h"
+#include "Input.h"
+#include "debug.h"
+#include "LoadFile.h"
 #include "Scenes.h"
 
-#include "Simon.h"
-#include "Goomba.h"
-#include "Whip.h"
-#include "Item.h"
-#include "Ground.h"
-#include "define.h"
-#include "tilemap.h"
-#include "Door.h"
-
-#include<iostream>
-#include<fstream>
-#include<vector>
-using namespace std;
-
 CGame *game;
-void loadSprites(string filepathtosprite, string filepathtotex, int idTex);
-void loadAnimations(string filepath, int idTex = 0);
-class CSampleKeyHander : public CKeyEventHandler
-{
-	virtual void KeyState(BYTE *states);
-	virtual void OnKeyDown(int KeyCode);
-	virtual void OnKeyUp(int KeyCode);
-};
 
-CSampleKeyHander * keyHandler;
-
-void CSampleKeyHander::OnKeyDown(int KeyCode)
+void Init(HWND hWnd)
 {
-	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
-	switch (KeyCode)
-	{
-	case DIK_SPACE:
-		CSimon::GetInstance()->SetState(SIMON_STATE_JUMP);
-		break;
-	case DIK_R: // reset
-		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
-		CSimon::GetInstance()->SetPosition(50.0f, 0.0f);
-		CSimon::GetInstance()->SetSpeed(0, 0);
-		break;
-	case DIK_A: // ATTACK
-		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
-		break;
-	case DIK_Q:
-		CSimon::GetInstance()->whip->levelUp();
-		break;
-	case DIK_X:
-		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);
-		break;
-	case DIK_1: //qua scene 1
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
-		CSimon::GetInstance()->SetPosition(10.0f, 300);
-		CGame::GetInstance()->SetCamPos(0.0f, 0.0f);
-		break;
-	case DIK_2: //qua scene 2
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_2);
-		CSimon::GetInstance()->SetPosition(1200.0f, 300);
-		break;
-	case DIK_3: //qua scene 3
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_3);
-		CSimon::GetInstance()->SetPosition(609.0f, 100);
-		break;
-	}
+	game = CGame::GetInstance();
+	game->Init(hWnd);
+
+	Input *inp = new Input();
+	game->InitKeyboard(inp);
+
+	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+
+	CLoadFile().LoadResources(RESOURCE_PATH);
+	CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
 }
 
-void CSampleKeyHander::OnKeyUp(int KeyCode)
+void Update(DWORD dt)
 {
-	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
+	// dt: time period between beginning of last frame and beginning of this frame
+	CScenes::GetInstance()->Update(dt);
 }
 
-void CSampleKeyHander::KeyState(BYTE *states)
+void Render()
 {
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_JUMP && CSimon::GetInstance()->isJumping) return;
-	if (CSimon::GetInstance()->isAutoGoX) return;
+	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
+	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
+	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
 
-	if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
-		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
-	else if (game->IsKeyDown(DIK_RIGHT) && !CSimon::GetInstance()->isAttacking)
-		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT) && !CSimon::GetInstance()->isAttacking)
-		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_U))
-		CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);
-	else if (game->IsKeyDown(DIK_I))
-		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
-	else
+	if (d3ddv->BeginScene())
 	{
-		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
-		else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
-		else CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
+
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+
+		CScenes::GetInstance()->Render();
+
+		spriteHandler->End();
+		d3ddv->EndScene();
 	}
+	// Display back buffer content to the screen
+	d3ddv->Present(NULL, NULL, NULL, NULL);
+}
+
+int Run()
+{
+	MSG msg;
+	int done = 0;
+	DWORD frameStart = GetTickCount();
+	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
+
+	while (!done)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+			if (msg.message == WM_QUIT) done = 1;
+
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		DWORD now = GetTickCount();
+
+		// dt: the time between (beginning of last frame) and now
+		// this frame: the frame we are about to render
+		DWORD dt = now - frameStart;
+
+		if (dt >= tickPerFrame)
+		{
+			frameStart = now;
+
+			game->ProcessKeyboard();
+
+			Update(dt);
+			Render();
+		}
+		else
+			Sleep(tickPerFrame - dt);
+	}
+
+	return 1;
 }
 
 LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -113,198 +104,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return 0;
-}
-
-wchar_t* ConvertToWideChar(char* p) // hàm này covert string sang wchar_t*, coppy trên mạng
-{
-	wchar_t *r;
-	r = new wchar_t[strlen(p) + 1];
-
-	char *tempsour = p;
-	wchar_t *tempdest = r;
-	while (*tempdest++ = *tempsour++);
-
-	return r;
-}
-
-void loadScenes(string path)
-{
-	fstream fs;
-	fs.open(path, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load file scene lỗi \n");
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int sceneID, mapID;
-		string linkObjs;
-		fs >> sceneID >> mapID >> linkObjs;
-		CScenes::GetInstance()->Add(SceneID(sceneID), mapID, linkObjs);
-	}
-	fs.close();
-}
-
-void loadMaps(string path)
-{
-	fstream fs;
-	fs.open(path, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load map lỗi \n");
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int mapID;
-		string mapTex, mapSprite, mapMatrix;
-		fs >> mapID >> mapTex >> mapSprite >> mapMatrix;
-		loadSprites(mapSprite, mapTex, mapID);
-		CMaps::GetInstance()->Add(ConvertToWideChar((char*)mapMatrix.c_str()), mapID);
-	}
-	fs.close();
-}
-
-void loadObject(string path)
-{
-	fstream fs;
-	fs.open(path, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load sprite, animation của object lỗi \n");
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int objID;
-		string tex, sprite, animation;
-		fs >> objID >> tex >> sprite >> animation;
-		loadSprites(sprite, tex, objID);
-		loadAnimations(animation);
-	}
-	fs.close();
-}
-
-void loadSprites(string filepathtosprite, string filepathtotex, int idTex)
-{
-	CTextures * textures = CTextures::GetInstance();
-	CSprites * sprites = CSprites::GetInstance();
-	textures->Add(idTex, ConvertToWideChar((char*)filepathtotex.c_str()), D3DCOLOR_XRGB(255, 0, 255));
-	LPDIRECT3DTEXTURE9 tex = textures->Get(idTex);
-	fstream fs;
-	fs.open(filepathtosprite, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load file sprite lỗi Ở ID: %d \n", idTex);
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int sprite, left, top, right, bottom;
-		fs >> sprite >> left >> top >> right >> bottom;
-		sprites->Add(sprite, left, top, right, bottom, tex);
-	}
-	fs.close();
-}
-
-void loadAnimations(string filepath, int idTex) {
-	CAnimations * animations = CAnimations::GetInstance();
-	LPANIMATION ani;
-	fstream fs;
-	fs.open(filepath, ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load file animation lỗi");
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int id;
-		int sprite1 = -1, sprite2 = -1, sprite3 = -1, sprite4 = -1;
-		fs >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4;
-		ani = new CAnimation(100);
-		if (sprite1 > -1)ani->Add(sprite1);
-		if (sprite2 > -1)ani->Add(sprite2);
-		if (sprite3 > -1)ani->Add(sprite3);
-		if (sprite4 > -1)ani->Add(sprite4);
-		animations->Add(id, ani);
-	}
-	fs.close();
-}
-
-void LoadResources()
-{
-	fstream fs;
-	fs.open("textures\\index.txt", ios::in);
-	if (fs.fail())
-	{
-		DebugOut(L"[ERROR] Load file sprite lỗi");
-		fs.close();
-	}
-	while (!fs.eof())
-	{
-		int id;
-		string path;
-		fs >> id >> path;
-		switch (id)
-		{
-		case ID_BBOX:
-			CTextures::GetInstance()->Add(id, ConvertToWideChar((char*)path.c_str()), D3DCOLOR_XRGB(255, 0, 255));
-			break;	
-		case ID_MAP:
-			loadMaps(path);
-			break;
-		case ID_SCENE:
-			loadScenes(path);
-			break;
-		case ID_OBJECT:
-			loadObject(path);
-			break;
-		default:
-			break;
-		}
-	}
-	fs.close();
-
-
-}
-
-void init()
-{
-	LoadResources();
-	CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
-}
-
-void Update(DWORD dt)
-{/*
-	Update world status for this frame
-	dt: time period between beginning of last frame and beginning of this frame
-*/
-	CScenes::GetInstance()->Update(dt);
-}
-
-void Render()
-{
-	LPDIRECT3DDEVICE9 d3ddv = game->GetDirect3DDevice();
-	LPDIRECT3DSURFACE9 bb = game->GetBackBuffer();
-	LPD3DXSPRITE spriteHandler = game->GetSpriteHandler();
-
-	if (d3ddv->BeginScene())
-	{
-		// Clear back buffer with a color
-		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
-
-		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
-		CScenes::GetInstance()->Render();
-
-		spriteHandler->End();
-		d3ddv->EndScene();
-	}
-
-	// Display back buffer content to the screen
-	d3ddv->Present(NULL, NULL, NULL, NULL);
 }
 
 HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHeight)
@@ -354,58 +153,11 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	return hWnd;
 }
 
-int Run()
-{
-	MSG msg;
-	int done = 0;
-	DWORD frameStart = GetTickCount();
-	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
-
-	while (!done)
-	{
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			if (msg.message == WM_QUIT) done = 1;
-
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		DWORD now = GetTickCount();
-
-		// dt: the time between (beginning of last frame) and now
-		// this frame: the frame we are about to render
-		DWORD dt = now - frameStart;
-
-		if (dt >= tickPerFrame)
-		{
-			frameStart = now;
-
-			game->ProcessKeyboard();
-
-			Update(dt);
-			Render();
-		}
-		else
-			Sleep(tickPerFrame - dt);
-	}
-
-	return 1;
-}
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	game = CGame::GetInstance();
-	game->Init(hWnd);
-
-	keyHandler = new CSampleKeyHander();
-	game->InitKeyboard(keyHandler);
-
-	init();
-
-	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+	Init(hWnd);
 
 	Run();
 

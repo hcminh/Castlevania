@@ -21,23 +21,23 @@
     <Filter Include="Source Files\scene">
       <UniqueIdentifier>{5cdd5837-a155-482d-898a-897b1ddee590}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\framework">
-      <UniqueIdentifier>{16249815-9b7a-4dc0-8585-8ca4b15777ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\framework">
-      <UniqueIdentifier>{2023136d-419f-4349-b6a2-ceeecf3c0463}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\item">
-      <UniqueIdentifier>{c9708c56-06e8-4793-81a3-3ed98de62a77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\item">
-      <UniqueIdentifier>{b012a5ad-b344-4014-957f-7f41f6caf325}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{2e2764ad-2595-4bd8-9d8c-49b4df24df18}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{a8ceca62-6b59-4b41-bef7-300c59a4bda2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Static Objects">
+      <UniqueIdentifier>{c744a0b4-fe48-4b53-89ce-74c3c4d25757}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Static Objects">
+      <UniqueIdentifier>{e78516a9-cc36-4c01-94ac-c05b13351a44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Framework">
+      <UniqueIdentifier>{2023136d-419f-4349-b6a2-ceeecf3c0463}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Framework">
+      <UniqueIdentifier>{16249815-9b7a-4dc0-8585-8ca4b15777ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,31 +54,22 @@
       <Filter>Header Files\scene</Filter>
     </ClInclude>
     <ClInclude Include="Textures.h">
-      <Filter>Header Files\framework</Filter>
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Sprites.h">
-      <Filter>Header Files\framework</Filter>
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="debug.h">
-      <Filter>Header Files\framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header Files\item</Filter>
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Header Files\weapon</Filter>
     </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Door.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files\framework</Filter>
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files\framework</Filter>
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Header Files\Objects</Filter>
@@ -96,7 +87,22 @@
       <Filter>Header Files\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Stairs.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Header Files\Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>Header Files\Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Header Files\Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFile.h">
+      <Filter>Header Files\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,31 +119,22 @@
       <Filter>Source Files\scene</Filter>
     </ClCompile>
     <ClCompile Include="Textures.cpp">
-      <Filter>Source Files\framework</Filter>
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Sprites.cpp">
-      <Filter>Source Files\framework</Filter>
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="debug.cpp">
-      <Filter>Source Files\framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source Files\item</Filter>
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files\weapon</Filter>
     </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Door.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files\framework</Filter>
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\framework</Filter>
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Source Files\Objects</Filter>
@@ -155,7 +152,22 @@
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Stairs.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Source Files\Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Source Files\Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Source Files\Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadFile.cpp">
+      <Filter>Source Files\Framework</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

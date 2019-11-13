@@ -134,7 +134,9 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Ground.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="LoadFile.h" />
     <ClInclude Include="Mario.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Simon.h" />
@@ -154,7 +156,9 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Ground.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="LoadFile.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mario.cpp" />
     <ClCompile Include="Scenes.cpp" />

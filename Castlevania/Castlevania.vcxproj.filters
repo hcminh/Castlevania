@@ -33,11 +33,11 @@
     <Filter Include="Source Files\Static Objects">
       <UniqueIdentifier>{e78516a9-cc36-4c01-94ac-c05b13351a44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Framework">
-      <UniqueIdentifier>{2023136d-419f-4349-b6a2-ceeecf3c0463}</UniqueIdentifier>
+    <Filter Include="Input">
+      <UniqueIdentifier>{6ee1c0ce-0518-410a-97f4-73e1a6f2b49b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Framework">
-      <UniqueIdentifier>{16249815-9b7a-4dc0-8585-8ca4b15777ed}</UniqueIdentifier>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{1c60619d-fdb9-4b60-a8d1-72a770244ce2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,23 +53,8 @@
     <ClInclude Include="Scenes.h">
       <Filter>Header Files\scene</Filter>
     </ClInclude>
-    <ClInclude Include="Textures.h">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprites.h">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="debug.h">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Header Files\weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Header Files\Objects</Filter>
@@ -99,10 +84,25 @@
       <Filter>Header Files\Static Objects</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
-      <Filter>Header Files\Framework</Filter>
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="LoadFile.h">
-      <Filter>Header Files\Framework</Filter>
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprites.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Textures.h">
+      <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,23 +118,8 @@
     <ClCompile Include="Scenes.cpp">
       <Filter>Source Files\scene</Filter>
     </ClCompile>
-    <ClCompile Include="Textures.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprites.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="debug.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Source Files\weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Source Files\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files\Framework</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Source Files\Objects</Filter>
@@ -164,10 +149,25 @@
       <Filter>Source Files\Static Objects</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp">
-      <Filter>Source Files\Framework</Filter>
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="LoadFile.cpp">
-      <Filter>Source Files\Framework</Filter>
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprites.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Textures.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

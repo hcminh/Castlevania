@@ -7,11 +7,17 @@ Input::Input()
 	game = CGame::GetInstance();
 }
 
+bool Input::canUseKeyboard()
+{
+	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return false;
+	if (CSimon::GetInstance()->isJumping) return false;
+	if (CSimon::GetInstance()->isAutoGoX) return false;
+	return true;
+}
+
 void Input::KeyState(BYTE *state)
 {
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return;
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_JUMP && CSimon::GetInstance()->isJumping) return;
-	if (CSimon::GetInstance()->isAutoGoX) return;
+	if (!canUseKeyboard()) return;
 
 	if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
 		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);

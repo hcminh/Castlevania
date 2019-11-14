@@ -7,6 +7,7 @@ class Input : public CKeyEventHandler
 	CGame * game;
 public:
 	Input();
+	bool canUseKeyboard();
 	virtual void KeyState(BYTE *state);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);

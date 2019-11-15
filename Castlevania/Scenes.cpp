@@ -6,7 +6,6 @@
 
 CScenes * CScenes::__instance = NULL;
 
-
 void CScenes::Update(DWORD dt)
 {
 	if (isStopWatchInUse)
@@ -20,6 +19,8 @@ void CScenes::Update(DWORD dt)
 			isStopWatchInUse = false;
 		}
 	}
+
+	loadObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
 
 	onCamObjects.clear();
 	for (int i = 1; i < objects.size(); i++)
@@ -39,9 +40,6 @@ void CScenes::Render()
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
 	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
-
-	//render stair ra nhìn thôi, mốt xóa
-	CStairs::GetInstance()->Render();
 }
 
 void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
@@ -83,15 +81,15 @@ void CScenes::updateCamPos()
 		if (xSimon >= SCREEN_WIDTH / 2 &&
 			xSimon <= mapWidth - (SCREEN_WIDTH / 2))
 		{
-			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); 
+			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
 		}
 	}
 }
 
 bool CScenes::onCamera(LPGAMEOBJECT obj, int xCam)
 {
-	if (obj->x < xCam && (obj->x + obj->width < xCam)) return false;
-	if (obj->x > xCam + SCREEN_WIDTH) return false;
+	if (obj->x < xCam - 32 && (obj->x + obj->width < xCam - 32)) return false;
+	if (obj->x > xCam + SCREEN_WIDTH + 32) return false;
 	return true;
 }
 
@@ -101,15 +99,15 @@ void CScenes::changeScene()
 	{
 		currentScene = SceneID::SCENEID_2;
 		curentMap = scenes[currentScene]->mapID;
-		loadObject(scenes[currentScene]->linkObjects);
+		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 300);
-		CGame::GetInstance()->SetCamPos(0, 0); 
+		CGame::GetInstance()->SetCamPos(0, 0);
 	}
 	else if (currentScene == SceneID::SCENEID_2)
 	{
 		currentScene = SceneID::SCENEID_3;
 		curentMap = scenes[currentScene]->mapID;
-		loadObject(scenes[currentScene]->linkObjects);
+		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 100);
 		CGame::GetInstance()->SetCamPos(0, 0);
 	}
@@ -117,7 +115,7 @@ void CScenes::changeScene()
 	{
 		currentScene = SceneID::SCENEID_2;
 		curentMap = scenes[currentScene]->mapID;
-		loadObject(scenes[currentScene]->linkObjects);
+		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(3000.0f, 300);
 		updateCamPos();
 	}
@@ -127,11 +125,42 @@ void CScenes::changeScene(SceneID newScene)
 {
 	currentScene = newScene;
 	curentMap = scenes[currentScene]->mapID;
-	loadObject(scenes[currentScene]->linkObjects);
+	loadObjectToGrid(scenes[currentScene]->linkObjects);
 }
 
-void CScenes::loadObject(string path)
+void CScenes::loadObjectsFromGrid(int xCam, int widthCam)
 {
+
+	objects.erase(objects.begin(), objects.end());
+	pushObject(CSimon::GetInstance());
+
+	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
+	int indexOfSecondCell = floor((xCam + widthCam )/ CELL_WIDTH);
+
+	int sizeFirstObjs = grid->cells[indexOfFirstCell]->objects.size();
+	int sizeSecondObjs = grid->cells[indexOfSecondCell]->objects.size();
+
+	for (int i = 0; i < sizeFirstObjs; i++)
+	{
+		pushObject(grid->cells[indexOfFirstCell]->objects[i]);
+	}
+	if (indexOfFirstCell != indexOfSecondCell)
+		for (int i = 0; i < sizeSecondObjs; i++)
+		{
+			pushObject(grid->cells[indexOfSecondCell]->objects[i]);
+		}
+
+}
+
+void CScenes::loadObjectToGrid(string path)
+{
+	if (grid != NULL || grid != nullptr)
+	{
+		delete grid;
+		grid = nullptr;
+	}
+	grid = new CGrid();
+	grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
 	//nhét con simon vào đầu mảng cho dễ xử lý 
 	pushObject(CSimon::GetInstance());
@@ -155,19 +184,19 @@ void CScenes::loadObject(string path)
 		{
 			CItem *cItem = new CItem(ItemType(item), ItemState(state));
 			cItem->SetPosition(x, y);
-			pushObject(cItem);
+			grid->addObjects(cItem);
 			break;
 		}
 		case GROUND:
 		{
 			CGround *ground = new CGround(x, y, width, height);
-			pushObject(ground);
+			grid->addObjects(ground);
 			break;
 		}
 		case DOOR:
 		{
 			CDoor *door = new CDoor(x, y);
-			pushObject(door);
+			grid->addObjects(door);
 			break;
 		}
 		}
@@ -193,3 +222,4 @@ CScene::CScene(SceneID sceneID, int mapID, string link)
 	this->mapID = mapID;
 	this->linkObjects = link;
 }
+

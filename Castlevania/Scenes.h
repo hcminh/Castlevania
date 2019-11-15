@@ -8,6 +8,7 @@
 #include "GameObject.h"
 #include "Simon.h"
 #include "tilemap.h"
+#include "Grid.h"
 
 #define MAX_TIME_STOP_WATCH 5000
 using namespace std;
@@ -42,7 +43,7 @@ class CScenes
 	SceneID currentScene;
 	int curentMap;
 	DWORD accutime = 0;
-
+	CGrid *grid;
 public:
 	bool isStopWatchInUse = false;
 
@@ -55,14 +56,15 @@ public:
 	void pushObject(LPGAMEOBJECT object);
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
-	int getListObjectSize() { return objects.size(); };
 	void putItem(ItemType type, float x, float y);
 	bool onCamera(LPGAMEOBJECT obj, int xCam);
 	void updateCamPos();
 	void changeScene();
 	void changeScene(SceneID newScene);
-	void loadObject(string path);
+	void loadObjectToGrid(string path);
+	void loadObjectsFromGrid(int xCam, int widthCam);
 	void stopObject();
+	int getObjectsSize() { return objects.size(); };
 
 };
 

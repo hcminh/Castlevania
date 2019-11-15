@@ -61,6 +61,9 @@ void Input::OnKeyDown(int KeyCode)
 	case DIK_X:
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);
 		break;
+	case DIK_0:
+		DebugOut(L"[OBJECTS] Số lượng OBJ hiện tại là: %d \n", CScenes::GetInstance()->getObjectsSize());
+		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
 		CSimon::GetInstance()->SetPosition(10.0f, 300);

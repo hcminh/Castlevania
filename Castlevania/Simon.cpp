@@ -278,7 +278,7 @@ void CSimon::autoGotoX(float x)
 
 void CSimon::attack()
 {
-	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && subWeapon->isFlying)|| levelUpgrade) return;
+	if ((CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && subWeapon->isFlying)) return;
 	else if (CGame::GetInstance()->IsKeyDown(DIK_UP) && typeSubWeapon != WeaponType::NONE && !subWeapon->isFlying)
 	{
 		isUseSubWeapon = true;

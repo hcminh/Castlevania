@@ -9,18 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\weapon">
-      <UniqueIdentifier>{3351b1db-6c95-47c1-801c-a0fa8c7c4774}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\weapon">
-      <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\scene">
-      <UniqueIdentifier>{e2ba5442-43a7-4e55-8f4d-ea374ef5d41f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\scene">
-      <UniqueIdentifier>{5cdd5837-a155-482d-898a-897b1ddee590}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Objects">
       <UniqueIdentifier>{2e2764ad-2595-4bd8-9d8c-49b4df24df18}</UniqueIdentifier>
     </Filter>
@@ -39,22 +27,25 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{1c60619d-fdb9-4b60-a8d1-72a770244ce2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Weapon">
+      <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Weapon">
+      <UniqueIdentifier>{3351b1db-6c95-47c1-801c-a0fa8c7c4774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{b364ee3f-72dc-44d3-b8eb-1cfe04a8050a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Whip.h">
-      <Filter>Header Files\weapon</Filter>
+      <Filter>Header Files\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="define.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tilemap.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes.h">
-      <Filter>Header Files\scene</Filter>
-    </ClInclude>
     <ClInclude Include="Weapon.h">
-      <Filter>Header Files\weapon</Filter>
+      <Filter>Header Files\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Goomba.h">
       <Filter>Header Files\Objects</Filter>
@@ -104,22 +95,22 @@
     <ClInclude Include="Textures.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="Scenes.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="tilemap.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Whip.cpp">
-      <Filter>Source Files\weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="tilemap.cpp">
-      <Filter>Source Files\scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Scenes.cpp">
-      <Filter>Source Files\scene</Filter>
+      <Filter>Source Files\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
-      <Filter>Source Files\weapon</Filter>
+      <Filter>Source Files\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Goomba.cpp">
       <Filter>Source Files\Objects</Filter>
@@ -168,6 +159,12 @@
     </ClCompile>
     <ClCompile Include="Textures.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Scenes.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="tilemap.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

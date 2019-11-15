@@ -12,6 +12,8 @@ bool Input::canUseKeyboard()
 	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return false;
 	if (CSimon::GetInstance()->isJumping) return false;
 	if (CSimon::GetInstance()->isAutoGoX) return false;
+	if (CSimon::GetInstance()->isAttacking) return false;
+	if (CSimon::GetInstance()->levelUpgrade) return false;
 	return true;
 }
 
@@ -19,11 +21,11 @@ void Input::KeyState(BYTE *state)
 {
 	if (!canUseKeyboard()) return;
 
-	if (game->IsKeyDown(DIK_DOWN) && !CSimon::GetInstance()->isAttacking)
+	if (game->IsKeyDown(DIK_DOWN))
 		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
-	else if (game->IsKeyDown(DIK_RIGHT) && !CSimon::GetInstance()->isAttacking)
+	else if (game->IsKeyDown(DIK_RIGHT))
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
-	else if (game->IsKeyDown(DIK_LEFT) && !CSimon::GetInstance()->isAttacking)
+	else if (game->IsKeyDown(DIK_LEFT))
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_U))
 		CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);

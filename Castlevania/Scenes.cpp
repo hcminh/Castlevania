@@ -20,9 +20,10 @@ void CScenes::Update(DWORD dt)
 			isStopWatchInUse = false;
 		}
 	}
+
 	onCamObjects.clear();
 	for (int i = 1; i < objects.size(); i++)
-		if (objects[i]->isEnable)
+		if (objects[i]->isEnable && onCamera(objects[i], CGame::GetInstance()->getCamPosX()))
 			onCamObjects.push_back(objects[i]);
 
 	for (int i = 0; i < objects.size(); i++)
@@ -51,12 +52,12 @@ void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
 
 void CScenes::pushObject(LPGAMEOBJECT object)
 {
-	this->objects.push_back(object);
+	this->objects.insert(make_pair(objects.size(), object));
 }
 
 void CScenes::insertObject(LPGAMEOBJECT object)
 {
-	this->objects.insert(objects.begin(), object);
+	/*this->objects.insert(objects.begin(), object);*/
 }
 
 void CScenes::clearAllObject()
@@ -85,6 +86,13 @@ void CScenes::updateCamPos()
 			CGame::GetInstance()->SetCamPos(xSimon - SCREEN_WIDTH / 2 , 0); 
 		}
 	}
+}
+
+bool CScenes::onCamera(LPGAMEOBJECT obj, int xCam)
+{
+	if (obj->x < xCam && (obj->x + obj->width < xCam)) return false;
+	if (obj->x > xCam + SCREEN_WIDTH) return false;
+	return true;
 }
 
 void CScenes::changeScene()
@@ -126,7 +134,7 @@ void CScenes::loadObject(string path)
 {
 	clearAllObject();
 	//nhét con simon vào đầu mảng cho dễ xử lý 
-	insertObject(CSimon::GetInstance());
+	pushObject(CSimon::GetInstance());
 
 	fstream fs;
 	fs.open(path, ios::in);

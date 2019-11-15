@@ -74,7 +74,6 @@ class CItem : public CGameObject
 	bool isDestroying = false;
 	bool isTouchGround = false;
 	float velocityVariation_x;
-	int width, heigth, widthState, heigthState;
 
 public:
 	ItemState itemState;
@@ -83,6 +82,6 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
-
+	void stateChange();
 	void SetState(int state);
 };

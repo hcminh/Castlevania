@@ -8,7 +8,6 @@ enum BrickType {
 
 class CGround : public CGameObject
 {
-	int width, height;
 public:
 	CGround(float x, float y, int width, int height);
 	virtual void Render();

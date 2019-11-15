@@ -60,6 +60,9 @@ public:
 	bool isEnable = true;
 	bool loadedSrc = false;
 
+	int width;
+	int height;
+
 	DWORD dt; 
 	ObjectType type;
 	vector<LPANIMATION> animations;

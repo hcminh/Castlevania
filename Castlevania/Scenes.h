@@ -36,7 +36,7 @@ typedef CScene * LPSCENE;
 class CScenes
 {
 	static CScenes * __instance; // Singleton Patern
-	vector<LPGAMEOBJECT> objects; //các object của map
+	unordered_map<int, LPGAMEOBJECT> objects; //các object của map
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
 	unordered_map<SceneID, LPSCENE> scenes;
 	SceneID currentScene;
@@ -57,6 +57,7 @@ public:
 	void clearAllObject();
 	int getListObjectSize() { return objects.size(); };
 	void putItem(ItemType type, float x, float y);
+	bool onCamera(LPGAMEOBJECT obj, int xCam);
 	void updateCamPos();
 	void changeScene();
 	void changeScene(SceneID newScene);

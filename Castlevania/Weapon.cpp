@@ -54,12 +54,12 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			if (coObjects->at(i)->type == ObjectType::ITEM)
 			{
 				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
+				if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
 			}
 			if (state == WeaponType::HOLY_WATER_WEAPON)
 			{
 				SetState(WeaponType::FIRER);
 			}
-			else if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
 			break;
 		}
 	}
@@ -154,9 +154,6 @@ bool CWeapon::isCollision(float obj_left, float obj_top, float obj_right, float 
 
 void CWeapon::LoadResources()
 {
-	if (loadedSrc) return;
-	loadedSrc = true;
-
 	AddAnimation(200);		// knife right
 	AddAnimation(201);		// knife left
 

@@ -2,11 +2,11 @@
 #include "Simon.h"
 #include "Scenes.h"
 
-CItem::CItem(ItemType itemType, ItemState itemState)
+CItem::CItem(ItemState itemState)
 {
 	type = ObjectType::ITEM;
 	this->itemState = itemState;
-	item = itemType;
+	item = randomItem();;
 	isEnable = true;
 	isDestroyed = false;
 	isDestroying = false;
@@ -278,5 +278,10 @@ void CItem::SetState(int state)
 	default:
 		break;
 	}
+}
+
+ItemType CItem::randomItem()
+{
+	return ItemType(rand() % 15);
 }
 

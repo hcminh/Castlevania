@@ -20,16 +20,18 @@ void CScenes::Update(DWORD dt)
 		}
 	}
 
-	loadObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
+	getObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
 
 	onCamObjects.clear();
-	for (int i = 1; i < objects.size(); i++)
-		if (objects[i]->isEnable && onCamera(objects[i], CGame::GetInstance()->getCamPosX()))
-			onCamObjects.push_back(objects[i]);
+	for (auto obj : objects)
+		if (obj.second->isEnable && onCamera(obj.second, CGame::GetInstance()->getCamPosX()))
+			onCamObjects.push_back(obj.second);
 
-	for (int i = 0; i < objects.size(); i++)
-		if (objects[i]->isEnable)
-			objects[i]->Update(dt, &onCamObjects);
+	insertObject(CSimon::GetInstance()); // để push con simon vào mảng objects sau khi đã lấy dc mảng oncamera để khỏi bị va cham với dao hoặc subweapon khác
+
+	for (auto obj : objects)
+		if (obj.second->isEnable)
+			obj.second->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
 }
@@ -39,7 +41,7 @@ void CScenes::Render()
 	CMaps::GetInstance()->Get(curentMap)->Draw(CGame::GetInstance()->getCamPos());
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
-	objects[0]->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
+	CSimon::GetInstance()->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
 
 void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
@@ -48,26 +50,14 @@ void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
 	scenes[sceneID] = scene;
 }
 
-void CScenes::pushObject(LPGAMEOBJECT object)
-{
-	this->objects.insert(make_pair(objects.size(), object));
-}
-
 void CScenes::insertObject(LPGAMEOBJECT object)
 {
-	/*this->objects.insert(objects.begin(), object);*/
+	this->objects.insert(make_pair(object->ID, object));
 }
 
 void CScenes::clearAllObject()
 {
 	objects.clear();
-}
-
-void CScenes::putItem(ItemType type, float x, float y)
-{
-	CItem *item = new CItem(type);
-	item->SetPosition(x, y);
-	pushObject(item);
 }
 
 void CScenes::updateCamPos()
@@ -102,6 +92,7 @@ void CScenes::changeScene()
 		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 300);
 		CGame::GetInstance()->SetCamPos(0, 0);
+		getObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
 	}
 	else if (currentScene == SceneID::SCENEID_2)
 	{
@@ -110,6 +101,7 @@ void CScenes::changeScene()
 		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(0.0f, 100);
 		CGame::GetInstance()->SetCamPos(0, 0);
+		getObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
 	}
 	else if (currentScene == SceneID::SCENEID_3)
 	{
@@ -118,6 +110,7 @@ void CScenes::changeScene()
 		loadObjectToGrid(scenes[currentScene]->linkObjects);
 		CSimon::GetInstance()->SetPosition(3000.0f, 300);
 		updateCamPos();
+		getObjectsFromGrid(CGame::GetInstance()->getCamPosX(), SCREEN_WIDTH);
 	}
 }
 
@@ -128,11 +121,10 @@ void CScenes::changeScene(SceneID newScene)
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 }
 
-void CScenes::loadObjectsFromGrid(int xCam, int widthCam)
+void CScenes::getObjectsFromGrid(int xCam, int widthCam)
 {
 
 	objects.erase(objects.begin(), objects.end());
-	pushObject(CSimon::GetInstance());
 
 	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
 	int indexOfSecondCell = floor((xCam + widthCam )/ CELL_WIDTH);
@@ -142,14 +134,15 @@ void CScenes::loadObjectsFromGrid(int xCam, int widthCam)
 
 	for (int i = 0; i < sizeFirstObjs; i++)
 	{
-		pushObject(grid->cells[indexOfFirstCell]->objects[i]);
+		insertObject(grid->cells[indexOfFirstCell]->objects[i]);
 	}
 	if (indexOfFirstCell != indexOfSecondCell)
 		for (int i = 0; i < sizeSecondObjs; i++)
 		{
-			pushObject(grid->cells[indexOfSecondCell]->objects[i]);
+			insertObject(grid->cells[indexOfSecondCell]->objects[i]);
 		}
 
+	//insertObject(CSimon::GetInstance());
 }
 
 void CScenes::loadObjectToGrid(string path)
@@ -162,8 +155,6 @@ void CScenes::loadObjectToGrid(string path)
 	grid = new CGrid();
 	grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
-	//nhét con simon vào đầu mảng cho dễ xử lý 
-	pushObject(CSimon::GetInstance());
 
 	fstream fs;
 	fs.open(path, ios::in);
@@ -173,29 +164,32 @@ void CScenes::loadObjectToGrid(string path)
 		fs.close();
 	}
 	int id;
-	int item, width, height, state;
+	int idInGame, width, height, state;
 	float x, y;
 	while (!fs.eof())
 	{
-		fs >> id >> x >> y >> item >> state >> width >> height;
+		fs >> id >> x >> y >> idInGame >> state >> width >> height;
 		switch (ObjectType(id))
 		{
 		case ITEM:
 		{
-			CItem *cItem = new CItem(ItemType(item), ItemState(state));
+			CItem *cItem = new CItem(ItemState(state));
 			cItem->SetPosition(x, y);
+			cItem->setID(idInGame);
 			grid->addObjects(cItem);
 			break;
 		}
 		case GROUND:
 		{
 			CGround *ground = new CGround(x, y, width, height);
+			ground->setID(idInGame);
 			grid->addObjects(ground);
 			break;
 		}
 		case DOOR:
 		{
 			CDoor *door = new CDoor(x, y);
+			door->setID(idInGame);
 			grid->addObjects(door);
 			break;
 		}

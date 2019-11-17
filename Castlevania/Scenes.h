@@ -2,6 +2,7 @@
 
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "define.h"
 #include "Game.h"
@@ -53,16 +54,14 @@ public:
 	LPSCENE getCurrentScene() { return scenes[SceneID(currentScene)]; };
 	static CScenes * GetInstance();
 	// Get, Set
-	void pushObject(LPGAMEOBJECT object);
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
-	void putItem(ItemType type, float x, float y);
 	bool onCamera(LPGAMEOBJECT obj, int xCam);
 	void updateCamPos();
 	void changeScene();
 	void changeScene(SceneID newScene);
 	void loadObjectToGrid(string path);
-	void loadObjectsFromGrid(int xCam, int widthCam);
+	void getObjectsFromGrid(int xCam, int widthCam);
 	void stopObject();
 	int getObjectsSize() { return objects.size(); };
 

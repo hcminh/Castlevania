@@ -251,6 +251,7 @@ void CSimon::colisionItem(CItem *it)
 		SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	case ItemType::KNIFE:
+		DebugOut(L"[COLISION] chạm vào KNIFE: %d\n");
 		typeSubWeapon = WeaponType::KNIFE_WEAPON;
 		break;
 	case ItemType::AXE:
@@ -297,9 +298,6 @@ void CSimon::attack()
 
 void CSimon::LoadResources()
 {
-	if (loadedSrc) return;
-	loadedSrc = true;
-
 	//xếp thứ tự add animation phải trùng với cái define ko là toi
 	AddAnimation(100);		// idle right
 	AddAnimation(101);		// idle left

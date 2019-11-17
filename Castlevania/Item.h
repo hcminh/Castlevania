@@ -78,10 +78,11 @@ class CItem : public CGameObject
 public:
 	ItemState itemState;
 	ItemType item;
-	CItem(ItemType type, ItemState itemState = ItemState::STATE_NONE);
+	CItem(ItemState itemState = ItemState::STATE_NONE);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	void stateChange();
 	void SetState(int state);
+	ItemType randomItem();
 };

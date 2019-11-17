@@ -19,6 +19,7 @@ enum ObjectType
 	GROUND,
 	DOOR,
 	STAIR,
+	SIMON
 };
 
 
@@ -58,7 +59,8 @@ public:
 
 	int state;
 	bool isEnable = true;
-	bool loadedSrc = false;
+
+	int ID;
 
 	int width;
 	int height;
@@ -73,6 +75,7 @@ public:
 	void GetPosition(float &x, float &y) { x = this->x; y = this->y; }
 	void GetSpeed(float &vx, float &vy) { vx = this->vx; vy = this->vy; }
 
+	void setID(int id) { this->ID = id; };
 	int GetState() { return this->state; }
 
 	void RenderBoundingBox();

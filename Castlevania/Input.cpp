@@ -17,6 +17,15 @@ bool Input::canUseKeyboard()
 	return true;
 }
 
+bool Input::canPressKey()
+{
+	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return false;
+	if (CSimon::GetInstance()->isAutoGoX) return false;
+	if (CSimon::GetInstance()->isAttacking) return false;
+	if (CSimon::GetInstance()->levelUpgrade) return false;
+	return true;
+}
+
 void Input::KeyState(BYTE *state)
 {
 	if (!canUseKeyboard()) return;
@@ -41,6 +50,7 @@ void Input::KeyState(BYTE *state)
 
 void Input::OnKeyDown(int KeyCode)
 {
+	if (!canPressKey()) return;
 	DebugOut(L"[INFO] KeyDown: %d\n", KeyCode);
 	switch (KeyCode)
 	{

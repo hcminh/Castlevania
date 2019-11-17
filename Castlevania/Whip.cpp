@@ -75,8 +75,6 @@ bool CWhip::isCollision(float obj_left, float obj_top, float obj_right, float ob
 
 void CWhip::LoadResources()
 {
-	if (loadedSrc) return;
-	loadedSrc = true;
 
 	AddAnimation(151);		// normal whip left
 	AddAnimation(153);		// short whip left

@@ -2,10 +2,10 @@
 
 #include <map>
 #include <unordered_map>
-#include <unordered_set>
 
 #include "define.h"
 #include "Game.h"
+#include "Camera.h"
 #include "GameObject.h"
 #include "Simon.h"
 #include "tilemap.h"
@@ -45,9 +45,12 @@ class CScenes
 	int curentMap;
 	DWORD accutime = 0;
 	CGrid *grid;
+	LPCAMERA camera; // lưu địa chỉ cam lại để khỏi phải gọi getinstance()
+	LPSIMON simon; //lưu luôn con simon cho lẹ
 public:
 	bool isStopWatchInUse = false;
 
+	CScenes();
 	void Update(DWORD dt);
 	void Render();
 	void Add(SceneID sceneID, int mapID, string linkObjects);
@@ -56,7 +59,6 @@ public:
 	// Get, Set
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
-	bool onCamera(LPGAMEOBJECT obj, int xCam);
 	void updateCamPos();
 	void changeScene();
 	void changeScene(SceneID newScene);

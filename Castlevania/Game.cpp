@@ -60,7 +60,7 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 
 //D3DXVECTOR3 p(floor(x), floor(y), 0); // https://docs.microsoft.com/vi-vn/windows/desktop/direct3d9/directly-mapping-texels-to-pixels
 // Try removing floor() to see blurry Mario
-	D3DXVECTOR3 p((x - cam_x), (y - cam_y), 0);
+	D3DXVECTOR3 p((x - *camX), (y - *camY), 0);
 	RECT r; 
 	r.left = left;
 	r.top = top;
@@ -141,6 +141,12 @@ void CGame::InitKeyboard(LPKEYEVENTHANDLER handler)
 	this->keyHandler = handler;
 
 	DebugOut(L"[INFO] Keyboard has been initialized successfully\n");
+}
+
+void CGame::InitCameraPositon(float *camx, float *camy)
+{
+	camX = camx;
+	camY = camy;
 }
 
 void CGame::ProcessKeyboard()

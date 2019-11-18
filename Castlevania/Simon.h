@@ -110,3 +110,5 @@ public:
 	void attack();
 	void LoadResources();
 };
+
+typedef CSimon * LPSIMON;

@@ -21,6 +21,9 @@ void Init(HWND hWnd)
 	Input *inp = new Input();
 	game->InitKeyboard(inp);
 
+	CCamera::GetInstance();
+	game->InitCameraPositon(&CCamera::GetInstance()->camX, &CCamera::GetInstance()->camY);
+
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	CLoadFile().LoadResources(RESOURCE_PATH);

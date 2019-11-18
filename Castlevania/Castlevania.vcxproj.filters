@@ -36,6 +36,9 @@
     <Filter Include="Source\Static Objects">
       <UniqueIdentifier>{e78516a9-cc36-4c01-94ac-c05b13351a44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{6c591322-f5c6-424f-b449-77f1b388cf65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Whip.h">
@@ -104,6 +107,9 @@
     <ClInclude Include="Grid.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -171,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

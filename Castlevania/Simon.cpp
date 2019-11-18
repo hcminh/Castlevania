@@ -82,6 +82,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					DebugOut(L"Qua màn mới nè!!!");
 					CScenes::GetInstance()->changeScene();
 				}
+				if (e->obj->type == ObjectType::GROUND) // nếu e->obj là DOOR
+				{
+					x -= min_tx * dx + nx * 0.4f;
+				}
 			}
 		}
 		if (ny < 0) {

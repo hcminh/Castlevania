@@ -3,7 +3,6 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include "define.h"
-
 #define directinput_version 0x0800
 #include <dinput.h>
 
@@ -40,11 +39,12 @@ class CGame
 
 	LPKEYEVENTHANDLER keyHandler;
 
-	float cam_x = 0.0f;
-	float cam_y = 0.0f;
+	float *camX;
+	float *camY;
 
 public:
 	void InitKeyboard(LPKEYEVENTHANDLER handler);
+	void InitCameraPositon(float *camx, float *camy);
 	void Init(HWND hWnd);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom, D3DCOLOR color);
 
@@ -70,14 +70,6 @@ public:
 	LPDIRECT3DSURFACE9 GetBackBuffer() { return backBuffer; }
 	LPD3DXSPRITE GetSpriteHandler() { return this->spriteHandler; }
 
-	void SetCamPos(float x, float y) { cam_x = x; cam_y = y; };
-	D3DXVECTOR3 getCamPos() { return D3DXVECTOR3(cam_x, cam_y, 0); };
-
-	float getCamPosX() { return cam_x; };
-	float getCamPosY() { return cam_y; };
-
-	float getBorderCamLeft() { return cam_x - 32; };
-	float getBorderCamRight() { return cam_x + SCREEN_WIDTH + 32; };
 	static CGame * GetInstance();
 
 	~CGame();

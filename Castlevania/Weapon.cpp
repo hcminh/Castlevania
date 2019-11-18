@@ -39,8 +39,8 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		y += dy;
 	}
 
-	if (x > CGame::GetInstance()->getCamPosX() + SCREEN_WIDTH || x < CGame::GetInstance()->getCamPosX()
-		|| y > CGame::GetInstance()->getCamPosY() + SCREEN_HEIGHT)
+	if (x > CCamera::GetInstance()->getCamPosX() + SCREEN_WIDTH || x < CCamera::GetInstance()->getCamPosX()
+		|| y > CCamera::GetInstance()->getCamPosY() + SCREEN_HEIGHT)
 	{
 		isFlying = false;
 	}

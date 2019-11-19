@@ -140,8 +140,6 @@ void CScenes::getObjectsFromGrid(int xCam, int widthCam)
 		{
 			insertObject(grid->cells[indexOfSecondCell]->objects[i]);
 		}
-
-	//insertObject(simon);
 }
 
 void CScenes::loadObjectToGrid(string path)
@@ -168,31 +166,36 @@ void CScenes::loadObjectToGrid(string path)
 	while (!fs.eof())
 	{
 		fs >> id >> x >> y >> idInGame >> state >> width >> height;
+
+		LPGAMEOBJECT obj = NULL;
 		switch (ObjectType(id))
 		{
 		case ITEM:
 		{
-			CItem *cItem = new CItem(ItemState(state));
-			cItem->SetPosition(x, y);
-			cItem->setID(idInGame);
-			grid->addObjects(cItem);
+			obj = new CItem(x, y, ItemState(state));
 			break;
 		}
 		case GROUND:
 		{
-			CGround *ground = new CGround(x, y, width, height);
-			ground->setID(idInGame);
-			grid->addObjects(ground);
+			obj = new CGround(x, y, width, height);
 			break;
 		}
 		case DOOR:
 		{
-			CDoor *door = new CDoor(x, y);
-			door->setID(idInGame);
-			grid->addObjects(door);
+			obj = new CDoor(x, y);
 			break;
 		}
+		case ENEMY:
+		{
+			obj = new CZombie();
+			obj->SetPosition(x, y);
+			break;
 		}
+
+		}
+
+		obj->setID(idInGame);
+		grid->addObjects(obj);
 	}
 	fs.close();
 }

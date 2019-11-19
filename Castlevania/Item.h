@@ -78,7 +78,7 @@ class CItem : public CGameObject
 public:
 	ItemState itemState;
 	ItemType item;
-	CItem(ItemState itemState = ItemState::STATE_NONE);
+	CItem(float xPos, float yPos, ItemState itemState = ItemState::STATE_NONE);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);

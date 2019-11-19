@@ -16,21 +16,19 @@ CSimon *CSimon::GetInstance()
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-	//upgrade whip level
-	accuTime += dt;
-	if (levelUpgrade && accuTime <= SIMON_UP_LEVEL_TIME) {
-		return;
-	}
-	levelUpgrade = false;
+
+	
+	//being attacked
+	//if (isAttacked && accuTime <= SIMON_HURT_TIME) {
+	//	x -= 3.0f*nx;
+	//	y -= 2.0f;
+	//	return;
+	//}
+	//isAttacked = false;
 
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-
-	// Simple fall down
-	if(!isOnStair)
-		vy += SIMON_GRAVITY * dt;
-
-
+	vy += SIMON_GRAVITY * dt;
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
@@ -46,12 +44,26 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(&listObject, coEvents);
 
-	// reset untouchable timer if untouchable time has passed
-	//if (GetTickCount() - untouchable_start > SIMON_UNTOUCHABLE_TIME)
-	//{
-	//	untouchable_start = 0;
-	//	untouchable = 0;
-	//}
+	//upgrade whip level
+	if (levelUpgrade && (GetTickCount() - levelUpStart > SIMON_UP_LEVEL_TIME))
+	{
+		levelUpStart = 0;
+		levelUpgrade = false;
+	}
+
+	//hurting
+	if (isHurting && (GetTickCount() - hurtingStart > SIMON_HURTING_TIME))
+	{
+		hurtingStart = 0;
+		isHurting = false;
+	}	
+
+	 //reset untouchable timer if untouchable time has passed
+	if (untouchable && (GetTickCount() - untouchableStart > SIMON_UNTOUCHABLE_TIME))
+	{
+		untouchableStart = 0;
+		untouchable = false;
+	}
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -69,10 +81,9 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0) 
+		if (nx != 0 && !untouchable)
 		{
 			//vx = 0;
-
 			//Collision logic with DOOR
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
@@ -82,15 +93,20 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					DebugOut(L"Qua màn mới nè!!!");
 					CScenes::GetInstance()->changeScene();
 				}
-				if (e->obj->type == ObjectType::GROUND) // nếu e->obj là DOOR
+				else if (e->obj->type == ObjectType::GROUND) // nếu e->obj là DOOR
 				{
 					x -= min_tx * dx + nx * 0.4f;
+				}
+				else if (e->obj->type == ObjectType::ENEMY) // nếu e->obj là DOOR
+				{
+					SetState(SIMON_STATE_ATTACKED);
 				}
 			}
 		}
 		if (ny < 0) {
 			vy = 0;
-			if (isJumping) {
+			if (isJumping) 
+			{
 				SetState(SIMON_STATE_STANDUP);
 				isJumping = false;
 			}
@@ -118,17 +134,14 @@ void CSimon::Render()
 
 	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
 	else if (levelUpgrade) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-	else if (isOnStair)
-	{
-		if (state == SIMON_STATE_GO_UP_STAIR) ani = SIMON_ANI_UP_STAIR_RIGHT;
-		else if(state == SIMON_STATE_IDLE_UP_STAIR) ani = SIMON_ANI_IDLE_UP_STAIR_RIGHT;
-	}
+	else if (isHurting) ani = SIMON_ANI_HURT_RIGHT;
 	else if (isAttacking && isSitting)  ani = SIMON_ANI_SIT_ATTACK_RIGHT;
 	else if (isAttacking)				ani = SIMON_ANI_ATTACK_RIGHT;
 	else if (isJumping)					ani = SIMON_ANI_JUMP_RIGHT;
 	else if (isSitting)					ani = SIMON_ANI_SIT_RIGHT;
 	else if (vx != 0) ani = SIMON_ANI_WALKING_RIGHT;
 
+	if(untouchable) color = D3DCOLOR_ARGB(rand() % 200 + 50, 255, 255, 255);
 	ani += (nx > 0) ? 0 : 1; //vì hành động phải chỉ cách hành động trái 1 frame nên sét ani bằng phải rồi kiểm tra nx là dc
 	animations[ani]->Render(x, y, color);
 
@@ -145,8 +158,8 @@ void CSimon::Render()
 
 void CSimon::SetState(int state)
 {
-	CGameObject::SetState(state);
 	if (isAttacking || isAutoGoX) return;
+	CGameObject::SetState(state);
 	switch (state)
 	{
 	case SIMON_STATE_WALKING_RIGHT:
@@ -183,28 +196,23 @@ void CSimon::SetState(int state)
 		isOnStair = false;
 		vx = 0;
 		break;
-	case SIMON_STATE_IDLE_UP_STAIR:
-		vy = 0;
-		vx = 0;
-		break;
 	case SIMON_STATE_DIE:
 		vy = -SIMON_DIE_DEFLECT_SPEED;
 		break;
 	case SIMON_STATE_LEVEL_UP:
 		if (levelUpgrade) return;
 		whip->levelUp();
-		levelUpgrade = true;
-		accuTime = 0;
+		startLevelUp();
 		break;
 	case SIMON_STATE_AUTO_GO:
 		if (isAutoGoX) return;
 		autoGotoX(1385.0);
 		break;
-	case SIMON_STATE_GO_UP_STAIR:
-		vx = SIMON_WALKING_SPEED;
-		vy = -SIMON_WALKING_SPEED;
-		isOnStair = true;
-		nx = 1;
+	case SIMON_STATE_ATTACKED:
+		vx = -0.5*nx;
+		vy = -0.3f;
+		startHurting();
+		startUntouchable();
 		break;
 	}
 }
@@ -315,10 +323,13 @@ void CSimon::LoadResources()
 	AddAnimation(109);		// ATTACK left
 	AddAnimation(110);		// SIT ATTACK right
 	AddAnimation(111);		// SIT ATTACK left
-	AddAnimation(113);		// UP STAIR RIGHT
-	AddAnimation(114);		// UP STAIR LEFT
-	AddAnimation(115);		// IDLE UP STAIR RIGHT
-	AddAnimation(116);		// IDLE UP STAIR LEFT
+	AddAnimation(113);		// HURT right
+	AddAnimation(114);		// HURT left
+
+	//AddAnimation(113);		// UP STAIR RIGHT
+	//AddAnimation(114);		// UP STAIR LEFT
+	//AddAnimation(115);		// IDLE UP STAIR RIGHT
+	//AddAnimation(116);		// IDLE UP STAIR LEFT
 
 
 	AddAnimation(112);		// die

@@ -23,8 +23,9 @@
 #define SIMON_STATE_ATTACK_WITH_SUB		7
 #define SIMON_STATE_LEVEL_UP			8
 #define SIMON_STATE_AUTO_GO				9
-#define SIMON_STATE_GO_UP_STAIR			10
-#define SIMON_STATE_IDLE_UP_STAIR		11
+#define SIMON_STATE_ATTACKED			10
+#define SIMON_STATE_STANDUP_AFTER_FALL	11
+
 
 #define SIMON_ANI_IDLE_RIGHT			0
 #define SIMON_ANI_IDLE_LEFT				1
@@ -38,10 +39,8 @@
 #define SIMON_ANI_ATTACK_LEFT			9
 #define SIMON_ANI_SIT_ATTACK_RIGHT		10
 #define SIMON_ANI_SIT_ATTACK_LEFT		11
-#define SIMON_ANI_UP_STAIR_RIGHT		12
-#define SIMON_ANI_UP_STAIR_LEFT			13
-#define SIMON_ANI_IDLE_UP_STAIR_RIGHT	14
-#define SIMON_ANI_IDLE_UP_STAIR_LEFT	15
+#define SIMON_ANI_HURT_RIGHT			12
+#define SIMON_ANI_HURT_LEFT				13
 #define SIMON_ANI_DIE					16
 
 #define MAX_ATTACK_FRAME				3
@@ -59,8 +58,10 @@
 
 #define SIMON_STATE_STANDUP		30
 
-#define SIMON_UNTOUCHABLE_TIME	 5000
-#define SIMON_UP_LEVEL_TIME		 700
+#define SIMON_UNTOUCHABLE_TIME		 2000
+#define SIMON_UP_LEVEL_TIME			 700
+#define SIMON_HURTING_TIME			 200
+#define SIMON_SIT_AFTER_FALL_TIME	 2000
 
 
 class CSimon : public CGameObject
@@ -69,13 +70,18 @@ class CSimon : public CGameObject
 
 	DWORD accuTime = 0; //thời gian tích lũy được
 	DWORD accuTimeStopWatch = 0; //thời gian tích lũy được
-	DWORD untouchable_start;
+	DWORD untouchableStart;
+	DWORD hurtingStart;
+	DWORD levelUpStart;
+	DWORD invisibleStart;
+	DWORD sittingStart;
 	float destinationX;
 	int ani;
 public:
 	//biến để kiểm tra Simon đang làm việc khác
 	bool isJumping = false;
 	bool isAttacking = false;
+	bool isHurting = false;
 	bool isUseSubWeapon = false;
 	bool isUsingStopWatch = false;
 	bool isSitting = false;
@@ -83,6 +89,8 @@ public:
 	bool levelUpgrade = false;
 	bool isAutoGoX = false;
 	bool isOnStair = false;
+	bool untouchable = false;
+	bool invisible = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -108,6 +116,10 @@ public:
 	void colisionItem(CItem *item);
 	void autoGotoX(float x);
 	void attack();
+	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }
+	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }
+	void startLevelUp() { levelUpgrade = true; levelUpStart = GetTickCount(); }
+	void startInvisible() { invisible = true; invisibleStart = GetTickCount(); }
 	void LoadResources();
 };
 

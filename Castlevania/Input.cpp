@@ -36,14 +36,14 @@ void Input::KeyState(BYTE *state)
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
 	else if (game->IsKeyDown(DIK_LEFT))
 		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
-	else if (game->IsKeyDown(DIK_U))
-		CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);
-	else if (game->IsKeyDown(DIK_I))
-		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+	//else if (game->IsKeyDown(DIK_U))
+	//	CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);
+	//else if (game->IsKeyDown(DIK_I))
+	//	CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	else
 	{
 		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
-		else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
+		//else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
 		else CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	}
 }
@@ -66,7 +66,10 @@ void Input::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
 		break;
 	case DIK_Q:
-		CSimon::GetInstance()->whip->levelUp();
+		CSimon::GetInstance()->SetState(SIMON_STATE_LEVEL_UP);
+		break;
+	case DIK_W:
+		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACKED);
 		break;
 	case DIK_X:
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);

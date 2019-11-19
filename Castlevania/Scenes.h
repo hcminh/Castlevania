@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Simon.h"
+#include "Zombie.h"
 #include "tilemap.h"
 #include "Grid.h"
 

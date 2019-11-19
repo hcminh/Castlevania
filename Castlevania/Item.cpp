@@ -2,10 +2,11 @@
 #include "Simon.h"
 #include "Scenes.h"
 
-CItem::CItem(ItemState itemState)
+CItem::CItem(float xPos, float yPos, ItemState itemState)
 {
 	type = ObjectType::ITEM;
 	this->itemState = itemState;
+	SetPosition(xPos, yPos);
 	item = randomItem();;
 	isEnable = true;
 	isDestroyed = false;

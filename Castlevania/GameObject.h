@@ -19,7 +19,8 @@ enum ObjectType
 	GROUND,
 	DOOR,
 	STAIR,
-	SIMON
+	SIMON,
+	ENEMY
 };
 
 

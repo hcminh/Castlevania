@@ -17,8 +17,6 @@
 #define FISH_ANI_IDLE_LEFT			7	//cá đứng trái
 #define FISH_ANI_WALK_RIGHT			8	//cá đi phải
 #define FISH_ANI_WALK_LEFT			9	//cá đi trái
-#define GHOST_ANI_WALK_RIGHT		10	//ma đi phải
-#define GHOST_ANI_WALK_LEFT			11	//ma đi trái
 #define BAT_ANI_IDLE				12	//dơi đậu
 #define BAT_ANI_WALK_RIGHT			13	//dơi bay phải
 #define BAT_ANI_WALK_LEFT			14	//dơi bay trái
@@ -46,10 +44,13 @@ class CEnemy : public CGameObject
 {
 
 public:
+	int HP;
+	int score;
+	int damage;
+
 	EnemyType enemyType;
-	int distanceToX = 0;
-	int width, height;
-	CEnemy(EnemyType eType);
+
+	CEnemy();
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();

@@ -104,11 +104,11 @@
     <ClInclude Include="tilemap.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -175,11 +175,11 @@
     <ClCompile Include="tilemap.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

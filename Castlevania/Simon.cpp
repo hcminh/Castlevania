@@ -16,16 +16,6 @@ CSimon *CSimon::GetInstance()
 
 void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
-
-	
-	//being attacked
-	//if (isAttacked && accuTime <= SIMON_HURT_TIME) {
-	//	x -= 3.0f*nx;
-	//	y -= 2.0f;
-	//	return;
-	//}
-	//isAttacked = false;
-
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
@@ -56,6 +46,13 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	{
 		hurtingStart = 0;
 		isHurting = false;
+		SetState(SIMON_STATE_SIT_AFTER_FALL);
+	}	
+	//sitting after falling
+	if (isFalling && (GetTickCount() - sittingStart > SIMON_SIT_AFTER_FALL_TIME))
+	{
+		sittingStart = 0;
+		SetState(SIMON_STATE_STANDUP);
 	}	
 
 	 //reset untouchable timer if untouchable time has passed
@@ -84,11 +81,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		if (nx != 0 && !untouchable)
 		{
 			//vx = 0;
-			//Collision logic with DOOR
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
 				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR
+				if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR //Collision logic with DOOR
 				{
 					DebugOut(L"Qua màn mới nè!!!");
 					CScenes::GetInstance()->changeScene();
@@ -104,12 +100,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 		}
 		if (ny < 0) {
-			vy = 0;
 			if (isJumping) 
 			{
 				SetState(SIMON_STATE_STANDUP);
-				isJumping = false;
 			}
+			vy = 0;
 		}
 		else if (ny > 0)
 			y += dy;
@@ -141,7 +136,7 @@ void CSimon::Render()
 	else if (isSitting)					ani = SIMON_ANI_SIT_RIGHT;
 	else if (vx != 0) ani = SIMON_ANI_WALKING_RIGHT;
 
-	if(untouchable) color = D3DCOLOR_ARGB(rand() % 200 + 50, 255, 255, 255);
+	if(untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
 	ani += (nx > 0) ? 0 : 1; //vì hành động phải chỉ cách hành động trái 1 frame nên sét ani bằng phải rồi kiểm tra nx là dc
 	animations[ani]->Render(x, y, color);
 
@@ -178,11 +173,17 @@ void CSimon::SetState(int state)
 		y += 18;
 		vx = 0;
 		break;
+	case SIMON_STATE_SIT_AFTER_FALL:
+		vy = 0;
+		startSittingAfterFall();
+		break;
 	case SIMON_STATE_STANDUP:
+		isFalling = false;
 		isSitting = false;
 		isJumping = false;
 		y -= 18;
 		vx = 0;
+		vy = 0;
 		break;
 	case SIMON_STATE_JUMP:
 		if (isJumping)return;
@@ -209,7 +210,7 @@ void CSimon::SetState(int state)
 		autoGotoX(1385.0);
 		break;
 	case SIMON_STATE_ATTACKED:
-		vx = -0.5*nx;
+		vx = -0.6*nx;
 		vy = -0.3f;
 		startHurting();
 		startUntouchable();

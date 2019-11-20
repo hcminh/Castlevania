@@ -8,7 +8,7 @@
 
 #define SIMON_WALKING_SPEED		 0.3f 	
 #define SIMON_AUTO_GO_SPEED		0.02f
-#define SIMON_JUMP_SPEED_Y		0.5f
+#define SIMON_JUMP_SPEED_Y		0.7f //0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
 #define SIMON_DIE_DEFLECT_SPEED	 0.5f
@@ -24,7 +24,7 @@
 #define SIMON_STATE_LEVEL_UP			8
 #define SIMON_STATE_AUTO_GO				9
 #define SIMON_STATE_ATTACKED			10
-#define SIMON_STATE_STANDUP_AFTER_FALL	11
+#define SIMON_STATE_SIT_AFTER_FALL		11
 
 
 #define SIMON_ANI_IDLE_RIGHT			0
@@ -61,7 +61,7 @@
 #define SIMON_UNTOUCHABLE_TIME		 2000
 #define SIMON_UP_LEVEL_TIME			 700
 #define SIMON_HURTING_TIME			 200
-#define SIMON_SIT_AFTER_FALL_TIME	 2000
+#define SIMON_SIT_AFTER_FALL_TIME	 400
 
 
 class CSimon : public CGameObject
@@ -76,6 +76,7 @@ class CSimon : public CGameObject
 	DWORD invisibleStart;
 	DWORD sittingStart;
 	float destinationX;
+	float oldY = 0;
 	int ani;
 public:
 	//biến để kiểm tra Simon đang làm việc khác
@@ -91,6 +92,7 @@ public:
 	bool isOnStair = false;
 	bool untouchable = false;
 	bool invisible = false;
+	bool isFalling = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -120,6 +122,7 @@ public:
 	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }
 	void startLevelUp() { levelUpgrade = true; levelUpStart = GetTickCount(); }
 	void startInvisible() { invisible = true; invisibleStart = GetTickCount(); }
+	void startSittingAfterFall() { isSitting = true; isFalling = true; sittingStart = GetTickCount(); }
 	void LoadResources();
 };
 

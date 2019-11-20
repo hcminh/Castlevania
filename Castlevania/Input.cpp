@@ -14,6 +14,7 @@ bool Input::canUseKeyboard()
 	if (CSimon::GetInstance()->isAutoGoX) return false;
 	if (CSimon::GetInstance()->isAttacking) return false;
 	if (CSimon::GetInstance()->levelUpgrade) return false;
+	if (CSimon::GetInstance()->isFalling) return false;
 	return true;
 }
 
@@ -42,7 +43,7 @@ void Input::KeyState(BYTE *state)
 	//	CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	else
 	{
-		if (CSimon::GetInstance()->isSitting) CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
+		if(CSimon::GetInstance()->isSitting)  CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
 		//else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
 		else CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
 	}

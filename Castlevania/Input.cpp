@@ -70,7 +70,7 @@ void Input::OnKeyDown(int KeyCode)
 		CSimon::GetInstance()->SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	case DIK_W:
-		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACKED);
+		CSimon::GetInstance()->SetState(SIMON_STATE_INVISIBLE);
 		break;
 	case DIK_X:
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);

@@ -19,6 +19,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
+
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
@@ -28,7 +29,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
-
 
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
@@ -40,7 +40,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		levelUpStart = 0;
 		levelUpgrade = false;
 	}
-
 	//hurting
 	if (isHurting && (GetTickCount() - hurtingStart > SIMON_HURTING_TIME))
 	{
@@ -54,12 +53,17 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		sittingStart = 0;
 		SetState(SIMON_STATE_STANDUP);
 	}	
-
 	 //reset untouchable timer if untouchable time has passed
 	if (untouchable && (GetTickCount() - untouchableStart > SIMON_UNTOUCHABLE_TIME))
 	{
 		untouchableStart = 0;
 		untouchable = false;
+	}
+	//reset untouchable timer if untouchable time has passed
+	if (invisible && (GetTickCount() - invisibleStart > SIMON_INVISIABLE_TIME))
+	{
+		invisibleStart = 0;
+		invisible = false;
 	}
 
 	// No collision occured, proceed normally
@@ -78,7 +82,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0 && !untouchable)
+		if (nx != 0 && !untouchable && !invisible)
 		{
 			//vx = 0;
 			for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -137,6 +141,7 @@ void CSimon::Render()
 	else if (vx != 0) ani = SIMON_ANI_WALKING_RIGHT;
 
 	if(untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
+	else if(invisible) color = D3DCOLOR_ARGB(150, 255, 255, 255);
 	ani += (nx > 0) ? 0 : 1; //vì hành động phải chỉ cách hành động trái 1 frame nên sét ani bằng phải rồi kiểm tra nx là dc
 	animations[ani]->Render(x, y, color);
 
@@ -203,6 +208,7 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_LEVEL_UP:
 		if (levelUpgrade) return;
 		whip->levelUp();
+		vx = 0;
 		startLevelUp();
 		break;
 	case SIMON_STATE_AUTO_GO:
@@ -214,6 +220,9 @@ void CSimon::SetState(int state)
 		vy = -0.3f;
 		startHurting();
 		startUntouchable();
+		break;
+	case SIMON_STATE_INVISIBLE:
+		startInvisible();
 		break;
 	}
 }
@@ -275,6 +284,9 @@ void CSimon::colisionItem(CItem *it)
 		break;
 	case ItemType::STOP_WATCH:
 		typeSubWeapon = WeaponType::STOP_WATCH_WEAPON;
+		break;
+	case ItemType::INVISIBLE:
+		SetState(SIMON_STATE_INVISIBLE);
 		break;
 	default:
 		break;

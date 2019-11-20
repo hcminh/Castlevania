@@ -114,10 +114,10 @@ void CLoadFile::loadAnimations(string filepath, int idTex)
 	}
 	while (!fs.eof())
 	{
-		int id;
+		int id, timeAnimation;
 		int sprite1 = -1, sprite2 = -1, sprite3 = -1, sprite4 = -1;
-		fs >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4;
-		ani = new CAnimation(100);
+		fs >> id >> sprite1 >> sprite2 >> sprite3 >> sprite4 >> timeAnimation;
+		ani = new CAnimation(timeAnimation);
 		if (sprite1 > -1)ani->Add(sprite1);
 		if (sprite2 > -1)ani->Add(sprite2);
 		if (sprite3 > -1)ani->Add(sprite3);

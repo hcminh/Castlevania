@@ -3,6 +3,7 @@
 #include "Whip.h"
 #include "Item.h"
 #include "Weapon.h"
+#include "Enemy.h"
 
 #define ID_TEX_SIMON 0
 
@@ -118,6 +119,8 @@ public:
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	bool isColisionItem(CItem *item);
 	void colisionItem(CItem *item);
+	bool isColisionEnemy(CEnemy *enemy);
+	void colisionEnemy(CEnemy *enemy);
 	void autoGotoX(float x);
 	void attack();
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }

@@ -20,6 +20,38 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CGameObject::Update(dt);
 	vy += SIMON_GRAVITY * dt;
 
+	//upgrade whip level
+	if (levelUpgrade && (GetTickCount() - levelUpStart > SIMON_UP_LEVEL_TIME))
+	{
+		levelUpStart = 0;
+		levelUpgrade = false;
+	}
+	//hurting
+	if (isHurting && (GetTickCount() - hurtingStart > SIMON_HURTING_TIME))
+	{
+		hurtingStart = 0;
+		isHurting = false;
+		SetState(SIMON_STATE_SIT_AFTER_FALL);
+	}
+	//sitting after falling
+	if (isFalling && (GetTickCount() - sittingStart > SIMON_SIT_AFTER_FALL_TIME))
+	{
+		sittingStart = 0;
+		SetState(SIMON_STATE_STANDUP);
+	}
+	//reset untouchable timer if untouchable time has passed
+	if (untouchable && (GetTickCount() - untouchableStart > SIMON_UNTOUCHABLE_TIME))
+	{
+		untouchableStart = 0;
+		untouchable = false;
+	}
+	//reset untouchable timer if untouchable time has passed
+	if (invisible && (GetTickCount() - invisibleStart > SIMON_INVISIABLE_TIME))
+	{
+		invisibleStart = 0;
+		invisible = false;
+	}
+
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
@@ -33,38 +65,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	// turn off collision when die 
 	if (state != SIMON_STATE_DIE)
 		CalcPotentialCollisions(&listObject, coEvents);
-
-	//upgrade whip level
-	if (levelUpgrade && (GetTickCount() - levelUpStart > SIMON_UP_LEVEL_TIME))
-	{
-		levelUpStart = 0;
-		levelUpgrade = false;
-	}
-	//hurting
-	if (isHurting && (GetTickCount() - hurtingStart > SIMON_HURTING_TIME))
-	{
-		hurtingStart = 0;
-		isHurting = false;
-		SetState(SIMON_STATE_SIT_AFTER_FALL);
-	}	
-	//sitting after falling
-	if (isFalling && (GetTickCount() - sittingStart > SIMON_SIT_AFTER_FALL_TIME))
-	{
-		sittingStart = 0;
-		SetState(SIMON_STATE_STANDUP);
-	}	
-	 //reset untouchable timer if untouchable time has passed
-	if (untouchable && (GetTickCount() - untouchableStart > SIMON_UNTOUCHABLE_TIME))
-	{
-		untouchableStart = 0;
-		untouchable = false;
-	}
-	//reset untouchable timer if untouchable time has passed
-	if (invisible && (GetTickCount() - invisibleStart > SIMON_INVISIABLE_TIME))
-	{
-		invisibleStart = 0;
-		invisible = false;
-	}
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -90,7 +90,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				LPCOLLISIONEVENT e = coEventsResult[i];
 				if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR //Collision logic with DOOR
 				{
-					DebugOut(L"Qua màn mới nè!!!");
 					CScenes::GetInstance()->changeScene();
 				}
 				else if (e->obj->type == ObjectType::GROUND) // nếu e->obj là DOOR
@@ -293,6 +292,27 @@ void CSimon::colisionItem(CItem *it)
 	}
 }
 
+bool CSimon::isColisionEnemy(CEnemy * enemy)
+{
+	float l, t, r, b;
+	float l1, t1, r1, b1;
+	this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	enemy->GetBoundingBox(l1, t1, r1, b1);
+	if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	{
+		return true; // check with AABB
+	}
+	LPCOLLISIONEVENT e = SweptAABBEx(enemy); // kt va chạm giữa 2 object bằng sweptAABB
+	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
+	delete e;
+	return res;
+}
+
+void CSimon::colisionEnemy(CEnemy * enemy)
+{
+}
+
 void CSimon::autoGotoX(float x)
 {
 	destinationX = x;
@@ -347,3 +367,4 @@ void CSimon::LoadResources()
 
 	AddAnimation(112);		// die
 }
+

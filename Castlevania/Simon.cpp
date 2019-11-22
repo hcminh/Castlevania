@@ -55,7 +55,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if(coObjects->at(i)->type != ObjectType::ITEM)
+		if (coObjects->at(i)->type != ObjectType::ITEM)
 			listObject.push_back(coObjects->at(i));
 	}
 
@@ -82,37 +82,34 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
 		y += min_ty * dy + ny * 0.4f;
 
-		if (nx != 0 && !untouchable && !invisible)
+		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
-			//vx = 0;
-			for (UINT i = 0; i < coEventsResult.size(); i++)
-			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
-				if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR //Collision logic with DOOR
-				{
-					CScenes::GetInstance()->changeScene();
-				}
-				else if (e->obj->type == ObjectType::GROUND) // nếu e->obj là DOOR
-				{
-					x -= min_tx * dx + nx * 0.4f;
-				}
-				else if (e->obj->type == ObjectType::ENEMY) // nếu e->obj là DOOR
-				{
-					SetState(SIMON_STATE_ATTACKED);
-				}
-			}
-		}
-		if (ny < 0) {
-			if (isJumping) 
-			{
-				SetState(SIMON_STATE_STANDUP);
-			}
-			vy = 0;
-		}
-		else if (ny > 0)
-			y += dy;
-	}
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
+			if (e->obj->type == ObjectType::GROUND) // nếu e->obj là GROUND
+			{
+				if (e->ny != 0)
+				{
+					if (e->ny < 0)
+					{
+						if (isJumping) SetState(SIMON_STATE_STANDUP);
+					}
+					else
+						y += dy;
+				}
+			}
+			else if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR //Collision logic with DOOR
+			{
+				CScenes::GetInstance()->changeScene();
+			}
+			else if (e->obj->type == ObjectType::ENEMY) // nếu e->obj là ENEMY
+			{
+				if(!invisible && !untouchable)
+					SetState(SIMON_STATE_ATTACKED);	
+
+			}
+		}
+	}
 	//update weapon
 	whip->Update(dt, coObjects);
 	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
@@ -139,8 +136,8 @@ void CSimon::Render()
 	else if (isSitting)					ani = SIMON_ANI_SIT_RIGHT;
 	else if (vx != 0) ani = SIMON_ANI_WALKING_RIGHT;
 
-	if(untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
-	else if(invisible) color = D3DCOLOR_ARGB(150, 255, 255, 255);
+	if (untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
+	else if (invisible) color = D3DCOLOR_ARGB(150, 255, 255, 255);
 	ani += (nx > 0) ? 0 : 1; //vì hành động phải chỉ cách hành động trái 1 frame nên sét ani bằng phải rồi kiểm tra nx là dc
 	animations[ani]->Render(x, y, color);
 
@@ -215,8 +212,9 @@ void CSimon::SetState(int state)
 		autoGotoX(1385.0);
 		break;
 	case SIMON_STATE_ATTACKED:
-		vx = -0.6*nx;
-		vy = -0.3f;
+		isJumping = true;
+		vx = -0.1*nx;
+		vy = -0.4f;
 		startHurting();
 		startUntouchable();
 		break;
@@ -228,20 +226,20 @@ void CSimon::SetState(int state)
 
 void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-		if (isSitting || (isJumping && !isAttacking))
-		{
-			left = x + PADDING;
-			top = y;
-			right = x + SIMON_BBOX_WIDTH - PADDING;
-			bottom = top + SIMON_SIT_BBOX_HEIGHT;
-		} 
-		else
-		{
-			left = x + PADDING;
-			top = y;
-			right = x + SIMON_BBOX_WIDTH - PADDING;
-			bottom = top + SIMON_BBOX_HEIGHT;
-		}
+	if (isSitting || (isJumping && !isAttacking))
+	{
+		left = x + PADDING;
+		top = y;
+		right = x + SIMON_BBOX_WIDTH - PADDING;
+		bottom = top + SIMON_SIT_BBOX_HEIGHT;
+	}
+	else
+	{
+		left = x + PADDING;
+		top = y;
+		right = x + SIMON_BBOX_WIDTH - PADDING;
+		bottom = top + SIMON_BBOX_HEIGHT;
+	}
 }
 
 bool CSimon::isColisionItem(CItem *item)

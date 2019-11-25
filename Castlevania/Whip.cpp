@@ -1,6 +1,7 @@
 ﻿#include "Whip.h"
 #include "Textures.h"
 #include "Simon.h"
+#include "Zombie.h"
 
 CWhip::CWhip(float &x, float &y, int &nx) : CGameObject()
 {
@@ -20,9 +21,13 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
 			if (isCollision(left, top, right, bottom))
 			{
-				if (coObjects->at(i)->type == ObjectType::ITEM);
+				if (coObjects->at(i)->type == ObjectType::ITEM)
 				{
 					coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
+				}
+				else if (coObjects->at(i)->type == ObjectType::ENEMY);
+				{
+					coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
 				}
 			}
 

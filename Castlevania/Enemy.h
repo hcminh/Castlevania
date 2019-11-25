@@ -3,6 +3,8 @@
 
 #define ENEMY_WALKING_SPEED 0.05f;
 
+#define ENEMY_BURN_TIME			1000	//CHAYS
+#define ENEMY_RESPAWN_TIME		10000	//hoi sinh
 
 #define ENEMY_STATE_WALKING 100
 #define ENEMY_STATE_DIE 200
@@ -44,13 +46,21 @@ class CEnemy : public CGameObject
 {
 
 public:
+
+	DWORD burningStart;
+	DWORD respawnTime;
+	bool isRespawning = false;
+	bool isBurning = false;
+	bool isDead = true;
 	int HP;
 	int score;
 	int damage;
-
 	EnemyType enemyType;
 
 	CEnemy();
+	void startBurning() { isBurning = true; burningStart = GetTickCount(); }
+	void startRespawnTime() { isRespawning = false; respawnTime = GetTickCount(); }
+	virtual void respawn() = 0;
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);
 	virtual void Render();

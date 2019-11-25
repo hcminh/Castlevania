@@ -85,28 +85,36 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-
-			if (e->obj->type == ObjectType::GROUND) // nếu e->obj là GROUND
+			if (e->obj->type == ObjectType::GROUND)
 			{
 				if (e->ny != 0)
 				{
 					if (e->ny < 0)
 					{
+						vy = 0;
 						if (isJumping) SetState(SIMON_STATE_STANDUP);
 					}
 					else
 						y += dy;
 				}
 			}
-			else if (e->obj->type == ObjectType::DOOR) // nếu e->obj là DOOR //Collision logic with DOOR
+			else if (e->obj->type == ObjectType::DOOR)
 			{
+				
 				CScenes::GetInstance()->changeScene();
 			}
-			else if (e->obj->type == ObjectType::ENEMY) // nếu e->obj là ENEMY
-			{
-				if(!invisible && !untouchable)
-					SetState(SIMON_STATE_ATTACKED);	
 
+			else if (e->obj->type == ObjectType::ENEMY)
+			{
+				if (!invisible && !untouchable)
+				{
+					SetState(SIMON_STATE_ATTACKED);
+				}
+				else
+				{
+					if (e->nx != 0) x += dx;
+					if (e->ny != 0) y += dy;
+				}
 			}
 		}
 	}

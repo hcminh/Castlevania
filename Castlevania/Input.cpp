@@ -15,6 +15,7 @@ bool Input::canUseKeyboard()
 	if (CSimon::GetInstance()->isAttacking) return false;
 	if (CSimon::GetInstance()->levelUpgrade) return false;
 	if (CSimon::GetInstance()->isFalling) return false;
+	if (CSimon::GetInstance()->isHurting) return false;
 	return true;
 }
 
@@ -24,6 +25,7 @@ bool Input::canPressKey()
 	if (CSimon::GetInstance()->isAutoGoX) return false;
 	if (CSimon::GetInstance()->isAttacking) return false;
 	if (CSimon::GetInstance()->levelUpgrade) return false;
+	if (CSimon::GetInstance()->isHurting) return false;
 	return true;
 }
 

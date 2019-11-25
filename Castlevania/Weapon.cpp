@@ -3,6 +3,7 @@
 #include "Scenes.h"
 #include "Textures.h"
 #include "debug.h"
+#include "Zombie.h"
 
 
 CWeapon::CWeapon() : CGameObject()
@@ -55,6 +56,10 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 			{
 				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 				if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
+			}
+			else if (coObjects->at(i)->type == ObjectType::ENEMY);
+			{
+				coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
 			}
 			if (state == WeaponType::HOLY_WATER_WEAPON)
 			{

@@ -1,8 +1,10 @@
 ﻿#include "Scenes.h"
 #include "Ground.h"
 #include "Door.h"
-#include "Enemy.h"
 #include "Stairs.h"
+#include "Enemy.h"
+#include "Zombie.h"
+#include "Fish.h"
 
 CScenes * CScenes::__instance = NULL;
 
@@ -187,8 +189,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case ENEMY:
 		{
-			obj = new CZombie();
-			obj->SetPosition(x, y);
+			obj = new CFish();
 			break;
 		}
 

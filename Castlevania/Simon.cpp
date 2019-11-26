@@ -319,6 +319,27 @@ void CSimon::colisionEnemy(CEnemy * enemy)
 {
 }
 
+bool CSimon::isColisionWeapon(CWeapon *weapon)
+{
+	float l, t, r, b;
+	float l1, t1, r1, b1;
+	this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	weapon->GetBoundingBox(l1, t1, r1, b1);
+	if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	{
+		return true; // check with AABB
+	}
+	LPCOLLISIONEVENT e = SweptAABBEx(weapon); // kt va chạm giữa 2 object bằng sweptAABB
+	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
+	delete e;
+	return res;
+}
+
+void CSimon::colisionWeapon(CWeapon *weapon)
+{
+}
+
 void CSimon::autoGotoX(float x)
 {
 	destinationX = x;

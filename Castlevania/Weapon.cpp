@@ -46,26 +46,38 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 		isFlying = false;
 	}
 
-	for (UINT i = 0; i < coObjects->size(); i++)
+	if (state == WeaponType::FIRE_BALL)
 	{
-		float top, left, bottom, right;
-		coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
-		if (isCollision(left, top, right, bottom))
+		if (CSimon::GetInstance()->isColisionWeapon(this))
 		{
-			if (coObjects->at(i)->type == ObjectType::ITEM)
+			isFlying = false;
+			CSimon::GetInstance()->SetState(SIMON_STATE_ATTACKED);
+		}
+	}
+	else
+	{
+		for (UINT i = 0; i < coObjects->size(); i++)
+		{
+			float top, left, bottom, right;
+			coObjects->at(i)->GetBoundingBox(left, top, right, bottom);
+			if (isCollision(left, top, right, bottom))
 			{
-				coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
-				if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
+				if (coObjects->at(i)->type == ObjectType::ITEM)
+				{
+					coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
+					if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
+				}
+				else if (coObjects->at(i)->type == ObjectType::ENEMY);
+				{
+					coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
+				}
+				if (state == WeaponType::HOLY_WATER_WEAPON)
+				{
+					SetState(WeaponType::FIRER);
+				}
+				break;
+
 			}
-			else if (coObjects->at(i)->type == ObjectType::ENEMY);
-			{
-				coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
-			}
-			if (state == WeaponType::HOLY_WATER_WEAPON)
-			{
-				SetState(WeaponType::FIRER);
-			}
-			break;
 		}
 	}
 }
@@ -77,6 +89,7 @@ void CWeapon::Render()
 	else if (state == WeaponType::KNIFE_WEAPON) ani = KNIFE_ANI_RIGHT;
 	else if (state == WeaponType::AXE_WEAPON)	ani = AXE_ANI_RIGHT;
 	else if (state == WeaponType::HOLY_WATER_WEAPON)	ani = HOLY_WATER_ANI_RIGHT;
+	else if (state == WeaponType::FIRE_BALL)	ani = FIRE_BALL_ANI_RIGHT;
 	ani += ((nx > 0) ? 0 : 1);
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	//RenderBoundingBox();
@@ -110,6 +123,12 @@ void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & b
 		right = left + FIRER_BBOX;
 		bottom = top + FIRER_BBOX;
 		break;
+	case WeaponType::FIRE_BALL:
+		left = x;
+		top = y;
+		right = left + HOLY_WATER_BBOX; //sài lại cho lẹ
+		bottom = top + HOLY_WATER_BBOX;
+		break;
 	}
 }
 
@@ -142,6 +161,10 @@ void CWeapon::SetState(int state)
 		accutime = 0;
 		isBurning = true;
 		break;
+	case WeaponType::FIRE_BALL:
+		vx = FIRE_BALL_SPEED * nx;
+		vy = 0;
+		break;
 	}
 }
 
@@ -170,6 +193,9 @@ void CWeapon::LoadResources()
 
 	AddAnimation(206);		// cháy lúc holy water ném ra
 	AddAnimation(206);		// add cái ani cháy 2 lần để cho nó đồng bộ vs mấy thằng kia, viết cái hàm render cho đẹp
+
+	AddAnimation(207);		// cháy lúc holy water ném ra
+	AddAnimation(208);		// add cái ani cháy 2 lần để cho nó đồng bộ vs mấy thằng kia, viết cái hàm render cho đẹp
 }
 
 

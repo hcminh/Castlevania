@@ -18,12 +18,12 @@ void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
 	CGameObject::Update(dt, coObject);
 
-	if (isRespawning && (GetTickCount() - respawnTime > ENEMY_RESPAWN_TIME)) // thoi gian hoi sinh
-	{
-		respawnTime = 0;
-		isRespawning = false;
-		respawn();
-	}
+	//if (isRespawning && (GetTickCount() - respawnTime > ENEMY_RESPAWN_TIME)) // thoi gian hoi sinh
+	//{
+	//	respawnTime = 0;
+	//	isRespawning = false;
+	//	respawn();
+	//}
 	if (isBurning && (GetTickCount() - burningStart > ENEMY_BURN_TIME))	//enemy fire
 	{
 		burningStart = 0;
@@ -75,7 +75,7 @@ void CZombie::SetState(int state)
 		startBurning();
 		break;
 	case ZOMBIE_STATE_RESPAWN:
-		startRespawnTime();
+		//startRespawnTime();
 		break;
 	}
 }

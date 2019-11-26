@@ -4,7 +4,7 @@
 #define ENEMY_WALKING_SPEED 0.05f;
 
 #define ENEMY_BURN_TIME			1000	//CHAYS
-#define ENEMY_RESPAWN_TIME		10000	//hoi sinh
+#define ENEMY_RESPAWN_TIME		5000	//hoi sinh
 
 #define ENEMY_STATE_WALKING 100
 #define ENEMY_STATE_DIE 200
@@ -13,12 +13,6 @@
 #define DOG_ANI_SIT_LEFT			1	//chó NGỒI L
 #define DOG_ANI_WALK_RIGHT			2	//chó đi phải
 #define DOG_ANI_WALK_LEFT			3	//chó đi trái
-#define FISH_ANI_SHOOT_RIGHT		4	//cá bắn phải
-#define FISH_ANI_SHOOT_LEFT			5	//cá bắn trái
-#define FISH_ANI_IDLE_RIGHT			6	//cá đứng phải
-#define FISH_ANI_IDLE_LEFT			7	//cá đứng trái
-#define FISH_ANI_WALK_RIGHT			8	//cá đi phải
-#define FISH_ANI_WALK_LEFT			9	//cá đi trái
 #define BAT_ANI_IDLE				12	//dơi đậu
 #define BAT_ANI_WALK_RIGHT			13	//dơi bay phải
 #define BAT_ANI_WALK_LEFT			14	//dơi bay trái
@@ -46,12 +40,11 @@ class CEnemy : public CGameObject
 {
 
 public:
-
 	DWORD burningStart;
 	DWORD respawnTime;
-	bool isRespawning = false;
 	bool isBurning = false;
-	bool isDead = true;
+	bool isDead = false;
+	bool isWaitingToRespawn = false;
 	int HP;
 	int score;
 	int damage;
@@ -59,7 +52,7 @@ public:
 
 	CEnemy();
 	void startBurning() { isBurning = true; burningStart = GetTickCount(); }
-	void startRespawnTime() { isRespawning = false; respawnTime = GetTickCount(); }
+	void waitingToRepawn() { isWaitingToRespawn = true; respawnTime = GetTickCount(); }
 	virtual void respawn() = 0;
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects);

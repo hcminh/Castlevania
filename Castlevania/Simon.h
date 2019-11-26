@@ -104,6 +104,7 @@ public:
 	CSimon() : CGameObject()
 	{
 		LoadResources();
+		type = ObjectType::SIMON;
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
 		subWeapon = new CWeapon();
@@ -121,6 +122,8 @@ public:
 	void colisionItem(CItem *item);
 	bool isColisionEnemy(CEnemy *enemy);
 	void colisionEnemy(CEnemy *enemy);
+	bool isColisionWeapon(CWeapon *weapon);
+	void colisionWeapon(CWeapon *weapon);
 	void autoGotoX(float x);
 	void attack();
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }

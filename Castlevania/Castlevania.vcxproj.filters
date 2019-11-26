@@ -17,9 +17,6 @@
     <Filter Include="Header\Weapon">
       <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\Objects">
-      <UniqueIdentifier>{a8ceca62-6b59-4b41-bef7-300c59a4bda2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header\Static Objects">
       <UniqueIdentifier>{c744a0b4-fe48-4b53-89ce-74c3c4d25757}</UniqueIdentifier>
     </Filter>
@@ -30,14 +27,20 @@
     <Filter Include="Source\Weapon">
       <UniqueIdentifier>{3351b1db-6c95-47c1-801c-a0fa8c7c4774}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Objects">
-      <UniqueIdentifier>{2e2764ad-2595-4bd8-9d8c-49b4df24df18}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Static Objects">
       <UniqueIdentifier>{e78516a9-cc36-4c01-94ac-c05b13351a44}</UniqueIdentifier>
     </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{6c591322-f5c6-424f-b449-77f1b388cf65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{8cd016c3-a571-4b8d-ac05-6abf6188a75d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Simon">
+      <UniqueIdentifier>{324b2cf3-8f17-47ae-bab2-ac0a1610a5e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects\Enemy">
+      <UniqueIdentifier>{f89846e1-4d0f-41e0-8dab-30602971fc44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,21 +52,6 @@
     </ClInclude>
     <ClInclude Include="Weapon.h">
       <Filter>Header\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Goomba.h">
-      <Filter>Header\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Mario.h">
-      <Filter>Header\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Simon.h">
-      <Filter>Header\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header\Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Zombie.h">
-      <Filter>Header\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Stairs.h">
       <Filter>Header\Static Objects</Filter>
@@ -110,6 +98,18 @@
     <ClInclude Include="Grid.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Simon.h">
+      <Filter>Objects\Simon</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Objects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Zombie.h">
+      <Filter>Objects\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Fish.h">
+      <Filter>Objects\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -120,21 +120,6 @@
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Source\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="Goomba.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Mario.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Simon.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source\Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Zombie.cpp">
-      <Filter>Source\Objects</Filter>
     </ClCompile>
     <ClCompile Include="Stairs.cpp">
       <Filter>Source\Static Objects</Filter>
@@ -180,6 +165,18 @@
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Simon.cpp">
+      <Filter>Objects\Simon</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Zombie.cpp">
+      <Filter>Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Fish.cpp">
+      <Filter>Objects\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

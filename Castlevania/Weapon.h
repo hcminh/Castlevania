@@ -16,6 +16,7 @@
 #define FIRER_BBOX				30
 
 #define KNIFE_FLYING_SPEED		0.5f
+#define FIRE_BALL_SPEED			0.25f
 #define AXE_SPEED_Y				0.5f
 #define AXE_SPEED_X				0.17f
 #define HOLY_WATER_SPEED_Y		0.25f
@@ -33,6 +34,8 @@
 #define HOLY_WATER_ANI_RIGHT	4
 #define HOLY_WATER_ANI_LEFT		5
 #define FIRE_ANI				6
+#define FIRE_BALL_ANI_RIGHT		8
+#define FIRE_BALL_ANI_LEFT		9
 
 
 enum WeaponType {
@@ -41,7 +44,8 @@ enum WeaponType {
 	AXE_WEAPON,
 	HOLY_WATER_WEAPON,
 	STOP_WATCH_WEAPON,
-	FIRER
+	FIRER,
+	FIRE_BALL
 };
 
 class CWeapon : public CGameObject

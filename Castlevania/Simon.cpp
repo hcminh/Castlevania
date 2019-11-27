@@ -18,7 +18,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 {
 	// Calculate dx, dy 
 	CGameObject::Update(dt);
-	vy += SIMON_GRAVITY * dt;
+	if (!isOnStair)
+	{
+		vy += SIMON_GRAVITY * dt;
+	}
 
 	//upgrade whip level
 	if (levelUpgrade && (GetTickCount() - levelUpStart > SIMON_UP_LEVEL_TIME))
@@ -79,8 +82,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		y += min_ty * dy + ny * 0.4f;
+		if (!isOnStair)
+		{
+			x += min_tx * dx + nx * 0.4f;		// nx*0.4f : need to push out a bit to avoid overlapping next frame
+			y += min_ty * dy + ny * 0.4f;
+		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -103,7 +109,12 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				
 				CScenes::GetInstance()->changeScene();
 			}
-
+			else if (e->obj->type == ObjectType::STAIR)
+			{
+				isCollisionStair = true;
+				if (e->nx != 0) x += dx;
+				if (e->ny != 0) y += dy;
+			}
 			else if (e->obj->type == ObjectType::ENEMY)
 			{
 				if (!invisible && !untouchable)
@@ -132,17 +143,18 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 void CSimon::Render()
 {
-	ani = SIMON_ANI_IDLE_RIGHT;
+	ani = ANI_IDLE_RIGHT;
 	D3DCOLOR color = D3DCOLOR_ARGB(255, 255, 255, 255);
 
-	if (state == SIMON_STATE_DIE) ani = SIMON_ANI_DIE;
+	if (state == SIMON_STATE_DIE) ani = ANI_DIE_RIGHT;
 	else if (levelUpgrade) color = D3DCOLOR_ARGB(255, rand() % 255 + 1, rand() % 255 + 1, rand() % 255 + 1);
-	else if (isHurting) ani = SIMON_ANI_HURT_RIGHT;
-	else if (isAttacking && isSitting)  ani = SIMON_ANI_SIT_ATTACK_RIGHT;
-	else if (isAttacking)				ani = SIMON_ANI_ATTACK_RIGHT;
-	else if (isJumping)					ani = SIMON_ANI_JUMP_RIGHT;
-	else if (isSitting)					ani = SIMON_ANI_SIT_RIGHT;
-	else if (vx != 0) ani = SIMON_ANI_WALKING_RIGHT;
+	else if (isHurting) ani = ANI_HURT_RIGHT;
+	else if (isAttacking && isSitting)  ani = ANI_SIT_ATTACK_RIGHT;
+	else if (isAttacking)				ani = ANI_ATTACK_RIGHT;
+	else if (isJumping)					ani = ANI_JUMP_RIGHT;
+	else if (isSitting)					ani = ANI_SIT_RIGHT;
+	else if (goingUpStair)				ani = ANI_UP_STAIR_RIGHT;
+	else if (vx != 0) ani = ANI_WALKING_RIGHT;
 
 	if (untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
 	else if (invisible) color = D3DCOLOR_ARGB(150, 255, 255, 255);
@@ -203,7 +215,7 @@ void CSimon::SetState(int state)
 		attack();
 		break;
 	case SIMON_STATE_IDLE:
-		isOnStair = false;
+		//isOnStair = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:
@@ -228,6 +240,13 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_INVISIBLE:
 		startInvisible();
+		break;
+	case SIMON_STATE_WALKING_ON_STAIR:
+		vy = 0;
+		y -= 3;
+		x += 3;
+		goingUpStair = true;
+		isOnStair = true;
 		break;
 	}
 }
@@ -272,13 +291,11 @@ void CSimon::colisionItem(CItem *it)
 	switch (it->item)
 	{
 	case ItemType::BIG_HEART:
-		DebugOut(L"[COLISION] chạm vào tim to bự nè: %d\n");
 		break;
 	case ItemType::WHIP:
 		SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	case ItemType::KNIFE:
-		DebugOut(L"[COLISION] chạm vào KNIFE: %d\n");
 		typeSubWeapon = WeaponType::KNIFE_WEAPON;
 		break;
 	case ItemType::AXE:
@@ -340,6 +357,23 @@ void CSimon::colisionWeapon(CWeapon *weapon)
 {
 }
 
+bool CSimon::isColisionStair(LPGAMEOBJECT stair)
+{
+	float l, t, r, b;
+	float l1, t1, r1, b1;
+	this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	stair->GetBoundingBox(l1, t1, r1, b1);
+	if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+	{
+		return true; // check with AABB
+	}
+	LPCOLLISIONEVENT e = SweptAABBEx(stair); // kt va chạm giữa 2 object bằng sweptAABB
+	bool res = e->t > 0 && e->t <= 1.0f; // ĐK va chạm
+	delete e;
+	return res;
+}
+
 void CSimon::autoGotoX(float x)
 {
 	destinationX = x;
@@ -385,13 +419,20 @@ void CSimon::LoadResources()
 	AddAnimation(111);		// SIT ATTACK left
 	AddAnimation(113);		// HURT right
 	AddAnimation(114);		// HURT left
-
-	//AddAnimation(113);		// UP STAIR RIGHT
-	//AddAnimation(114);		// UP STAIR LEFT
-	//AddAnimation(115);		// IDLE UP STAIR RIGHT
-	//AddAnimation(116);		// IDLE UP STAIR LEFT
-
+	AddAnimation(115);		// Đứng lên Phải
+	AddAnimation(116);		// Đứng lên Trái
+	AddAnimation(117);		// Đi lên Phải
+	AddAnimation(118);		// Đi lên Trái
+	AddAnimation(119);		// Đánh lên phải
+	AddAnimation(120);		// Đánh lên trái
+	AddAnimation(121);		// Đứng Xuống Phải
+	AddAnimation(122);		// Đứng Xuống Trái
+	AddAnimation(123);		// Đi Xuống Phải
+	AddAnimation(124);		// Đi Xuống Trái
+	AddAnimation(125);		// Đánh Xuống phải
+	AddAnimation(126);		// Đánh Xuống trái
 
 	AddAnimation(112);		// die
+	AddAnimation(127);		// die
 }
 

@@ -10,26 +10,6 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{b364ee3f-72dc-44d3-b8eb-1cfe04a8050a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Header\Weapon">
-      <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header\Static Objects">
-      <UniqueIdentifier>{c744a0b4-fe48-4b53-89ce-74c3c4d25757}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Source\Weapon">
-      <UniqueIdentifier>{3351b1db-6c95-47c1-801c-a0fa8c7c4774}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Static Objects">
-      <UniqueIdentifier>{e78516a9-cc36-4c01-94ac-c05b13351a44}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{6c591322-f5c6-424f-b449-77f1b388cf65}</UniqueIdentifier>
     </Filter>
@@ -42,28 +22,19 @@
     <Filter Include="Objects\Enemy">
       <UniqueIdentifier>{f89846e1-4d0f-41e0-8dab-30602971fc44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Static Objects">
+      <UniqueIdentifier>{c3f58907-e504-472e-a5ef-7a446be65577}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Weapon">
+      <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Whip.h">
-      <Filter>Header\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
-      <Filter>Header</Filter>
+      <Filter>Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
-      <Filter>Header\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Stairs.h">
-      <Filter>Header\Static Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Ground.h">
-      <Filter>Header\Static Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Door.h">
-      <Filter>Header\Static Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>Header\Static Objects</Filter>
+      <Filter>Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Input</Filter>
@@ -113,29 +84,21 @@
     <ClInclude Include="Dog.h">
       <Filter>Objects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="define.h" />
+    <ClInclude Include="Stair.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Whip.cpp">
-      <Filter>Source\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="Weapon.cpp">
-      <Filter>Source\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="Stairs.cpp">
-      <Filter>Source\Static Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Door.cpp">
-      <Filter>Source\Static Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Ground.cpp">
-      <Filter>Source\Static Objects</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>Source\Static Objects</Filter>
-    </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
@@ -183,6 +146,25 @@
     </ClCompile>
     <ClCompile Include="Dog.cpp">
       <Filter>Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
+      <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Whip.cpp">
+      <Filter>Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Stair.cpp">
+      <Filter>Static Objects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

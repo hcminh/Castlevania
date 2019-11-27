@@ -4,7 +4,7 @@
 #include <vector>
 
 #define STAIR_BBOX_WIDTH			48
-#define STAIR_BBOX_HEIGHT			16
+#define STAIR_BBOX_HEIGHT			32
 
 enum CheckPoint {
 	BOTTOM,
@@ -21,18 +21,5 @@ public:
 };
 
 typedef CStair * LPSTAIR;
-
-
-class CStairs
-{
-	static CStairs * _instance;
-
-public:
-
-	vector< LPSTAIR> stairs;
-
-	void Render();
-	static CStairs * GetInstance();
-};
 
 

@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Weapon.h"
 #include "Enemy.h"
+#include "Stair.h"
 
 #define ID_TEX_SIMON 0
 
@@ -27,23 +28,37 @@
 #define SIMON_STATE_ATTACKED			10
 #define SIMON_STATE_SIT_AFTER_FALL		11
 #define SIMON_STATE_INVISIBLE			12
+#define SIMON_STATE_WALKING_ON_STAIR	13
 
 
-#define SIMON_ANI_IDLE_RIGHT			0
-#define SIMON_ANI_IDLE_LEFT				1
-#define SIMON_ANI_SIT_RIGHT				2
-#define SIMON_ANI_SIT_LEFT				3
-#define SIMON_ANI_JUMP_RIGHT			4
-#define SIMON_ANI_JUMP_LEFT				5
-#define SIMON_ANI_WALKING_RIGHT			6
-#define SIMON_ANI_WALKING_LEFT			7
-#define SIMON_ANI_ATTACK_RIGHT			8
-#define SIMON_ANI_ATTACK_LEFT			9
-#define SIMON_ANI_SIT_ATTACK_RIGHT		10
-#define SIMON_ANI_SIT_ATTACK_LEFT		11
-#define SIMON_ANI_HURT_RIGHT			12
-#define SIMON_ANI_HURT_LEFT				13
-#define SIMON_ANI_DIE					16
+#define ANI_IDLE_RIGHT				0
+#define ANI_IDLE_LEFT				1
+#define ANI_SIT_RIGHT				2
+#define ANI_SIT_LEFT				3
+#define ANI_JUMP_RIGHT				4
+#define ANI_JUMP_LEFT				5
+#define ANI_WALKING_RIGHT			6
+#define ANI_WALKING_LEFT			7
+#define ANI_ATTACK_RIGHT			8
+#define ANI_ATTACK_LEFT				9
+#define ANI_SIT_ATTACK_RIGHT		10
+#define ANI_SIT_ATTACK_LEFT			11
+#define ANI_HURT_RIGHT				12
+#define ANI_HURT_LEFT				13
+#define ANI_IDLE_UP_STAIR_RIGHT		14		// Đứng lên Phải	 	
+#define ANI_IDLE_UP_STAIR_LEFT		15		// Đứng lên Trái	
+#define ANI_UP_STAIR_RIGHT			16		// Đi lên Phải	
+#define ANI_UP_STAIR_LEFT			17		// Đi lên Trái	
+#define ANI_HIT_UP_STAIR_RIGHT		18		// Đánh lên phải	
+#define ANI_HIT_UP_STAIR_LEFT		19		// Đánh lên trái	
+#define ANI_IDLE_DOWN_STAIR_RIGHT	20		// Đứng Xuống Phải	
+#define ANI_IDLE_DOWN_STAIR_LEFT	21		// Đứng Xuống Trái	
+#define ANI_DOWN_STAIR_RIGHT		22		// Đi Xuống Phải	
+#define ANI_DOWN_STAIR_LEFT			23		// Đi Xuống Trái	
+#define ANI_HIT_DOWN_STAIR_RIGHT	24		// Đánh Xuống phải	
+#define ANI_HIT_DOWN_STAIR_LEFT		25		// Đánh Xuống trái	
+#define ANI_DIE_RIGHT				26
+#define ANI_DIE_LEFT				27
 
 #define MAX_ATTACK_FRAME				3
 
@@ -92,10 +107,13 @@ public:
 	bool isMoving = false;
 	bool levelUpgrade = false;
 	bool isAutoGoX = false;
-	bool isOnStair = false;
 	bool untouchable = false;
 	bool invisible = false;
 	bool isFalling = false;
+	bool goingUpStair = false;
+	bool goingDownStair = false;
+	bool isOnStair = false;
+	bool isCollisionStair = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -124,6 +142,7 @@ public:
 	void colisionEnemy(CEnemy *enemy);
 	bool isColisionWeapon(CWeapon *weapon);
 	void colisionWeapon(CWeapon *weapon);
+	bool isColisionStair(LPGAMEOBJECT stair);
 	void autoGotoX(float x);
 	void attack();
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }

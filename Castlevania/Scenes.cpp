@@ -1,7 +1,7 @@
 ﻿#include "Scenes.h"
 #include "Ground.h"
 #include "Door.h"
-#include "Stairs.h"
+#include "Stair.h"
 #include "Enemy.h"
 #include "Zombie.h"
 #include "Fish.h"
@@ -200,6 +200,11 @@ void CScenes::loadObjectToGrid(string path)
 		grid->addObjects(obj);
 	}
 	fs.close();
+
+	LPSTAIR stair = new CStair(CheckPoint::BOTTOM);
+	stair->setID(999);
+	stair->SetPosition(1232.0f, 370);
+	grid->addObjects(stair);
 }
 
 CScenes * CScenes::GetInstance()

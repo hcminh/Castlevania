@@ -8,7 +8,6 @@ CFish::CFish() : CEnemy()
 {
 	isEnable = true;
 
-	waitToShoot = FISH_WAIT_TO_SHOOT_TIME;
 	width = FISH_BBOX_WIDTH;
 	height = FISH_BBOX_HEIGHT;
 
@@ -41,12 +40,13 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else return;
 	}
 	CGameObject::Update(dt, coObject);
-	vy += FISH_GRAVITY * dt;
+	if (vy != 0)
+		vy += FISH_GRAVITY * dt;
 
-	waitToShoot -= dt;
-	if (waitToShoot < 0)
+	if (isWaitToShoot && (GetTickCount() - waitToShoot > FISH_WAIT_TO_SHOOT_TIME))
 	{
-		waitToShoot = FISH_WAIT_TO_SHOOT_TIME;
+		waitToShoot = 0;
+		isWaitToShoot = false;
 		SetState(FISH_STATE_SHOOT);
 
 	}
@@ -54,13 +54,16 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	{
 		burningStart = 0;
 		isBurning = false;
+		dead();
+		waitingToRepawn();
 	}
 	else if (isShooting && (GetTickCount() - shootingTime > FISH_SHOOTING_TIME))	//enemy fire
 	{
 		shootingTime = 0;
 		isShooting = false;
 		nx = -nx;
-		SetState(ENEMY_STATE_WALKING);
+		SetState(FISH_STATE_WALK);
+		waitingToShoot();
 	}
 	else
 	{
@@ -82,8 +85,8 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			x += dx;
-			y += min_ty * dy + ny * 0.1f;
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
 
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
@@ -91,7 +94,7 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 				if (e->obj->type == ObjectType::GROUND)
 				{
-					if (e->ny != 0)
+					if (e->ny != 0 && isFlying)
 					{
 						if (e->ny < 0)
 						{
@@ -102,11 +105,19 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 					}
 				}
 			}
-
+			if (x < 50 || x > 300)
+			{
+				this->nx = -this->nx;
+				SetState(FISH_STATE_WALK);
+			}
 		}
+
+		// clean up collision events
+		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 	}
 
 	if (weapon != NULL) weapon->Update(dt, coObject);
+
 }
 
 void CFish::Render()
@@ -131,6 +142,7 @@ void CFish::respawn()
 	vy = -0.7f;
 	isDead = false;
 	isWalking = false;
+	isFlying = true;
 	SetPosition(200, 350);
 }
 
@@ -140,20 +152,24 @@ void CFish::dead()
 	isShooting = false;
 	isFlying = false;
 	isWalking = false;
+	isWaitToShoot = false;
+	SetPosition(0, 450);
 }
 
 void CFish::active()
 {
-	vx = FISH_WALKING_SPEED;
 	vy = 0;
-	isWalking = true;
+	isFlying = false;
+	SetState(FISH_STATE_WALK);
+	waitingToShoot();
 }
 
 void CFish::SetState(int state)
 {
 	switch (state)
 	{
-	case ENEMY_STATE_WALKING:
+	case FISH_STATE_WALK:
+		isWalking = true;
 		vx = nx * ENEMY_WALKING_SPEED;
 		break;
 	case FISH_STATE_SHOOT:

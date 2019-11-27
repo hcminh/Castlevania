@@ -110,6 +110,9 @@
     <ClInclude Include="Fish.h">
       <Filter>Objects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Dog.h">
+      <Filter>Objects\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -176,6 +179,9 @@
       <Filter>Objects\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Fish.cpp">
+      <Filter>Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Dog.cpp">
       <Filter>Objects\Enemy</Filter>
     </ClCompile>
   </ItemGroup>

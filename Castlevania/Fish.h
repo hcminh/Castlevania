@@ -9,12 +9,13 @@
 #define FISH_WALKING_SPEED		0.1f
 #define FISH_GRAVITY				0.002f
 
-#define FISH_WAIT_TO_SHOOT_TIME		6000
+#define FISH_WAIT_TO_SHOOT_TIME		3000
 #define FISH_SHOOTING_TIME			700
 
 #define FISH_STATE_DEAD			0
 #define FISH_STATE_RESPAWN		1
 #define FISH_STATE_SHOOT		2
+#define FISH_STATE_WALK			3
 
 #define FISH_ANI_SHOOT_RIGHT		0	//cá bắn phải
 #define FISH_ANI_SHOOT_LEFT			1	//cá bắn trái
@@ -29,15 +30,18 @@ class CFish : public CEnemy
 public:
 
 	CWeapon *weapon = NULL;
-	int waitToShoot = 0;
+	DWORD waitToShoot;
 	DWORD shootingTime;
 	bool isShooting = false;
 	bool isFlying = false;
 	bool isWalking = false;
+	bool isWaitToShoot = false;
 
 	CFish();
 
+
 	void startShoot() { isShooting = true; shootingTime = GetTickCount(); }
+	void waitingToShoot() { isWaitToShoot = true; waitToShoot = GetTickCount(); }
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();
 	virtual void respawn();

@@ -54,10 +54,20 @@ CEnemy::CEnemy() {
 
 void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom)
 {
-	left = x;
-	top = y;
-	right = left + width;
-	bottom = top + height;
+	if (isDead || isBurning)
+	{
+		left = 0;
+		top = 0;
+		right = 0;
+		bottom = 0;
+	}
+	else
+	{
+		left = x;
+		top = y;
+		right = left + width;
+		bottom = top + height;
+	}
 }
 
 void CEnemy::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)

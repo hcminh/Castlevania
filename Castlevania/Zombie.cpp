@@ -5,30 +5,36 @@
 CZombie::CZombie() : CEnemy()
 {
 	isEnable = true;
-	isDead = false;
 	width = ZOMBIE_BBOX_WIDTH;
 	height = ZOMBIE_BBOX_HEIGHT;
-	vx = ZOMBIE_WALKING_SPEED;
 	AddAnimation(310);	//ma đi phải
 	AddAnimation(311);	//ma đi trái
 	AddAnimation(252);		// DEAD
+
+	dead();
+	waitingToRepawn();
 }
 
 void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
+	if (isDead)
+	{
+		if (isWaitingToRespawn && (GetTickCount() - respawnTime > ENEMY_RESPAWN_TIME))	//enemy respawn
+		{
+			respawnTime = 0;
+			isWaitingToRespawn = false;
+			respawn();
+		}
+		else return;
+	}
 	CGameObject::Update(dt, coObject);
 
-	//if (isRespawning && (GetTickCount() - respawnTime > ENEMY_RESPAWN_TIME)) // thoi gian hoi sinh
-	//{
-	//	respawnTime = 0;
-	//	isRespawning = false;
-	//	respawn();
-	//}
 	if (isBurning && (GetTickCount() - burningStart > ENEMY_BURN_TIME))	//enemy fire
 	{
 		burningStart = 0;
 		isBurning = false;
-		SetState(ZOMBIE_STATE_RESPAWN);
+		dead();
+		waitingToRepawn();
 	}
 	else
 	{
@@ -59,8 +65,22 @@ void CZombie::Render()
 
 void CZombie::respawn()
 {
+	isDead = false;
 	vx = ENEMY_WALKING_SPEED;
+	SetPosition(200, 304);
 	//SetPosition(CCamera::GetInstance()->getBorderCamLeft(), 300);
+}
+
+void CZombie::dead()
+{
+	isDead = true;
+	vx = 0;
+	SetPosition(0, 450);
+}
+
+void CZombie::active()
+{
+	SetState(ENEMY_STATE_WALKING);
 }
 
 void CZombie::SetState(int state)

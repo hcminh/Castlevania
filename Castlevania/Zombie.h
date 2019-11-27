@@ -25,6 +25,8 @@ public:
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();
 	virtual void respawn();
+	virtual void dead();
+	virtual void active();
 	virtual void SetState(int state);
 };
 

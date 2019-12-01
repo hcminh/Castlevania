@@ -1,21 +1,22 @@
 #pragma once
 
 #include "GameObject.h"
-#include <vector>
 
-#define STAIR_BBOX_WIDTH			48
+#define STAIR_BBOX_WIDTH			32
 #define STAIR_BBOX_HEIGHT			32
 
-enum CheckPoint {
-	BOTTOM,
-	TOP
+enum STATESTAIR {
+	STAIR_NONE,
+	UP_RIGHT,
+	UP_LEFT,
+	DOWN_RIGHT,
+	DOWN_LEFT,
 };
 
 class CStair : public CGameObject
 {
 public:
-	CheckPoint checkPoint;
-	CStair(CheckPoint cp);
+	CStair(float x, float y);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

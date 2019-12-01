@@ -32,9 +32,16 @@ void CScenes::Update(DWORD dt)
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 
 	onCamObjects.clear();
+	stairs.clear();
+
 	for (auto obj : objects)
 		if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
-			onCamObjects.push_back(obj.second);
+		{
+			if (obj.second->type == ObjectType::STAIR)
+				stairs.push_back(obj.second);
+			//else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
+				onCamObjects.push_back(obj.second);
+		}
 
 	insertObject(simon); // để push con simon vào mảng objects sau khi đã lấy dc mảng oncamera để khỏi bị va cham với dao hoặc subweapon khác
 
@@ -129,7 +136,7 @@ void CScenes::getObjectsFromGrid(int xCam, int widthCam)
 	objects.erase(objects.begin(), objects.end());
 
 	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
-	int indexOfSecondCell = floor((xCam + widthCam )/ CELL_WIDTH);
+	int indexOfSecondCell = floor((xCam + widthCam) / CELL_WIDTH);
 
 	int sizeFirstObjs = grid->cells[indexOfFirstCell]->objects.size();
 	int sizeSecondObjs = grid->cells[indexOfSecondCell]->objects.size();
@@ -193,6 +200,11 @@ void CScenes::loadObjectToGrid(string path)
 			obj = new CDog();
 			break;
 		}
+		case STAIR:
+		{
+			obj = new CStair(x, y);
+			break;
+		}
 
 		}
 
@@ -200,11 +212,6 @@ void CScenes::loadObjectToGrid(string path)
 		grid->addObjects(obj);
 	}
 	fs.close();
-
-	LPSTAIR stair = new CStair(CheckPoint::BOTTOM);
-	stair->setID(999);
-	stair->SetPosition(1232.0f, 370);
-	grid->addObjects(stair);
 }
 
 CScenes * CScenes::GetInstance()

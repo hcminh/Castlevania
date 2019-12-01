@@ -1,10 +1,10 @@
 #include "Stair.h"
 
-CStair::CStair(CheckPoint cp)
+CStair::CStair(float x, float y)
 {
 	isEnable = true;
 	type = ObjectType::STAIR;
-	checkPoint = cp;
+	SetPosition(x, y);
 }
 
 void CStair::Render()

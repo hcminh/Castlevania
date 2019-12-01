@@ -1,31 +1,35 @@
 ﻿#include "Input.h"
 #include "Scenes.h"
-#include "Simon.h"
 
 Input::Input()
 {
 	game = CGame::GetInstance();
 }
 
+void Input::addSimon()
+{
+	simon = CSimon::GetInstance();
+}
+
 bool Input::canUseKeyboard()
 {
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return false;
-	if (CSimon::GetInstance()->isJumping) return false;
-	if (CSimon::GetInstance()->isAutoGoX) return false;
-	if (CSimon::GetInstance()->isAttacking) return false;
-	if (CSimon::GetInstance()->levelUpgrade) return false;
-	if (CSimon::GetInstance()->isFalling) return false;
-	if (CSimon::GetInstance()->isHurting) return false;
+	if (simon->GetState() == SIMON_STATE_DIE) return false;
+	if (simon->isJumping) return false;
+	if (simon->isAutoGoX) return false;
+	if (simon->isAttacking) return false;
+	if (simon->levelUpgrade) return false;
+	if (simon->isFalling) return false;
+	if (simon->isHurting) return false;
 	return true;
 }
 
 bool Input::canPressKey()
 {
-	if (CSimon::GetInstance()->GetState() == SIMON_STATE_DIE) return false;
-	if (CSimon::GetInstance()->isAutoGoX) return false;
-	if (CSimon::GetInstance()->isAttacking) return false;
-	if (CSimon::GetInstance()->levelUpgrade) return false;
-	if (CSimon::GetInstance()->isHurting) return false;
+	if (simon->GetState() == SIMON_STATE_DIE) return false;
+	if (simon->isAutoGoX) return false;
+	if (simon->isAttacking) return false;
+	if (simon->levelUpgrade) return false;
+	if (simon->isHurting) return false;
 	return true;
 }
 
@@ -34,26 +38,39 @@ void Input::KeyState(BYTE *state)
 	if (!canUseKeyboard()) return;
 
 	if (game->IsKeyDown(DIK_DOWN))
-		CSimon::GetInstance()->SetState(SIMON_STATE_SIT);
+	{
+		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
+		{
+			downStair();
+			return;
+		}
+		simon->SetState(SIMON_STATE_SIT);
+	}
 	else if (game->IsKeyDown(DIK_RIGHT))
-		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_RIGHT);
+	{
+		simon->SetState(SIMON_STATE_WALKING_RIGHT);
+	}
 	else if (game->IsKeyDown(DIK_LEFT))
-		CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_LEFT);
+		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_UP))
 	{
-		if (CSimon::GetInstance()->isCollisionStair)
-			CSimon::GetInstance()->SetState(SIMON_STATE_WALKING_ON_STAIR);
-	}
-	//else if (game->IsKeyDown(DIK_U))
-	//	CSimon::GetInstance()->SetState(SIMON_STATE_GO_UP_STAIR);
-	//else if (game->IsKeyDown(DIK_I))
-	//	CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
-		else
+		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
 		{
-			if (CSimon::GetInstance()->isSitting)  CSimon::GetInstance()->SetState(SIMON_STATE_STANDUP);
-			//else if (CSimon::GetInstance()->isOnStair) CSimon::GetInstance()->SetState(SIMON_STATE_IDLE_UP_STAIR);
-			else CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
+			upStair();
+			return;
 		}
+		simon->SetState(SIMON_STATE_IDLE);
+	}
+	else
+	{
+		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
+		{
+			if (standStair() == true)
+				return;
+		}
+		else if (simon->isSitting)  simon->SetState(SIMON_STATE_STANDUP);
+		simon->SetState(SIMON_STATE_IDLE);
+	}
 }
 
 void Input::OnKeyDown(int KeyCode)
@@ -63,40 +80,43 @@ void Input::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		CSimon::GetInstance()->SetState(SIMON_STATE_JUMP);
+		simon->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_R: // reset
-		CSimon::GetInstance()->SetState(SIMON_STATE_IDLE);
-		CSimon::GetInstance()->SetPosition(50.0f, 0.0f);
-		CSimon::GetInstance()->SetSpeed(0, 0);
+		simon->SetState(SIMON_STATE_IDLE);
+		simon->SetPosition(50.0f, 0.0f);
+		simon->SetSpeed(0, 0);
 		break;
 	case DIK_A: // ATTACK
-		CSimon::GetInstance()->SetState(SIMON_STATE_ATTACK);
+		simon->SetState(SIMON_STATE_ATTACK);
 		break;
 	case DIK_Q:
-		CSimon::GetInstance()->SetState(SIMON_STATE_LEVEL_UP);
+		simon->SetState(SIMON_STATE_LEVEL_UP);
 		break;
 	case DIK_W:
-		CSimon::GetInstance()->SetState(SIMON_STATE_INVISIBLE);
+		simon->SetState(SIMON_STATE_INVISIBLE);
 		break;
 	case DIK_X:
-		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", CSimon::GetInstance()->x, CSimon::GetInstance()->y);
+		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", simon->x, simon->y);
 		break;
 	case DIK_0:
 		DebugOut(L"[OBJECTS] Số lượng OBJ hiện tại là: %d \n", CScenes::GetInstance()->getObjectsSize());
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
-		CSimon::GetInstance()->SetPosition(10.0f, 300);
+		simon->SetPosition(10.0f, 300);
 		CCamera::GetInstance()->SetCamPos(0.0f, 0.0f);
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->changeScene(SceneID::SCENEID_2);
-		CSimon::GetInstance()->SetPosition(1150.0f, 300);
+		simon->SetPosition(1211.0f, 330);
+		break;
+	case DIK_P: //qua scene 2
+		simon->SetPosition(1214.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->changeScene(SceneID::SCENEID_3);
-		CSimon::GetInstance()->SetPosition(609.0f, 100);
+		simon->SetPosition(609.0f, 100);
 		break;
 	}
 }
@@ -106,3 +126,59 @@ void Input::OnKeyUp(int KeyCode)
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
 }
 
+void Input::downStair()
+{
+	int stairDirection = simon->stairDirection;
+
+	if (simon->canMoveDownStair == false)
+	{
+		if (simon->isOnStair == true)
+			simon->SetState(SIMON_STATE_IDLE);
+		else
+			simon->SetState(SIMON_STATE_SIT);
+
+		return;
+	}
+	else
+	{
+		simon->nx = -simon->stairDirection;
+		simon->SetState(SIMON_STATE_DOWN_STAIR);
+	}
+
+	return;
+}
+
+void Input::upStair()
+{
+	int stairDirection = simon->stairDirection;
+
+	if (simon->canMoveUpStair == false)
+	{
+		if (simon->isOnStair == true)
+		{
+			int nx = simon->stairDirection;
+			simon->nx = nx;
+			simon->SetState(SIMON_STATE_UP_STAIR);
+			simon->AutoWalk(14 * nx, SIMON_STATE_IDLE, nx);
+		}
+		return;
+	}
+	else
+	{
+		simon->nx = stairDirection;
+		simon->SetState(SIMON_STATE_UP_STAIR);
+	}
+
+	return;
+}
+
+bool Input::standStair()
+{
+	if (simon->GetState() == SIMON_STATE_UP_STAIR || simon->GetState() == SIMON_STATE_DOWN_STAIR)
+	{
+		simon->vx = simon->vy = 0;
+		return true;
+	}
+
+	return false;
+}

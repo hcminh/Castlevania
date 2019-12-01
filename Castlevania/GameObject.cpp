@@ -70,7 +70,6 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 */
 void CGameObject::CalcPotentialCollisions( vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents)
 {
-
 	coEvents.clear();
 	UINT coObjectSize = coObjects->size();
 	for (UINT i = 0; i < coObjectSize; i++)

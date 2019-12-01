@@ -27,6 +27,7 @@ void Init(HWND hWnd)
 	SetWindowPos(hWnd, 0, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
 
 	CLoadFile().LoadResources(RESOURCE_PATH);
+	inp->addSimon();
 	CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
 }
 

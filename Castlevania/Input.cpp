@@ -39,37 +39,24 @@ void Input::KeyState(BYTE *state)
 
 	if (game->IsKeyDown(DIK_DOWN))
 	{
-		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
-		{
-			downStair();
-			return;
-		}
-		simon->SetState(SIMON_STATE_SIT);
+		if(simon->downStair(CScenes::GetInstance()->stairs));
+		else simon->SetState(SIMON_STATE_SIT);
 	}
-	else if (game->IsKeyDown(DIK_RIGHT))
+	else if (game->IsKeyDown(DIK_RIGHT) && !simon->isOnStair)
 	{
 		simon->SetState(SIMON_STATE_WALKING_RIGHT);
 	}
-	else if (game->IsKeyDown(DIK_LEFT))
+	else if (game->IsKeyDown(DIK_LEFT) && !simon->isOnStair)
 		simon->SetState(SIMON_STATE_WALKING_LEFT);
 	else if (game->IsKeyDown(DIK_UP))
 	{
-		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
-		{
-			upStair();
-			return;
-		}
-		simon->SetState(SIMON_STATE_IDLE);
+		simon->upStair(CScenes::GetInstance()->stairs);
 	}
 	else
 	{
-		if (simon->isColisionStair(CScenes::GetInstance()->stairs))
-		{
-			if (standStair() == true)
-				return;
-		}
+		if(simon->isOnStair) simon->SetState(SIMON_STATE_IDLE_STAIR);
 		else if (simon->isSitting)  simon->SetState(SIMON_STATE_STANDUP);
-		simon->SetState(SIMON_STATE_IDLE);
+		else simon->SetState(SIMON_STATE_IDLE);
 	}
 }
 
@@ -109,7 +96,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->changeScene(SceneID::SCENEID_2);
-		simon->SetPosition(1211.0f, 330);
+		simon->SetPosition(3313.0f, 330);
 		break;
 	case DIK_P: //qua scene 2
 		simon->SetPosition(1214.0f, 300);
@@ -124,61 +111,4 @@ void Input::OnKeyDown(int KeyCode)
 void Input::OnKeyUp(int KeyCode)
 {
 	DebugOut(L"[INFO] KeyUp: %d\n", KeyCode);
-}
-
-void Input::downStair()
-{
-	int stairDirection = simon->stairDirection;
-
-	if (simon->canMoveDownStair == false)
-	{
-		if (simon->isOnStair == true)
-			simon->SetState(SIMON_STATE_IDLE);
-		else
-			simon->SetState(SIMON_STATE_SIT);
-
-		return;
-	}
-	else
-	{
-		simon->nx = -simon->stairDirection;
-		simon->SetState(SIMON_STATE_DOWN_STAIR);
-	}
-
-	return;
-}
-
-void Input::upStair()
-{
-	int stairDirection = simon->stairDirection;
-
-	if (simon->canMoveUpStair == false)
-	{
-		if (simon->isOnStair == true)
-		{
-			int nx = simon->stairDirection;
-			simon->nx = nx;
-			simon->SetState(SIMON_STATE_UP_STAIR);
-			simon->AutoWalk(14 * nx, SIMON_STATE_IDLE, nx);
-		}
-		return;
-	}
-	else
-	{
-		simon->nx = stairDirection;
-		simon->SetState(SIMON_STATE_UP_STAIR);
-	}
-
-	return;
-}
-
-bool Input::standStair()
-{
-	if (simon->GetState() == SIMON_STATE_UP_STAIR || simon->GetState() == SIMON_STATE_DOWN_STAIR)
-	{
-		simon->vx = simon->vy = 0;
-		return true;
-	}
-
-	return false;
 }

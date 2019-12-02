@@ -202,7 +202,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case STAIR:
 		{
-			obj = new CStair(x, y);
+			obj = new CStair(STATESTAIR(state), width, height, x, y);
 			break;
 		}
 

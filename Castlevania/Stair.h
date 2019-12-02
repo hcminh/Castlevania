@@ -2,8 +2,8 @@
 
 #include "GameObject.h"
 
-#define STAIR_BBOX_WIDTH			32
-#define STAIR_BBOX_HEIGHT			32
+#define STAIR_BBOX_WIDTH			48
+#define STAIR_BBOX_HEIGHT			16
 
 enum STATESTAIR {
 	STAIR_NONE,
@@ -16,7 +16,10 @@ enum STATESTAIR {
 class CStair : public CGameObject
 {
 public:
-	CStair(float x, float y);
+	STATESTAIR stateStair = STATESTAIR::STAIR_NONE;
+	int ladders = 0;
+	int firstLadderPosX = 0;
+	CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

@@ -15,8 +15,5 @@ public:
 	virtual void KeyState(BYTE *state);
 	virtual void OnKeyDown(int KeyCode);
 	virtual void OnKeyUp(int KeyCode);
-	void downStair();
-	void upStair();
-	bool standStair();
 };
 

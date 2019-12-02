@@ -1,10 +1,13 @@
 #include "Stair.h"
 
-CStair::CStair(float x, float y)
+CStair::CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y)
 {
-	isEnable = true;
-	type = ObjectType::STAIR;
-	SetPosition(x, y);
+	this->isEnable = true;
+	this->stateStair = st;
+	this->ladders = ladders;
+	this->firstLadderPosX = firstLadderPosX;
+	this->type = ObjectType::STAIR;
+	this->SetPosition(x, y);
 }
 
 void CStair::Render()

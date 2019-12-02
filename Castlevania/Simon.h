@@ -38,7 +38,7 @@
 #define SIMON_STATE_INVISIBLE			12
 #define SIMON_STATE_UP_STAIR			13
 #define SIMON_STATE_DOWN_STAIR			14
-#define SIMON_STATE_COLLISION_STAIR		15
+#define SIMON_STATE_IDLE_STAIR			15
 
 
 #define ANI_IDLE_RIGHT				0
@@ -104,7 +104,6 @@ class CSimon : public CGameObject
 	DWORD invisibleStart;
 	DWORD sittingStart;
 	float destinationX;
-	float oldY = 0;
 	int ani;
 public:
 	//biến để kiểm tra Simon đang làm việc khác
@@ -120,19 +119,14 @@ public:
 	bool invisible = false;
 	bool isFalling = false;
 	//stair
+	bool isStartOnStair = false; //bắt đầu lên/xuống thang, biến này dùng để kiếm tra giúp cho hàm stairOnStair chỉ chạy 1 lần duy nhất khi bấm phím
 	bool isOnStair = false;	// trạng thái đang đứng trên cầu thang 
 	bool isMoving = false;
 	bool isUpStair = false;
 	bool isDownStair = false;
-	bool canMoveUpStair = false;	// có thể di chuyển lên cầu thang
-	bool canMoveDownStair = false;	// có thể di chuyển xuống cầu thang
-	int stairDirection = 0;			// 1: trái dưới - phải trên, -1: trái trên - phải dưới
-	LPGAMEOBJECT stairCollided = nullptr; // lưu bậc thang va chạm với simon -> để xét vị trí đi tới cầu thang để lên - xuống
 
 	// auto-walk
-	float autoWalkDistance = 0;		// Khoảng cách 
-	int stateAfterAutoWalk = -1;	// Trạng thái sau khi auto-walk
-	int nxAfterAutoWalk = 0;		// Hướng Simon sau khi auto-walk
+	bool isAutoWalkToStair = false;
 	bool isAutoWalk = false;		// tự động đi
 
 	CWhip *whip;
@@ -163,12 +157,10 @@ public:
 	void colisionEnemy(CEnemy *enemy);
 	bool isColisionWeapon(CWeapon *weapon);
 	void colisionWeapon(CWeapon *weapon);
-	bool isColisionStair(vector<LPGAMEOBJECT> stair);
-	void autoGotoX(float x);
+	void upStair(vector<LPGAMEOBJECT> stairs);
+	bool downStair(vector<LPGAMEOBJECT> stairs);
+	void startOnStair(LPGAMEOBJECT stair);
 	void attack();
-	// Auto-walk
-	void AutoWalk(float distance, int new_state, int new_nx);
-	void DoAutoWalk();
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }
 	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }
 	void startLevelUp() { levelUpgrade = true; levelUpStart = GetTickCount(); }

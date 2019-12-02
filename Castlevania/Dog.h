@@ -4,9 +4,9 @@
 
 // Dog
 #define DOG_BBOX_WIDTH		65
-#define DOG_BBOX_HEIGHT		32
+#define DOG_BBOX_HEIGHT		30
 
-#define DOG_WALKING_SPEED		0.17f
+#define DOG_WALKING_SPEED		0.3f
 #define DOG_JUMPING_SPEED		0.5f
 #define DOG_GRAVITY				0.002f
 
@@ -26,7 +26,7 @@ class CDog : public CEnemy
 public:
 	bool isJumping = false;
 	bool isSitting = false;
-	CDog();
+	CDog(float x, float y);
 
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();

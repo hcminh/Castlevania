@@ -67,6 +67,7 @@ void Input::OnKeyDown(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
+		if (simon->isOnStair) return;
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_R: // reset
@@ -96,7 +97,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_2);
-		simon->SetPosition(3313.0f, 330);
+		simon->SetPosition(1700, 330);
 		break;
 	case DIK_P: //qua scene 2
 		simon->SetPosition(1214.0f, 300);

@@ -1,6 +1,7 @@
 ﻿#include "Item.h"
 #include "Simon.h"
 #include "Scenes.h"
+#include <ctime>
 
 CItem::CItem(float xPos, float yPos, ItemState itemState)
 {
@@ -65,20 +66,28 @@ CItem::CItem(float xPos, float yPos, ItemState itemState)
 		AddAnimation(256);		// knife
 		vy = BIG_HEART_GRAVITY;
 		break;
+	case STOP_WATCH:
+		AddAnimation(258);		// STOP_WATCH
+		vy = BIG_HEART_GRAVITY;
+		break;
 	case AXE:
 		AddAnimation(257);		// AXE
 		vy = BIG_HEART_GRAVITY;
 		break;
-	case STOP_WATCH:
-		AddAnimation(258);		// STOP_WATCH
+	case HOLY_WATER:
+		AddAnimation(260);		// HOLY_WATER
+		vy = BIG_HEART_GRAVITY;
+		break;
+	case HOLY_CROSS:
+		AddAnimation(269);		// HOLY_CROSS
 		vy = BIG_HEART_GRAVITY;
 		break;
 	case INVISIBLE:
 		AddAnimation(259);		// INVISIBLE
 		vy = BIG_HEART_GRAVITY;
 		break;
-	case HOLY_WATER:
-		AddAnimation(260);		// HOLY_WATER
+	case FOOD:
+		AddAnimation(266);		// GÀ NƯỚNG
 		vy = BIG_HEART_GRAVITY;
 		break;
 	case POINT_400:
@@ -93,11 +102,11 @@ CItem::CItem(float xPos, float yPos, ItemState itemState)
 		AddAnimation(265);		// túi đỏ
 		vy = BIG_HEART_GRAVITY;
 		break;
-	case FOOD:
-		AddAnimation(266);		// GÀ NƯỚNG
+	case DOUBLE_SHOT:
+		AddAnimation(268);		// double shot
 		vy = BIG_HEART_GRAVITY;
 		break;
-	case DOUBLE_SHOT:
+	case TRIPLE_SHOT:
 		AddAnimation(268);		// double shot
 		vy = BIG_HEART_GRAVITY;
 		break;

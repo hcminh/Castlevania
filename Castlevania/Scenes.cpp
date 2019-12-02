@@ -39,15 +39,16 @@ void CScenes::Update(DWORD dt)
 		{
 			if (obj.second->type == ObjectType::STAIR)
 				stairs.push_back(obj.second);
-			//else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
+			else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
 				onCamObjects.push_back(obj.second);
 		}
 
-	//insertObject(simon); // để push con simon vào mảng objects sau khi đã lấy dc mảng oncamera để khỏi bị va cham với dao hoặc subweapon khác
-
-	for (auto obj : objects)
-		if (obj.second->isEnable)
-			obj.second->Update(dt, &onCamObjects);
+	for (auto obj : onCamObjects)
+		if (obj->isEnable)
+			obj->Update(dt, &onCamObjects);
+	//for (auto obj : objects)
+	//	if (obj.second->isEnable)
+	//		obj.second->Update(dt, &onCamObjects);
 	simon->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
@@ -116,20 +117,16 @@ void CScenes::getObjectsFromGrid(int xCam, int widthCam)
 	objects.erase(objects.begin(), objects.end());
 
 	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
-	int indexOfSecondCell = floor((xCam + widthCam) / CELL_WIDTH);
+	int indexOfLastCell = floor((xCam + widthCam) / CELL_WIDTH);
 
-	int sizeFirstObjs = grid->cells[indexOfFirstCell]->objects.size();
-	int sizeSecondObjs = grid->cells[indexOfSecondCell]->objects.size();
-
-	for (int i = 0; i < sizeFirstObjs; i++)
+	for (int i = indexOfFirstCell; i <= indexOfLastCell; i++)
 	{
-		insertObject(grid->cells[indexOfFirstCell]->objects[i]);
-	}
-	if (indexOfFirstCell != indexOfSecondCell)
-		for (int i = 0; i < sizeSecondObjs; i++)
+		int sizeOfCell = grid->cells[i]->objects.size();
+		for (int j = 0; j < sizeOfCell; j++)
 		{
-			insertObject(grid->cells[indexOfSecondCell]->objects[i]);
+			insertObject(grid->cells[i]->objects[j]);
 		}
+	}
 }
 
 void CScenes::loadObjectToGrid(string path)
@@ -177,7 +174,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case ENEMY:
 		{
-			obj = new CDog();
+			obj = new CDog(x, y);
 			break;
 		}
 		case STAIR:

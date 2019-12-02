@@ -5,9 +5,12 @@
 #include "Simon.h"
 
 
-CDog::CDog() : CEnemy()
+CDog::CDog(float x, float y) : CEnemy()
 {
 	isEnable = true;
+	SetPosition(x, y);
+	isSitting = true;
+	this->nx = -1;
 	width = DOG_BBOX_WIDTH;
 	height = DOG_BBOX_HEIGHT;
 	AddAnimation(300);	//chó NGỒI R
@@ -19,22 +22,10 @@ CDog::CDog() : CEnemy()
 	AddAnimation(252);		// CHÁY
 	AddAnimation(252);		// CHÁY
 
-	dead();
-	waitingToRepawn();
 }
 
 void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
-	if (isDead)
-	{
-		if (isWaitingToRespawn && (GetTickCount() - respawnTime > ENEMY_RESPAWN_TIME))	//enemy respawn
-		{
-			respawnTime = 0;
-			isWaitingToRespawn = false;
-			respawn();
-		}
-		else return;
-	}
 
 	if (isBurning && (GetTickCount() - burningStart > ENEMY_BURN_TIME))	//enemy fire
 	{
@@ -43,69 +34,62 @@ void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		dead();
 		waitingToRepawn();
 	}
-	else if (isSitting && abs(CSimon::GetInstance()->x - this->x) < 200)
+
+	if (isSitting && abs(CSimon::GetInstance()->x - this->x) < 100)
 	{
 		active();
 	}
+	CGameObject::Update(dt, coObject);
+
+	vy += DOG_GRAVITY * dt;
+
+	vector<LPCOLLISIONEVENT> coEvents;
+	vector<LPCOLLISIONEVENT> coEventsResult;
+
+	coEvents.clear();
+
+	CalcPotentialCollisions(coObject, coEvents);
+
+	if (coEvents.size() == 0)
+	{
+		x += dx;
+		y += dy;
+	}
 	else
 	{
-		CGameObject::Update(dt, coObject);
-		if (vy != 0)
-			vy += DOG_GRAVITY * dt;
+		float min_tx, min_ty, nx = 0, ny;
 
-		vector<LPCOLLISIONEVENT> coEvents;
-		vector<LPCOLLISIONEVENT> coEventsResult;
+		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		coEvents.clear();
+		x += min_tx * dx + nx * 0.4f;
+		y += min_ty * dy + ny * 0.4f;
 
-		CalcPotentialCollisions(coObject, coEvents);
-
-		if (coEvents.size() == 0)
+		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
-			x += dx;
-			y += dy;
-		}
-		else
-		{
-			float min_tx, min_ty, nx = 0, ny;
+			LPCOLLISIONEVENT e = coEventsResult[i];
 
-			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
-
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
-
-			for (UINT i = 0; i < coEventsResult.size(); i++)
+			if (e->obj->type == ObjectType::GROUND)
 			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
-
-				if (e->obj->type == ObjectType::GROUND)
+				if (e->ny != 0 && isJumping)
 				{
-					if (e->ny != 0 && isJumping)
+					if (e->ny < 0)
 					{
-						if (e->ny < 0)
-						{
-							vy = 0;
-							isJumping = false;
-						}
-						else
-							y += dy;
+						vy = 0;
+						isJumping = false;
 					}
-				}
-				else
-				{
-					x += dx;
+					else
+						y += dy;
 				}
 			}
+			else
+			{
+				x += dx;
+			}
 		}
+	}
 
-		// clean up collision events
-		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
-	}
-	if (x <= 20 || x >= 300)
-	{
-		nx = -nx;
-		vx = vx * nx;
-	}
+	// clean up collision events
+	for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
 }
 

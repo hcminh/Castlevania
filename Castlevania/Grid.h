@@ -3,7 +3,7 @@
 #include "GameObject.h"
 using namespace std;
 
-#define CELL_WIDTH 512
+#define CELL_WIDTH 256
 
 class CCell
 {

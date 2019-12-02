@@ -68,7 +68,6 @@ enum ItemType
 class CItem : public CGameObject
 {
 	DWORD timeDisplayed; // Thời gian đã hiển thị.
-
 	DWORD timeWaited; // Thời gian đã chờ trước khi hiển thị
 	bool isDestroyed = false;
 	bool isDestroying = false;

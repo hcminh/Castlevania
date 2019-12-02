@@ -504,6 +504,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 				return false;
 			}
 		}
+		return false;
 	}
 }
 

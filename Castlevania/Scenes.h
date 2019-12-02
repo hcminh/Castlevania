@@ -14,7 +14,7 @@
 #define MAX_TIME_STOP_WATCH 5000
 using namespace std;
 
-enum SceneID
+enum SCENEID
 {
 	SCENEID_0,
 	SCENEID_1,
@@ -27,9 +27,9 @@ class CScene
 public:
 
 	string linkObjects;
-	SceneID sceneID = SceneID::SCENEID_1; // mặc định là scene 1
+	SCENEID sceneID = SCENEID::SCENEID_1; // mặc định là scene 1
 	int mapID;
-	CScene(SceneID sceneID, int mapID, string link);
+	CScene(SCENEID sceneID, int mapID, string link);
 
 };
 
@@ -40,8 +40,8 @@ class CScenes
 	static CScenes * __instance; // Singleton Patern
 	unordered_map<int, LPGAMEOBJECT> objects; //các object của map
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
-	unordered_map<SceneID, LPSCENE> scenes;
-	SceneID currentScene;
+	unordered_map<SCENEID, LPSCENE> scenes;
+	SCENEID currentScene;
 	int curentMap;
 	DWORD accutime = 0;
 	CGrid *grid;
@@ -53,15 +53,15 @@ public:
 	CScenes();
 	void Update(DWORD dt);
 	void Render();
-	void Add(SceneID sceneID, int mapID, string linkObjects);
-	LPSCENE getCurrentScene() { return scenes[SceneID(currentScene)]; };
+	void Add(SCENEID sceneID, int mapID, string linkObjects);
+	LPSCENE getCurrentScene() { return scenes[SCENEID(currentScene)]; };
 	static CScenes * GetInstance();
 	// Get, Set
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
 	void updateCamPos();
-	void changeScene();
-	void changeScene(SceneID newScene);
+	void changeScene(LPGAMEOBJECT obj);
+	void changeScene(SCENEID newScene);
 	void loadObjectToGrid(string path);
 	void getObjectsFromGrid(int xCam, int widthCam);
 	void stopObject();

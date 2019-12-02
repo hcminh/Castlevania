@@ -90,19 +90,19 @@ void Input::OnKeyDown(int KeyCode)
 		DebugOut(L"[OBJECTS] Số lượng OBJ hiện tại là: %d \n", CScenes::GetInstance()->getObjectsSize());
 		break;
 	case DIK_1: //qua scene 1
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_1);
+		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
 		simon->SetPosition(10.0f, 300);
 		CCamera::GetInstance()->SetCamPos(0.0f, 0.0f);
 		break;
 	case DIK_2: //qua scene 2
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_2);
+		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_2);
 		simon->SetPosition(3313.0f, 330);
 		break;
 	case DIK_P: //qua scene 2
 		simon->SetPosition(1214.0f, 300);
 		break;
 	case DIK_3: //qua scene 3
-		CScenes::GetInstance()->changeScene(SceneID::SCENEID_3);
+		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_3);
 		simon->SetPosition(609.0f, 100);
 		break;
 	}

@@ -83,7 +83,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			else if (e->obj->type == ObjectType::DOOR)
 			{
 
-				CScenes::GetInstance()->changeScene();
+				CScenes::GetInstance()->changeScene(e->obj);
 			}
 			else if (e->obj->type == ObjectType::ENEMY)
 			{
@@ -432,6 +432,7 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
 
+		simon_t += 50;
 		simon_b += 5;
 
 		for (UINT i = 0; i < stairs.size(); i++)

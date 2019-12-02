@@ -2,9 +2,12 @@
 
 
 
-CDoor::CDoor(float x, float y)
+CDoor::CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y)
 {
 	type = ObjectType::DOOR;
+	this->nextScene = nextScene;
+	this->newPosX = newPosX;
+	this->newPosY = newPosY;
 	this->x = x;
 	this->y = y;
 	isEnable = true;
@@ -12,7 +15,7 @@ CDoor::CDoor(float x, float y)
 
 void CDoor::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CDoor::GetBoundingBox(float & l, float & t, float & r, float & b)

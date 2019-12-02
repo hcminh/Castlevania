@@ -12,7 +12,7 @@ CStair::CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y
 
 void CStair::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CStair::GetBoundingBox(float & l, float & t, float & r, float & b)

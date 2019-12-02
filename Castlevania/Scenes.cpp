@@ -43,11 +43,12 @@ void CScenes::Update(DWORD dt)
 				onCamObjects.push_back(obj.second);
 		}
 
-	insertObject(simon); // để push con simon vào mảng objects sau khi đã lấy dc mảng oncamera để khỏi bị va cham với dao hoặc subweapon khác
+	//insertObject(simon); // để push con simon vào mảng objects sau khi đã lấy dc mảng oncamera để khỏi bị va cham với dao hoặc subweapon khác
 
 	for (auto obj : objects)
 		if (obj.second->isEnable)
 			obj.second->Update(dt, &onCamObjects);
+	simon->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
 }
@@ -60,7 +61,7 @@ void CScenes::Render()
 	simon->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
 }
 
-void CScenes::Add(SceneID sceneID, int mapID, string linkObjects)
+void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
 {
 	LPSCENE scene = new CScene(sceneID, mapID, linkObjects);
 	scenes[sceneID] = scene;
@@ -84,46 +85,25 @@ void CScenes::updateCamPos()
 	if (xSimon > SCREEN_WIDTH / 2 &&
 		xSimon + SCREEN_WIDTH / 2 < mapWidth)
 	{
-		if (xSimon >= SCREEN_WIDTH / 2 &&
-			xSimon <= mapWidth - (SCREEN_WIDTH / 2))
-		{
 			camera->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
-		}
 	}
+	else if(xSimon < SCREEN_WIDTH / 2) camera->SetCamPos(0, 0);
+	else if(xSimon > SCREEN_WIDTH / 2) camera->SetCamPos(mapWidth - SCREEN_WIDTH - 4, 0);
 }
 
-void CScenes::changeScene()
+void CScenes::changeScene(LPGAMEOBJECT obj)
 {
-	if (currentScene == SceneID::SCENEID_1)
-	{
-		currentScene = SceneID::SCENEID_2;
-		curentMap = scenes[currentScene]->mapID;
-		loadObjectToGrid(scenes[currentScene]->linkObjects);
-		simon->SetPosition(0.0f, 300);
-		camera->SetCamPos(0, 0);
-		getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
-	}
-	else if (currentScene == SceneID::SCENEID_2)
-	{
-		currentScene = SceneID::SCENEID_3;
-		curentMap = scenes[currentScene]->mapID;
-		loadObjectToGrid(scenes[currentScene]->linkObjects);
-		simon->SetPosition(0.0f, 100);
-		camera->SetCamPos(0, 0);
-		getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
-	}
-	else if (currentScene == SceneID::SCENEID_3)
-	{
-		currentScene = SceneID::SCENEID_2;
-		curentMap = scenes[currentScene]->mapID;
-		loadObjectToGrid(scenes[currentScene]->linkObjects);
-		simon->SetPosition(3000.0f, 300);
-		updateCamPos();
-		getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
-	}
+	auto door = dynamic_cast<CDoor *> (obj);
+
+	currentScene = door->nextScene;
+	curentMap = scenes[currentScene]->mapID;
+	loadObjectToGrid(scenes[currentScene]->linkObjects);
+	simon->SetPosition(door->newPosX, door->newPosY);
+	updateCamPos();
+	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
-void CScenes::changeScene(SceneID newScene)
+void CScenes::changeScene(SCENEID newScene)
 {
 	currentScene = newScene;
 	curentMap = scenes[currentScene]->mapID;
@@ -192,7 +172,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case DOOR:
 		{
-			obj = new CDoor(x, y);
+			obj = new CDoor(SCENEID(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
 			break;
 		}
 		case ENEMY:
@@ -202,7 +182,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case STAIR:
 		{
-			obj = new CStair(STATESTAIR(state), width, height, x, y);
+			obj = new CStair(STATESTAIR(state), width, height, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên
 			break;
 		}
 
@@ -226,7 +206,7 @@ void CScenes::stopObject()
 	accutime = 0;
 }
 
-CScene::CScene(SceneID sceneID, int mapID, string link)
+CScene::CScene(SCENEID sceneID, int mapID, string link)
 {
 	this->sceneID = sceneID;
 	this->mapID = mapID;

@@ -34,7 +34,7 @@ void CLoadFile::loadScenes(string path)
 		int sceneID, mapID;
 		string linkObjs;
 		fs >> sceneID >> mapID >> linkObjs;
-		CScenes::GetInstance()->Add(SceneID(sceneID), mapID, linkObjs);
+		CScenes::GetInstance()->Add(SCENEID(sceneID), mapID, linkObjs);
 	}
 	fs.close();
 }

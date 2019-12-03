@@ -11,9 +11,28 @@ bool CCamera::onCamera(float left, float right)
 	return true;
 }
 
+bool CCamera::isMovingCamera()
+{
+	if (camX < newX)
+	{
+		camX++;
+		return true;
+	}
+	return false;
+}
+
+void CCamera::movingCamera(float newX)
+{
+	this->newX = newX;
+	stopMoving = true;
+}
+
+
 CCamera::CCamera()
 {
 }
+
+
 
 CCamera *CCamera::GetInstance()
 {

@@ -97,6 +97,9 @@
     <ClInclude Include="Stair.h">
       <Filter>Static Objects</Filter>
     </ClInclude>
+    <ClInclude Include="SupportObject.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -164,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Stair.cpp">
+      <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="SupportObject.cpp">
       <Filter>Static Objects</Filter>
     </ClCompile>
   </ItemGroup>

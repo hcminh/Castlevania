@@ -20,7 +20,8 @@ enum ObjectType
 	DOOR,
 	STAIR,
 	SIMON,
-	ENEMY
+	ENEMY,
+	SUPPORTER,
 };
 
 

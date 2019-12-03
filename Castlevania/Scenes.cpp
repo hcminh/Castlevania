@@ -6,6 +6,7 @@
 #include "Zombie.h"
 #include "Fish.h"
 #include "Dog.h"
+#include "SupportObject.h"
 
 CScenes * CScenes::__instance = NULL;
 
@@ -59,7 +60,7 @@ void CScenes::Render()
 	CMaps::GetInstance()->Get(curentMap)->Draw(camera->getCamPos());
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
-	simon->Render(); //render lol simon cuối cùng để nó đè lên mấy thằng kia
+	simon->Render(); //render simon cuối cùng để nó đè lên mấy thằng kia
 }
 
 void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
@@ -82,13 +83,15 @@ void CScenes::updateCamPos()
 {
 	float xSimon = simon->x + SIMON_SPRITE_WIDTH;
 	int mapWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
+	if (camera->stopMoving) { mapWidth = 3092; return; }
 
-	if (xSimon > SCREEN_WIDTH / 2 &&
+	if (xSimon - startPointOfState > SCREEN_WIDTH / 2 &&
 		xSimon + SCREEN_WIDTH / 2 < mapWidth)
 	{
 			camera->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
 	}
-	else if(xSimon < SCREEN_WIDTH / 2) camera->SetCamPos(0, 0);
+	else if(xSimon - startPointOfState < SCREEN_WIDTH / 2)
+		camera->SetCamPos(startPointOfState, 0);
 	else if(xSimon > SCREEN_WIDTH / 2) camera->SetCamPos(mapWidth - SCREEN_WIDTH - 4, 0);
 }
 
@@ -100,6 +103,7 @@ void CScenes::changeScene(LPGAMEOBJECT obj)
 	curentMap = scenes[currentScene]->mapID;
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	simon->SetPosition(door->newPosX, door->newPosY);
+	startPointOfState = 0;
 	updateCamPos();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
@@ -180,6 +184,11 @@ void CScenes::loadObjectToGrid(string path)
 		case STAIR:
 		{
 			obj = new CStair(STATESTAIR(state), width, height, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên
+			break;
+		}
+		case SUPPORTER:
+		{
+			obj = new CSupportObject(STATESP(state), width, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
 			break;
 		}
 

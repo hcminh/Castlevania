@@ -7,7 +7,8 @@ class CCamera
 {
 	static CCamera * __instance;
 public:
-
+	bool stopMoving = false;
+	float newX = 0.0f;
 	float camX = 0.0f;
 	float camY = 0.0f;
 
@@ -21,6 +22,10 @@ public:
 
 	float getBorderCamLeft() { return camX - 32; };
 	float getBorderCamRight() { return camX + SCREEN_WIDTH + 32; };
+
+	bool isMovingCamera();
+	void movingCamera(float newX);
+
 	CCamera();
 	static CCamera * GetInstance();
 };

@@ -9,7 +9,7 @@
 #define ID_TEX_SIMON 0
 
 #define SIMON_WALKING_SPEED		 0.4f 	
-#define SIMON_AUTO_GO_SPEED		0.02f
+#define SIMON_AUTO_WALK_SPEED	 0.02f
 #define SIMON_JUMP_SPEED_Y		0.7f //0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -32,7 +32,7 @@
 #define SIMON_STATE_ATTACK				6
 #define SIMON_STATE_ATTACK_WITH_SUB		7
 #define SIMON_STATE_LEVEL_UP			8
-#define SIMON_STATE_AUTO_GO				9
+#define SIMON_STATE_AUTO_WALK			9
 #define SIMON_STATE_ATTACKED			10
 #define SIMON_STATE_SIT_AFTER_FALL		11
 #define SIMON_STATE_INVISIBLE			12
@@ -114,7 +114,6 @@ public:
 	bool isUsingStopWatch = false;
 	bool isSitting = false;
 	bool levelUpgrade = false;
-	bool isAutoGoX = false;
 	bool untouchable = false;
 	bool invisible = false;
 	bool isFalling = false;
@@ -124,10 +123,12 @@ public:
 	bool isMoving = false;
 	bool isUpStair = false;
 	bool isDownStair = false;
+	//handle camera
+	bool isCameraUpdate = false;
 
 	// auto-walk
-	bool isAutoWalkToStair = false;
 	bool isAutoWalk = false;		// tự động đi
+	float autoDistance = 0;		// Khoảng cách 
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -157,10 +158,13 @@ public:
 	void colisionEnemy(CEnemy *enemy);
 	bool isColisionWeapon(CWeapon *weapon);
 	void colisionWeapon(CWeapon *weapon);
+	void collisionSupporter(LPGAMEOBJECT obj);
 	void upStair(vector<LPGAMEOBJECT> stairs);
 	bool downStair(vector<LPGAMEOBJECT> stairs);
 	void startOnStair(LPGAMEOBJECT stair);
 	void attack();
+	void autoWalk(float distance);
+	void autoWalkToX(float x);
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }
 	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }
 	void startLevelUp() { levelUpgrade = true; levelUpStart = GetTickCount(); }

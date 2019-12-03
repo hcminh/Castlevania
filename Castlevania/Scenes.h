@@ -49,6 +49,7 @@ class CScenes
 	LPSIMON simon; //lưu luôn con simon cho lẹ
 public:
 	bool isStopWatchInUse = false;
+	float startPointOfState = 0;
 	vector<LPGAMEOBJECT> stairs; //các cầu thang trong camera
 	CScenes();
 	void Update(DWORD dt);

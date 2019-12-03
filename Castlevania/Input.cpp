@@ -15,7 +15,7 @@ bool Input::canUseKeyboard()
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return false;
 	if (simon->isJumping) return false;
-	if (simon->isAutoGoX) return false;
+	if (simon->isAutoWalk) return false;
 	if (simon->isAttacking) return false;
 	if (simon->levelUpgrade) return false;
 	if (simon->isFalling) return false;
@@ -26,7 +26,7 @@ bool Input::canUseKeyboard()
 bool Input::canPressKey()
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return false;
-	if (simon->isAutoGoX) return false;
+	if (simon->isAutoWalk) return false;
 	if (simon->isAttacking) return false;
 	if (simon->levelUpgrade) return false;
 	if (simon->isHurting) return false;
@@ -56,6 +56,7 @@ void Input::KeyState(BYTE *state)
 	{
 		if(simon->isOnStair) simon->SetState(SIMON_STATE_IDLE_STAIR);
 		else if (simon->isSitting)  simon->SetState(SIMON_STATE_STANDUP);
+		else if (simon->isAutoWalk) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		else simon->SetState(SIMON_STATE_IDLE);
 	}
 }
@@ -88,7 +89,7 @@ void Input::OnKeyDown(int KeyCode)
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", simon->x, simon->y);
 		break;
 	case DIK_0:
-		DebugOut(L"[OBJECTS] Số lượng OBJ hiện tại là: %d \n", CScenes::GetInstance()->getObjectsSize());
+		simon->SetState(SIMON_STATE_AUTO_WALK);
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
@@ -97,7 +98,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_2);
-		simon->SetPosition(1700, 330);
+		simon->SetPosition(2562, 330);
 		break;
 	case DIK_P: //qua scene 2
 		simon->SetPosition(1214.0f, 300);

@@ -75,8 +75,8 @@ class CItem : public CGameObject
 	float velocityVariation_x;
 
 public:
-	ItemState itemState;
-	ItemType item;
+	ItemState itemState = ItemState::STATE_NONE;
+	ItemType item = TYPE_NONE;
 	CItem(float xPos, float yPos, ItemState itemState = ItemState::STATE_NONE);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();

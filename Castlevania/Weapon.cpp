@@ -70,6 +70,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				else if (coObjects->at(i)->type == ObjectType::ENEMY);
 				{
 					coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
+					if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
 				}
 				if (state == WeaponType::HOLY_WATER_WEAPON)
 				{

@@ -30,6 +30,7 @@ bool Input::canPressKey()
 	if (simon->isAttacking) return false;
 	if (simon->levelUpgrade) return false;
 	if (simon->isHurting) return false;
+	if (simon->isMoving) return false;
 	return true;
 }
 
@@ -93,7 +94,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
-		simon->SetPosition(10.0f, 300);
+		simon->SetPosition(1000.0f, 300);
 		CCamera::GetInstance()->SetCamPos(0.0f, 0.0f);
 		break;
 	case DIK_2: //qua scene 2
@@ -105,7 +106,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_3);
-		simon->SetPosition(609.0f, 100);
+		simon->SetPosition(10.0f, 100);
 		break;
 	}
 }

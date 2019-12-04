@@ -34,22 +34,41 @@ void CScenes::Update(DWORD dt)
 
 	onCamObjects.clear();
 	stairs.clear();
+	grounds.clear();
+
+	for (int i = 0;i < zombies.size();i++)
+	{
+		onCamObjects.push_back(zombies[i]);
+		insertObject(zombies[i]);
+	}
 
 	for (auto obj : objects)
 		if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
 		{
 			if (obj.second->type == ObjectType::STAIR)
 				stairs.push_back(obj.second);
+			else if (obj.second->type == ObjectType::GROUND)
+			{
+				onCamObjects.push_back(obj.second);
+				grounds.push_back(obj.second);
+			}
 			else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
 				onCamObjects.push_back(obj.second);
 		}
 
-	for (auto obj : onCamObjects)
-		if (obj->isEnable)
-			obj->Update(dt, &onCamObjects);
-	//for (auto obj : objects)
-	//	if (obj.second->isEnable)
-	//		obj.second->Update(dt, &onCamObjects);
+
+
+	//for (auto obj : onCamObjects)
+	//	if (obj->isEnable)
+	//		obj->Update(dt, &onCamObjects);
+	for (auto obj : objects)
+	{
+		if (obj.second->isEnable)
+		{
+				obj.second->Update(dt, &grounds); //obj khác ngoài simon chỉ cần kt va chạm vs ground
+		}
+	}
+
 	simon->Update(dt, &onCamObjects);
 	// update camera
 	updateCamPos();
@@ -143,6 +162,7 @@ void CScenes::loadObjectToGrid(string path)
 	grid = new CGrid();
 	grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
+	zombies.clear();
 
 	fstream fs;
 	fs.open(path, ios::in);
@@ -176,9 +196,21 @@ void CScenes::loadObjectToGrid(string path)
 			obj = new CDoor(SCENEID(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
 			break;
 		}
-		case ENEMY:
+		case ENEMY_DOG:
 		{
 			obj = new CDog(x, y);
+			break;
+		}
+		case ENEMY_ZOMBIE:
+		{
+			LPGAMEOBJECT zom = new CZombie(width, state);
+			zom->setID(idInGame);
+			zombies.push_back(zom);
+			break;
+		}
+		case ENEMY_FISH:
+		{
+			obj = new CFish();
 			break;
 		}
 		case STAIR:
@@ -194,8 +226,11 @@ void CScenes::loadObjectToGrid(string path)
 
 		}
 
-		obj->setID(idInGame);
-		grid->addObjects(obj);
+		if (obj != NULL)
+		{
+			obj->setID(idInGame);
+			grid->addObjects(obj);
+		}
 	}
 	fs.close();
 }

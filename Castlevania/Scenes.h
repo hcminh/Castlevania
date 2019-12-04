@@ -40,6 +40,8 @@ class CScenes
 	static CScenes * __instance; // Singleton Patern
 	unordered_map<int, LPGAMEOBJECT> objects; //các object của map
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
+	vector<LPGAMEOBJECT> zombies; // quản lý zombie
+	vector<LPGAMEOBJECT> grounds; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
 	unordered_map<SCENEID, LPSCENE> scenes;
 	SCENEID currentScene;
 	int curentMap;

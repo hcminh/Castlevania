@@ -40,7 +40,6 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else return;
 	}
 	CGameObject::Update(dt, coObject);
-	if (vy != 0)
 		vy += FISH_GRAVITY * dt;
 
 	if (isWaitToShoot && (GetTickCount() - waitToShoot > FISH_WAIT_TO_SHOOT_TIME))
@@ -139,7 +138,7 @@ void CFish::Render()
 void CFish::respawn()
 {
 	vx = 0;
-	vy = -0.7f;
+	vy = -0.9f;
 	isDead = false;
 	isWalking = false;
 	isFlying = true;

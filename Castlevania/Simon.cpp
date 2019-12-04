@@ -290,10 +290,13 @@ void CSimon::SetState(int state)
 		startLevelUp();
 		break;
 	case SIMON_STATE_ATTACKED:
-		isJumping = true;
-		vx = -0.1*nx;
-		vy = -0.4f;
-		startHurting();
+		if (!isOnStair)
+		{
+			isJumping = true;
+			vx = -0.1*nx;
+			vy = -0.4f;
+			startHurting();
+		}
 		startUntouchable();
 		break;
 	case SIMON_STATE_INVISIBLE:
@@ -634,7 +637,7 @@ void CSimon::attack()
 
 void CSimon::autoWalk(float distance)
 {
-	vx = SIMON_AUTO_WALK_SPEED *nx;
+	vx = SIMON_AUTO_WALK_SPEED * nx;
 	vy = 0;
 	isAutoWalk = true;
 	autoDistance = distance;

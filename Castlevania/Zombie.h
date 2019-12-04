@@ -6,7 +6,7 @@
 #define ZOMBIE_BBOX_WIDTH			30
 #define ZOMBIE_BBOX_HEIGHT			65
 
-#define ZOMBIE_WALKING_SPEED		0.1f
+#define ZOMBIE_WALKING_SPEED		0.2f
 #define ZOMBIE_GRAVITY				0.002f
 
 #define ZOMBIE_STATE_DEAD			0
@@ -20,8 +20,7 @@ class CZombie : public CEnemy
 {
 public:
 
-	CZombie();
-
+	CZombie(DWORD timeToRespawn, int nx);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();
 	virtual void respawn();

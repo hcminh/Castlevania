@@ -11,6 +11,7 @@ CDog::CDog(float x, float y) : CEnemy()
 	SetPosition(x, y);
 	isSitting = true;
 	this->nx = -1;
+	gravity = DOG_GRAVITY;
 	width = DOG_BBOX_WIDTH;
 	height = DOG_BBOX_HEIGHT;
 	AddAnimation(300);	//chó NGỒI R
@@ -41,7 +42,7 @@ void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	}
 	CGameObject::Update(dt, coObject);
 
-	vy += DOG_GRAVITY * dt;
+	vy += gravity  * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -113,6 +114,7 @@ void CDog::respawn()
 	isDead = false;
 	isSitting = true;
 	vx = 0;
+	gravity = DOG_GRAVITY;
 	SetPosition(200, 340);
 	//SetPosition(CCamera::GetInstance()->getBorderCamLeft(), 300);
 }

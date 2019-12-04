@@ -20,8 +20,8 @@ public:
 	float getCamPosX() { return camX; };
 	float getCamPosY() { return camY; };
 
-	float getBorderCamLeft() { return camX - 32; };
-	float getBorderCamRight() { return camX + SCREEN_WIDTH + 32; };
+	float getBorderCamLeft() { return camX; };
+	float getBorderCamRight() { return camX + SCREEN_WIDTH; };
 
 	bool isMovingCamera();
 	void movingCamera(float newX);

@@ -4,7 +4,7 @@
 #define ENEMY_WALKING_SPEED 0.05f;
 
 #define ENEMY_BURN_TIME			1000	//CHAYS
-#define ENEMY_RESPAWN_TIME		2000	//hoi sinh
+#define ENEMY_RESPAWN_TIME		5000	//hoi sinh
 
 #define ENEMY_STATE_WALKING 100
 #define ENEMY_STATE_DIE 200
@@ -38,12 +38,14 @@ class CEnemy : public CGameObject
 public:
 	DWORD burningStart;
 	DWORD respawnTime;
+	DWORD timeToRespawn;
 	bool isBurning = false;
 	bool isDead = false;
 	bool isWaitingToRespawn = false;
 	int HP;
 	int score;
 	int damage;
+	float gravity = 0.0f;
 	EnemyType enemyType;
 
 	CEnemy();

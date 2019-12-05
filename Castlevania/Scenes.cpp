@@ -43,6 +43,7 @@ void CScenes::Update(DWORD dt)
 	}
 
 	for (auto obj : objects)
+	{
 		if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
 		{
 			if (obj.second->type == ObjectType::STAIR)
@@ -55,6 +56,7 @@ void CScenes::Update(DWORD dt)
 			else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
 				onCamObjects.push_back(obj.second);
 		}
+	}
 
 
 

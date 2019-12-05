@@ -1,5 +1,6 @@
 ﻿#include "Zombie.h"
 #include "Camera.h"
+#include "Debug.h"
 
 
 CZombie::CZombie(DWORD timeToRespawn, int nx) : CEnemy()
@@ -41,13 +42,11 @@ void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	else
 	{
 		CGameObject::Update(dt, coObject);
-
 		vy += gravity * dt;
 		vector<LPCOLLISIONEVENT> coEvents;
 		vector<LPCOLLISIONEVENT> coEventsResult;
 
 		coEvents.clear();
-
 		CalcPotentialCollisions(coObject, coEvents);
 
 		if (coEvents.size() == 0)
@@ -61,17 +60,12 @@ void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			x += min_tx * dx + nx * 0.1f;
-			y += min_ty * dy + ny * 0.1f;
-
-			if (nx != 0 && ny == 0)
+			x += min_tx * dx + nx * 0.4f;
+			y += min_ty * dy + ny * 0.4f;
+			if (nx != 0)
 			{
-				this->nx *= -1;
+				this->nx *= -1; // chạm tường thì đổi chiều
 				this->vx *= -1;
-			}
-			else if (ny == -1.0f)
-			{
-				vy = 0;
 			}
 		}
 
@@ -104,12 +98,11 @@ void CZombie::respawn()
 {
 	isDead = false;
 	gravity = ZOMBIE_GRAVITY;
-	vx = nx * ENEMY_WALKING_SPEED;
-	if(nx > 0)
+	vx = nx * ZOMBIE_WALKING_SPEED;
+	if (nx > 0)
 		SetPosition(CCamera::GetInstance()->getBorderCamLeft() + 50, 304);
 	else
 		SetPosition(CCamera::GetInstance()->getBorderCamRight() - 50, 304);
-	//SetPosition(CCamera::GetInstance()->getBorderCamLeft(), 300);
 }
 
 void CZombie::dead()
@@ -129,7 +122,7 @@ void CZombie::SetState(int state)
 	switch (state)
 	{
 	case ENEMY_STATE_WALKING:
-		vx = nx * ENEMY_WALKING_SPEED;
+		vx = nx * ZOMBIE_WALKING_SPEED;
 		break;
 	case ZOMBIE_STATE_DEAD:
 		vx = 0;

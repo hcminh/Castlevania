@@ -75,7 +75,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				if (nx != 0 && isAutoWalk)
 				{
-					x += min_tx * dx + nx * 0.4f;;
+					x += min_tx * dx + nx * 0.4f;
 				}
 
 				// Khi đang lên/xuống cầu thang, va chạm theo trục x sẽ không được xét tới
@@ -278,6 +278,7 @@ void CSimon::SetState(int state)
 		isUpStair = false;
 		isDownStair = false;
 		isStartOnStair = false;
+		isMoving = false;
 		vx = 0;
 		break;
 	case SIMON_STATE_DIE:

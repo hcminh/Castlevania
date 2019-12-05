@@ -1,7 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
-#define ENEMY_WALKING_SPEED 0.05f;
+#define ENEMY_WALKING_SPEED 0.1f;
 
 #define ENEMY_BURN_TIME			1000	//CHAYS
 #define ENEMY_RESPAWN_TIME		5000	//hoi sinh

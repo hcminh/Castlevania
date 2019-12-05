@@ -1,6 +1,7 @@
 ﻿#include "Fish.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "Simon.h"
 #include "debug.h"
 
 
@@ -10,6 +11,7 @@ CFish::CFish() : CEnemy()
 
 	width = FISH_BBOX_WIDTH;
 	height = FISH_BBOX_HEIGHT;
+	gravity = FISH_GRAVITY;
 
 	weapon = new CWeapon();
 	weapon->SetState(WeaponType::FIRE_BALL);
@@ -40,7 +42,7 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else return;
 	}
 	CGameObject::Update(dt, coObject);
-		vy += FISH_GRAVITY * dt;
+	vy += gravity * dt;
 
 	if (isWaitToShoot && (GetTickCount() - waitToShoot > FISH_WAIT_TO_SHOOT_TIME))
 	{
@@ -60,7 +62,8 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	{
 		shootingTime = 0;
 		isShooting = false;
-		nx = -nx;
+		float distanceToSimon = x - CSimon::GetInstance()->x + 1;// tránh TH xSimon trùng xFish
+		nx = -(distanceToSimon) / (abs(distanceToSimon))*nx;
 		SetState(FISH_STATE_WALK);
 		waitingToShoot();
 	}
@@ -81,33 +84,24 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else
 		{
 			float min_tx, min_ty, nx = 0, ny;
-
+			DebugOut(L"[FISH] %d \n", coEvents.size());
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
-
-			for (UINT i = 0; i < coEventsResult.size(); i++)
+			x += dx; // để vầy là khỏi cần kiểm tra va chạm nx
+			if (ny != 0 && isFlying)
 			{
-				LPCOLLISIONEVENT e = coEventsResult[i];
-
-				if (e->obj->type == ObjectType::GROUND)
+				if (ny < 0)
 				{
-					if (e->ny != 0 && isFlying)
-					{
-						if (e->ny < 0)
-						{
-							active();
-						}
-						else
-							y += dy;
-					}
+					active();
 				}
+				else
+					y += dy;
 			}
-			if (x < 50 || x > 300)
+
+			if (nx != 0)
 			{
-				this->nx = -this->nx;
-				SetState(FISH_STATE_WALK);
+				this->nx *= -1; // chạm tường thì đổi chiều
+				this->vx *= -1;
 			}
 		}
 
@@ -139,6 +133,8 @@ void CFish::respawn()
 {
 	vx = 0;
 	vy = -0.9f;
+	nx = -1;
+	gravity = FISH_GRAVITY;
 	isDead = false;
 	isWalking = false;
 	isFlying = true;
@@ -147,6 +143,8 @@ void CFish::respawn()
 
 void CFish::dead()
 {
+	vy = vx = 0;
+	gravity = FISH_GRAVITY;
 	isDead = true;
 	isShooting = false;
 	isFlying = false;
@@ -169,7 +167,7 @@ void CFish::SetState(int state)
 	{
 	case FISH_STATE_WALK:
 		isWalking = true;
-		vx = nx * ENEMY_WALKING_SPEED;
+		vx = nx * FISH_WALKING_SPEED;
 		break;
 	case FISH_STATE_SHOOT:
 		vx = 0;
@@ -185,6 +183,8 @@ void CFish::SetState(int state)
 		break;
 	case FISH_STATE_DEAD:
 		vx = 0;
+		vy = 0;
+		gravity = 0;
 		startBurning();
 		break;
 	}

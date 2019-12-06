@@ -113,20 +113,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		}
 	}
 
-	if (isCameraUpdate)
-	{
-		if (CCamera::GetInstance()->isMovingCamera())
-		{
-			SetState(SIMON_STATE_IDLE);
-		}
-		else
-		{
-			isCameraUpdate = false;
-			autoWalk(40.0f);
-		}
-	}
-
-
 	if (isAutoWalk)
 	{
 		if (abs(dx) <= abs(autoDistance))
@@ -449,25 +435,23 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 	case DOOR_1_TO_2:
 		autoWalkToX(this->x + 100);//200 là khoảng cách để chạm vs cửa
 		break;
-	case STOP_CAM:
-		x += dx;
-		CCamera::GetInstance()->stopMoving = true;
-		break;
 	case CONECT_SCENE_2:
-		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2);
-		isCameraUpdate = true;
+		cantHandle = true;
+		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 60); //60 là chiều rộng của simon
+		CScenes::GetInstance()->stateGame = STATE_2_2;
+		CScenes::GetInstance()->setStateWidth();
+		CScenes::GetInstance()->stopMovingObject = true;
+		SetState(SIMON_STATE_IDLE);
+		autoWalk(40.0f);
 		break;
 	case STOP_CAM_2:
 		CScenes::GetInstance()->startPointOfState = 3072;
 		CCamera::GetInstance()->movingCamera(3072);
-		isCameraUpdate = true;
 		supporter->isEnable = false;
 		break;
 	case TURN_OF_CAM_UPDATE:
 		supporter->isEnable = false;
 		CScenes::GetInstance()->startPointOfState = 3072;
-		isCameraUpdate = false;
-		CCamera::GetInstance()->stopMoving = false;
 		break;
 	default:
 		break;

@@ -10,6 +10,7 @@ class CDoor : public CGameObject
 {
 public:
 	SCENEID nextScene;
+	STATESCENE nextStateGame;
 	float newPosX = 0;
 	float newPosY = 0;
 	CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y);

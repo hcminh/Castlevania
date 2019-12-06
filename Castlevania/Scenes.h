@@ -21,6 +21,14 @@ enum SCENEID
 	SCENEID_2,
 	SCENEID_3,
 };
+enum STATESCENE
+{
+	STATE_1,
+	STATE_2_1,
+	STATE_2_2,
+	STATE_2_3,
+	STATE_3,
+};
 
 class CScene
 {
@@ -51,7 +59,10 @@ class CScenes
 	LPSIMON simon; //lưu luôn con simon cho lẹ
 public:
 	bool isStopWatchInUse = false;
+	bool stopMovingObject = false;
 	float startPointOfState = 0;
+	STATESCENE stateGame;
+	float stateWidth;
 	vector<LPGAMEOBJECT> stairs; //các cầu thang trong camera
 	CScenes();
 	void Update(DWORD dt);
@@ -60,9 +71,11 @@ public:
 	LPSCENE getCurrentScene() { return scenes[SCENEID(currentScene)]; };
 	static CScenes * GetInstance();
 	// Get, Set
+	void setStateWidth();
+	float getStateWidth();
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
-	void updateCamPos();
+	void updateCam();
 	void changeScene(LPGAMEOBJECT obj);
 	void changeScene(SCENEID newScene);
 	void loadObjectToGrid(string path);

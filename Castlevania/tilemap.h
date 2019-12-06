@@ -12,8 +12,6 @@
 #include "Textures.h"
 
 #define TILEMAP_TRANSPARENT_COLOR		D3DCOLOR_XRGB(5,5,5)
-
-
 using namespace std;
 
 class CMap
@@ -29,7 +27,7 @@ public:
 	CMap(int ID, LPCWSTR dataPath);
 	void LoadMap(LPCWSTR dataPath);					// load ma trận map 
 	void Draw(D3DXVECTOR3 camPosition);	// vẽ tất cả các tile nằm trong camera
-	int GetMapWidth() { return width; }
+	int GetMapWidth();
 };
 
 typedef CMap * LPTILEMAP;

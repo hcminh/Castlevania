@@ -8,7 +8,7 @@
 
 #define ID_TEX_SIMON 0
 
-#define SIMON_WALKING_SPEED		 0.15f 	
+#define SIMON_WALKING_SPEED		 0.3f 	
 #define SIMON_AUTO_WALK_SPEED	 0.02f
 #define SIMON_JUMP_SPEED_Y		0.7f //0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
@@ -117,14 +117,13 @@ public:
 	bool untouchable = false;
 	bool invisible = false;
 	bool isFalling = false;
+	bool cantHandle = false;
 	//stair
 	bool isStartOnStair = false; //bắt đầu lên/xuống thang, biến này dùng để kiếm tra giúp cho hàm stairOnStair chỉ chạy 1 lần duy nhất khi bấm phím
 	bool isOnStair = false;	// trạng thái đang đứng trên cầu thang 
 	bool isMoving = false;
 	bool isUpStair = false;
 	bool isDownStair = false;
-	//handle camera
-	bool isCameraUpdate = false;
 
 	// auto-walk
 	bool isAutoWalk = false;		// tự động đi

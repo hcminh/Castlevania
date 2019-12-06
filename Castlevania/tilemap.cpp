@@ -7,7 +7,6 @@ CMaps * CMaps::_instance = NULL;
 CMap::CMap(int ID, LPCWSTR dataPath)
 {
 	this->ID = ID;
-
 	LoadMap(dataPath);
 }
 
@@ -64,6 +63,11 @@ void CMap::Draw(D3DXVECTOR3 camPosition)
 			tilemap[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 		}
 	}
+}
+
+int CMap::GetMapWidth()
+{
+	return width;
 }
 
 void CMaps::Add(LPCWSTR dataPath, int ID)

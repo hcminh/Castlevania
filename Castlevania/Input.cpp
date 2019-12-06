@@ -94,12 +94,9 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
-		simon->SetPosition(1000.0f, 300);
-		CCamera::GetInstance()->SetCamPos(0.0f, 0.0f);
 		break;
 	case DIK_2: //qua scene 2
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_2);
-		simon->SetPosition(2562, 330);
 		break;
 	case DIK_P: //qua scene 2
 		simon->SetPosition(1214.0f, 300);

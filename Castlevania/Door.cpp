@@ -6,6 +6,7 @@ CDoor::CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y)
 {
 	type = ObjectType::DOOR;
 	this->nextScene = nextScene;
+	this->nextStateGame = STATESCENE::STATE_2_1;
 	this->newPosX = newPosX;
 	this->newPosY = newPosY;
 	this->x = x;

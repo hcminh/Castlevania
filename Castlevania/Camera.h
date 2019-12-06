@@ -7,7 +7,7 @@ class CCamera
 {
 	static CCamera * __instance;
 public:
-	bool stopMoving = false;
+	bool autoMoving = false;
 	float newX = 0.0f;
 	float camX = 0.0f;
 	float camY = 0.0f;
@@ -25,6 +25,8 @@ public:
 
 	bool isMovingCamera();
 	void movingCamera(float newX);
+
+	void update(float stateWidth, float startPointOfState);
 
 	CCamera();
 	static CCamera * GetInstance();

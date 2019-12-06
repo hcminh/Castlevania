@@ -18,62 +18,49 @@ CScenes::CScenes()
 
 void CScenes::Update(DWORD dt)
 {
-	if (isStopWatchInUse)
+	if (!stopMovingObject)
 	{
-		accutime += dt;
-		if (accutime >= MAX_TIME_STOP_WATCH)
+
+		getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
+
+		onCamObjects.clear();
+		stairs.clear();
+		grounds.clear();
+
+		for (int i = 0;i < zombies.size();i++)
 		{
-			CSimon::GetInstance()->subWeapon->isStopWatch = false;
-			CSimon::GetInstance()->isUseSubWeapon = false;
-			CSimon::GetInstance()->subWeapon->isFlying = false;
-			isStopWatchInUse = false;
+			onCamObjects.push_back(zombies[i]);
+			insertObject(zombies[i]);
 		}
-	}
 
-	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
-
-	onCamObjects.clear();
-	stairs.clear();
-	grounds.clear();
-
-	for (int i = 0;i < zombies.size();i++)
-	{
-		onCamObjects.push_back(zombies[i]);
-		insertObject(zombies[i]);
-	}
-
-	for (auto obj : objects)
-	{
-		if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
+		for (auto obj : objects)
 		{
-			if (obj.second->type == ObjectType::STAIR)
-				stairs.push_back(obj.second);
-			else if (obj.second->type == ObjectType::GROUND)
+			if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
 			{
-				onCamObjects.push_back(obj.second);
-				grounds.push_back(obj.second);
+				if (obj.second->type == ObjectType::STAIR)
+					stairs.push_back(obj.second);
+				else if (obj.second->type == ObjectType::GROUND)
+				{
+					onCamObjects.push_back(obj.second);
+					grounds.push_back(obj.second);
+				}
+				else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
+					onCamObjects.push_back(obj.second);
 			}
-			else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
-				onCamObjects.push_back(obj.second);
 		}
-	}
 
-
-
-	//for (auto obj : onCamObjects)
-	//	if (obj->isEnable)
-	//		obj->Update(dt, &onCamObjects);
-	for (auto obj : objects)
-	{
-		if (obj.second->isEnable)
+		for (auto obj : objects)
 		{
+			if (obj.second->isEnable)
+			{
 				obj.second->Update(dt, &grounds); //obj khác ngoài simon chỉ cần kt va chạm vs ground
+			}
 		}
-	}
 
-	simon->Update(dt, &onCamObjects);
+		simon->Update(dt, &onCamObjects);
+	}
 	// update camera
-	updateCamPos();
+	updateCam();
 }
 
 void CScenes::Render()
@@ -90,6 +77,46 @@ void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
 	scenes[sceneID] = scene;
 }
 
+void CScenes::setStateWidth()
+{
+	switch (stateGame)
+	{
+	case STATE_1:
+	case STATE_3:
+	default:
+		stateWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
+		break;
+	case STATE_2_1:
+		stateWidth = 3092;
+		break;
+	case STATE_2_2:
+		stateWidth = 5632;
+		break;
+	case STATE_2_3:
+		break;
+	}
+}
+
+float CScenes::getStateWidth()
+{
+	switch (stateGame)
+	{
+	case STATE_1:
+	case STATE_3:
+	default:
+		return CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
+		break;
+	case STATE_2_1:
+		return 3092;
+		break;
+	case STATE_2_2:
+		return 5632;
+		break;
+	case STATE_2_3:
+		break;
+	}
+}
+
 void CScenes::insertObject(LPGAMEOBJECT object)
 {
 	this->objects.insert(make_pair(object->ID, object));
@@ -100,40 +127,50 @@ void CScenes::clearAllObject()
 	objects.clear();
 }
 
-void CScenes::updateCamPos()
+void CScenes::updateCam()
 {
-	float xSimon = simon->x + SIMON_SPRITE_WIDTH;
-	int mapWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
-	if (camera->stopMoving) { mapWidth = 3092; return; }
-
-	if (xSimon - startPointOfState > SCREEN_WIDTH / 2 &&
-		xSimon + SCREEN_WIDTH / 2 < mapWidth)
-	{
-			camera->SetCamPos(xSimon - SCREEN_WIDTH / 2, 0);
-	}
-	else if(xSimon - startPointOfState < SCREEN_WIDTH / 2)
-		camera->SetCamPos(startPointOfState, 0);
-	else if(xSimon > SCREEN_WIDTH / 2) camera->SetCamPos(mapWidth - SCREEN_WIDTH - 4, 0);
+	setStateWidth();
+	camera->update(stateWidth, startPointOfState);
 }
 
 void CScenes::changeScene(LPGAMEOBJECT obj)
 {
 	auto door = dynamic_cast<CDoor *> (obj);
-
 	currentScene = door->nextScene;
 	curentMap = scenes[currentScene]->mapID;
+	stateGame = door->nextStateGame;
+	setStateWidth();
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	simon->SetPosition(door->newPosX, door->newPosY);
 	startPointOfState = 0;
-	updateCamPos();
+	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
 void CScenes::changeScene(SCENEID newScene)
 {
-	currentScene = newScene;
-	curentMap = scenes[currentScene]->mapID;
+	if (newScene == SCENEID_1)
+	{
+		currentScene = newScene;
+		curentMap = scenes[currentScene]->mapID;
+		stateGame = STATE_1;
+		setStateWidth();
+		startPointOfState = 0;
+		simon->SetPosition(1000.0f, 300);
+	}
+	else if (newScene == SCENEID_2)
+	{
+		currentScene = newScene;
+		curentMap = scenes[currentScene]->mapID;
+		stateGame = STATE_2_1;
+		setStateWidth();
+		startPointOfState = 0;
+		simon->SetPosition(2562, 330);
+	}
+
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
+	updateCam();
+	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
 void CScenes::getObjectsFromGrid(int xCam, int widthCam)

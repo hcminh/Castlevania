@@ -199,7 +199,7 @@ void CScenes::loadObjectToGrid(string path)
 		grid = nullptr;
 	}
 	grid = new CGrid();
-	grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
+	//grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
 	zombies.clear();
 
@@ -210,12 +210,14 @@ void CScenes::loadObjectToGrid(string path)
 		DebugOut(L"[ERROR] Load file obecject lỗi");
 		fs.close();
 	}
-	int id;
+	int id, cellIndex, numOfCell;
 	int idInGame, width, height, state;
 	float x, y;
+	fs >> numOfCell;
+	grid->initListCells(numOfCell);
 	while (!fs.eof())
 	{
-		fs >> id >> x >> y >> idInGame >> state >> width >> height;
+		fs >> cellIndex >> id >> x >> y >> idInGame >> state >> width >> height;
 
 		LPGAMEOBJECT obj = NULL;
 		switch (ObjectType(id))
@@ -268,7 +270,7 @@ void CScenes::loadObjectToGrid(string path)
 		if (obj != NULL)
 		{
 			obj->setID(idInGame);
-			grid->addObjects(obj);
+			grid->addObject(cellIndex, obj);
 		}
 	}
 	fs.close();

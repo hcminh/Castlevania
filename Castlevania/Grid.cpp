@@ -12,11 +12,24 @@ void CGrid::addObjects(LPGAMEOBJECT obj)
 		cells[i]->objects.push_back(obj);
 	}
 }
+void CGrid::addObject(int cellIndex, LPGAMEOBJECT obj)
+{
+		cells[cellIndex]->objects.push_back(obj);
+}
 
 void CGrid::initCells(int mapWidth)
 {
 	int numOfCells = ceil(mapWidth / CELL_WIDTH);
 	for (int i = 0; i <= numOfCells; i++)
+	{
+		CCell *cell = new CCell();
+		cells.push_back(cell);
+	}
+}
+
+void CGrid::initListCells(int numOfCells)
+{
+	for (int i = 0; i < numOfCells; i++)
 	{
 		CCell *cell = new CCell();
 		cells.push_back(cell);

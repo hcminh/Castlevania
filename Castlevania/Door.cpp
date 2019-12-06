@@ -1,4 +1,4 @@
-#include "Door.h"
+﻿#include "Door.h"
 
 
 
@@ -6,7 +6,10 @@ CDoor::CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y)
 {
 	type = ObjectType::DOOR;
 	this->nextScene = nextScene;
-	this->nextStateGame = STATESCENE::STATE_2_1;
+	if(nextScene == SCENEID::SCENEID_3)
+		this->nextStateGame = STATESCENE::STATE_3;
+	else if (nextScene == SCENEID::SCENEID_2)
+		this->nextStateGame = STATESCENE::STATE_2_2; // set cứng tạm thời vầy để tìm cách giải quết vì lười thêm feild mới vào file txt
 	this->newPosX = newPosX;
 	this->newPosY = newPosY;
 	this->x = x;

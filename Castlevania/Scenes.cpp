@@ -7,6 +7,7 @@
 #include "Fish.h"
 #include "Dog.h"
 #include "SupportObject.h"
+#include <fstream>
 
 CScenes * CScenes::__instance = NULL;
 
@@ -167,6 +168,15 @@ void CScenes::changeScene(SCENEID newScene)
 		startPointOfState = 0;
 		simon->SetPosition(2562, 330);
 	}
+	else if (newScene == SCENEID_3)
+	{
+		currentScene = newScene;
+		curentMap = scenes[currentScene]->mapID;
+		stateGame = STATE_3;
+		setStateWidth();
+		startPointOfState = 0;
+		simon->SetPosition(10, 330);
+	}
 
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	updateCam();
@@ -272,6 +282,18 @@ void CScenes::loadObjectToGrid(string path)
 		}
 	}
 	fs.close();
+
+	//ofstream myfile;
+	//myfile.open("objects-scene-1-final.txt");
+	//for (int i = 0;i < grid->cells.size(); i++)
+	//{
+	//	for (int j = 0; j < grid->cells[i]->objects.size(); j++)
+	//	{
+	//		myfile << i << " " << grid->cells[i]->objects[j]->type << " " << grid->cells[i]->objects[j]->x << " " << grid->cells[i]->objects[j]->y << " " << grid->cells[i]->objects[j]->ID << " " << grid->cells[i]->objects[j]->state << " " << grid->cells[i]->objects[j]->width << " " << grid->cells[i]->objects[j]->height << endl;
+	//	}
+	//}
+
+	//myfile.close();
 }
 
 CScenes * CScenes::GetInstance()

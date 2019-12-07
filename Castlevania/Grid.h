@@ -19,7 +19,9 @@ class CGrid
 public:
 	vector<LPCELL> cells;
 	void addObjects(LPGAMEOBJECT);
+	void addObject(int, LPGAMEOBJECT);
 	void initCells(int mapWidth);
+	void initListCells(int numOfCell);
 	CGrid();
 };
 

@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Zombie.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Dog.cpp" />

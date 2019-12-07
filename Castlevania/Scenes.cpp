@@ -6,6 +6,7 @@
 #include "Zombie.h"
 #include "Fish.h"
 #include "Dog.h"
+#include "Bat.h"
 #include "SupportObject.h"
 #include <fstream>
 
@@ -166,7 +167,7 @@ void CScenes::changeScene(SCENEID newScene)
 		stateGame = STATE_2_1;
 		setStateWidth();
 		startPointOfState = 0;
-		simon->SetPosition(2562, 330);
+		simon->SetPosition(1000, 330);
 	}
 	else if (newScene == SCENEID_3)
 	{
@@ -209,7 +210,7 @@ void CScenes::loadObjectToGrid(string path)
 		grid = nullptr;
 	}
 	grid = new CGrid();
-	grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
+	//grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
 	zombies.clear();
 
@@ -220,12 +221,14 @@ void CScenes::loadObjectToGrid(string path)
 		DebugOut(L"[ERROR] Load file obecject lỗi");
 		fs.close();
 	}
-	int id;
+	int id, cellIndex, numOfCell;
 	int idInGame, width, height, state;
 	float x, y;
+	fs >> numOfCell;
+	grid->initListCells(numOfCell);
 	while (!fs.eof())
 	{
-		fs >> id >> x >> y >> idInGame >> state >> width >> height;
+		fs >> cellIndex >> id >> x >> y >> idInGame >> state >> width >> height;
 
 		LPGAMEOBJECT obj = NULL;
 		switch (ObjectType(id))
@@ -278,22 +281,15 @@ void CScenes::loadObjectToGrid(string path)
 		if (obj != NULL)
 		{
 			obj->setID(idInGame);
-			grid->addObjects(obj);
+			grid->addObject(cellIndex, obj);
 		}
 	}
 	fs.close();
 
-	ofstream myfile;
-	myfile.open("objects-scene-1-final.txt");
-	for (int i = 0;i < grid->cells.size(); i++)
-	{
-		for (int j = 0; j < grid->cells[i]->objects.size(); j++)
-		{
-			myfile << i << " " << grid->cells[i]->objects[j]->type << " " << grid->cells[i]->objects[j]->x << " " << grid->cells[i]->objects[j]->y << " " << grid->cells[i]->objects[j]->ID << " " << grid->cells[i]->objects[j]->state << " " << grid->cells[i]->objects[j]->width << " " << grid->cells[i]->objects[j]->height << endl;
-		}
-	}
+	CBat *bat = new CBat(5000, -1);
+	bat->setID(200);
+	grid->addObject(cellIndex, bat);
 
-	myfile.close();
 }
 
 CScenes * CScenes::GetInstance()

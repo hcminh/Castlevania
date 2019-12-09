@@ -27,20 +27,20 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	updateState();
 
-
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM && coObjects->at(i)->type != ObjectType::STAIR)
+		if (coObjects->at(i)->type != ObjectType::ITEM)
+		{
 			listObject.push_back(coObjects->at(i));
+		}
 	}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 
-	// turn off collision when die 
-	if (state != SIMON_STATE_DIE)
-		CalcPotentialCollisions(&listObject, coEvents);
+	coEvents.clear();
+	CalcPotentialCollisions(&listObject, coEvents);
 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
@@ -98,6 +98,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (e->obj->type == ObjectType::ENEMY)
 			{
+				DebugOut(L"[VA CHẠM ENEMY] \n");
 				if (!invisible && !untouchable)
 				{
 					SetState(SIMON_STATE_ATTACKED);

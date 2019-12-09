@@ -70,11 +70,10 @@ LPCOLLISIONEVENT CGameObject::SweptAABBEx(LPGAMEOBJECT coO)
 */
 void CGameObject::CalcPotentialCollisions( vector<LPGAMEOBJECT> *coObjects, vector<LPCOLLISIONEVENT> &coEvents)
 {
-	coEvents.clear();
-	UINT coObjectSize = coObjects->size();
-	for (UINT i = 0; i < coObjectSize; i++)
+	for (UINT i = 0; i < coObjects->size(); i++)
 	{
 		LPCOLLISIONEVENT e = SweptAABBEx(coObjects->at(i));
+
 		if (e->t > 0 && e->t <= 1.0f)
 			coEvents.push_back(e);
 		else
@@ -95,11 +94,11 @@ void CGameObject::FilterCollision(vector<LPCOLLISIONEVENT> &coEvents, vector<LPC
 	ny = 0.0f;
 
 	coEventsResult.clear();
-	LPCOLLISIONEVENT c;
-	UINT coEventSize = coEvents.size();
-	for (UINT i = 0; i < coEventSize; i++)
+
+	for (UINT i = 0; i < coEvents.size(); i++)
 	{
-		c = coEvents[i];
+
+		LPCOLLISIONEVENT c = coEvents[i];
 
 		if (c->t < min_tx && c->nx != 0) {
 			min_tx = c->t;

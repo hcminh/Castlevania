@@ -100,15 +100,19 @@ void CZombie::respawn()
 	gravity = ZOMBIE_GRAVITY;
 	vx = nx * ZOMBIE_WALKING_SPEED;
 	if (nx > 0)
-		SetPosition(CCamera::GetInstance()->getBorderCamLeft() + 50, 304);
+		SetPosition(CCamera::GetInstance()->getBorderCamLeft(), 300);
 	else
-		SetPosition(CCamera::GetInstance()->getBorderCamRight() - 50, 304);
+		SetPosition(CCamera::GetInstance()->getBorderCamRight(), 300); //304
 }
 
 void CZombie::dead()
 {
 	isDead = true;
+	isBurning = false;
+	burningStart = 0;
 	vx = 0;
+	vy = 0;
+	gravity = 0;
 	SetPosition(0, 450);
 }
 

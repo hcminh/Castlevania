@@ -1,4 +1,4 @@
-#include "Camera.h"
+﻿#include "Camera.h"
 #include "Simon.h"
 #include "Scenes.h"
 
@@ -6,8 +6,8 @@ CCamera * CCamera::__instance = NULL;
 
 bool CCamera::onCamera(float left, float right)
 {
-	if (left < camX - 32 && (right < camX - 32)) return false;
-	if (left > camX + SCREEN_WIDTH + 32) return false;
+	if (left < camX - 60 && (right < camX - 60)) return false;
+	if (left > camX + SCREEN_WIDTH + 60) return false;
 	return true;
 }
 
@@ -33,7 +33,7 @@ void CCamera::update(float stateWidth, float startPointOfState)
 	if (autoMoving && isMovingCamera())
 		return;
 	CScenes::GetInstance()->stopMovingObject = false;
-	float xSimon = CSimon::GetInstance()->x + SIMON_SPRITE_WIDTH;
+	float xSimon = CSimon::GetInstance()->x + 30; //nửa người simon
 
 	if (xSimon - startPointOfState > SCREEN_WIDTH / 2 &&
 		xSimon + SCREEN_WIDTH / 2 < stateWidth)

@@ -226,9 +226,7 @@ void CGame::SweptAABB(
 	t = -1.0f;			// no collision
 	nx = ny = 0;
 
-	//
 	// Broad-phase test 
-	//
 
 	float bl = dx > 0 ? ml : ml + dx;
 	float bt = dy > 0 ? mt : mt + dy;

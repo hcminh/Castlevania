@@ -31,23 +31,24 @@ void CScenes::Update(DWORD dt)
 
 		for (int i = 0;i < zombies.size();i++)
 		{
-			onCamObjects.push_back(zombies[i]);
 			insertObject(zombies[i]);
 		}
 
 		for (auto obj : objects)
 		{
-			if (obj.second->isEnable && camera->onCamera(obj.second->x, obj.second->x + obj.second->width))
+
+			if (obj.second->type == ObjectType::GROUND)
 			{
-				if (obj.second->type == ObjectType::STAIR)
-					stairs.push_back(obj.second);
-				else if (obj.second->type == ObjectType::GROUND)
-				{
-					onCamObjects.push_back(obj.second);
-					grounds.push_back(obj.second);
-				}
-				else //nhớ bật cái này lên để ko cho cái stair vào cam mắc công va chạm vs enemy
-					onCamObjects.push_back(obj.second);
+				onCamObjects.push_back(obj.second);
+				grounds.push_back(obj.second);
+			}
+			else if (obj.second->type == ObjectType::STAIR)
+			{
+				stairs.push_back(obj.second);
+			}
+			else if (obj.second->isEnable)
+			{
+				onCamObjects.push_back(obj.second);
 			}
 		}
 
@@ -184,13 +185,13 @@ void CScenes::changeScene(SCENEID newScene)
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
-void CScenes::getObjectsFromGrid(int xCam, int widthCam)
+void CScenes::getObjectsFromGrid(float xCam, int widthCam)
 {
 
 	objects.erase(objects.begin(), objects.end());
 
 	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
-	int indexOfLastCell = floor((xCam + widthCam) / CELL_WIDTH);
+	int indexOfLastCell = ceil((xCam + widthCam) / CELL_WIDTH);
 
 	for (int i = indexOfFirstCell; i <= indexOfLastCell; i++)
 	{

@@ -79,7 +79,7 @@ public:
 	void changeScene(LPGAMEOBJECT obj);
 	void changeScene(SCENEID newScene);
 	void loadObjectToGrid(string path);
-	void getObjectsFromGrid(int xCam, int widthCam);
+	void getObjectsFromGrid(float xCam, int widthCam);
 	void stopObject();
 	int getObjectsSize() { return objects.size(); };
 

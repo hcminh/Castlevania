@@ -9,7 +9,7 @@
 #define ID_TEX_SIMON 0
 
 #define SIMON_WALKING_SPEED		 0.15f 	
-#define SIMON_AUTO_WALK_SPEED	 0.02f
+#define SIMON_AUTO_WALK_SPEED	 0.08f
 #define SIMON_JUMP_SPEED_Y		0.5f
 #define SIMON_JUMP_DEFLECT_SPEED 0.2f
 #define SIMON_GRAVITY			0.002f
@@ -125,10 +125,13 @@ public:
 	bool isMoving = false;
 	bool isUpStair = false;
 	bool isDownStair = false;
+	int stairDirection = 0;			// 1: trái dưới - phải trên, -1: trái trên - phải dưới
 
 	// auto-walk
 	bool isAutoWalk = false;		// tự động đi
-	float autoDistance = 0;		// Khoảng cách 
+	float autoWalkDistance = 0;		// Khoảng cách 
+	int stateAfterAutoWalk = -1;	// Trạng thái sau khi auto-walk
+	int nxAfterAutoWalk = 0;		// Hướng Simon sau khi auto-walk
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -164,14 +167,15 @@ public:
 	bool downStair(vector<LPGAMEOBJECT> stairs);
 	void startOnStair(LPGAMEOBJECT stair);
 	void attack();
-	void autoWalk(float distance);
-	void autoWalkToX(float x);
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }
 	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }
 	void startLevelUp() { levelUpgrade = true; levelUpStart = GetTickCount(); }
 	void startInvisible() { invisible = true; invisibleStart = GetTickCount(); }
 	void startSittingAfterFall() { isSitting = true; isFalling = true; sittingStart = GetTickCount(); }
 	void LoadResources();
+	//autowalk
+	void autoWalk(float distance, int new_state, int new_nx);
+	void DoAutoWalk();
 };
 
 typedef CSimon * LPSIMON;

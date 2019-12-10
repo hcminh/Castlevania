@@ -27,6 +27,19 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	updateState();
 
+	// Auto - walk
+	if (isAutoWalk)
+		DoAutoWalk();
+	if (coObjects == NULL)
+	{
+		if (!isAutoWalk)
+		{
+			x += dx;
+			y += dy;
+		}
+		return;
+	}
+
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
@@ -43,7 +56,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CalcPotentialCollisions(&listObject, coEvents);
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0)
+	if (coEvents.size() == 0 && !isAutoWalk)
 	{
 		x += dx;
 		y += dy;
@@ -55,8 +68,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		x += min_tx * dx + nx * 0.4f;	// nx*0.4f : need to push out a bit to avoid overlapping next frame
-		y += min_ty * dy + ny * 0.4f;
+		if (!isAutoWalk)
+		{
+			x += min_tx * dx + nx * 0.4f;	// nx*0.4f : need to push out a bit to avoid overlapping next frame
+			y += min_ty * dy + ny * 0.4f;
+		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
@@ -105,20 +121,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 				//Sử lý nếu đang trên cầu thang thì ko bị nhảy ra sau
 			}
-		}
-	}
-
-	if (isAutoWalk)
-	{
-		if (abs(dx) <= abs(autoDistance))
-		{
-			x += dx;
-			autoDistance -= dx;
-		}
-		else
-		{
-			isAutoWalk = false;
-			autoDistance = 0;
 		}
 	}
 
@@ -196,6 +198,7 @@ void CSimon::Render()
 
 	if (untouchable) color = D3DCOLOR_ARGB(rand() % 220 + 100, 255, 255, 255);
 	else if (invisible) color = D3DCOLOR_ARGB(150, 255, 255, 255);
+	if (CScenes::GetInstance()->stopMovingObject) ani = ANI_IDLE_RIGHT; //khi cam dang di chuyen thi ko update
 	ani += (nx > 0) ? 0 : 1; //vì hành động phải chỉ cách hành động trái 1 frame nên sét ani bằng phải rồi kiểm tra nx là dc
 	animations[ani]->Render(x, y, color);
 
@@ -217,16 +220,6 @@ void CSimon::SetState(int state)
 
 	switch (state)
 	{
-		//case SIMON_STATE_WALKING_RIGHT:
-		//	vx = SIMON_WALKING_SPEED;
-		//	if (isSitting) SetState(SIMON_STATE_STANDUP);
-		//	nx = 1;
-		//	break;
-		//case SIMON_STATE_WALKING_LEFT:
-		//	vx = -SIMON_WALKING_SPEED;
-		//	if (isSitting) SetState(SIMON_STATE_STANDUP);
-		//	nx = -1;
-		//	break;
 	case SIMON_STATE_WALK:
 		vx = SIMON_WALKING_SPEED * nx;
 		if (isSitting) SetState(SIMON_STATE_STANDUP);
@@ -315,7 +308,7 @@ void CSimon::SetState(int state)
 		isStartOnStair = false;
 		break;
 	case SIMON_STATE_AUTO_WALK:
-		autoWalkToX(1831);
+		//autoWalkToX(1831);
 		break;
 	}
 }
@@ -350,7 +343,6 @@ bool CSimon::checkColisionDoor(vector<LPGAMEOBJECT> doors)
 		if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
 		{
 			isAutoWalk = false;
-			autoDistance = 0;
 			CScenes::GetInstance()->changeScene(doors[i]);
 			return true; // check with AABB
 		}
@@ -452,25 +444,23 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 	switch (supporter->stateSp)
 	{
 	case DOOR_1_TO_2:
-		autoWalkToX(this->x + 100);//200 là khoảng cách để chạm vs cửa
+		SetState(SIMON_STATE_WALK);
+		vx = SIMON_AUTO_WALK_SPEED;
+		autoWalk(100, SIMON_STATE_IDLE, 1);
 		break;
 	case CONECT_SCENE_2:
 		cantHandle = true;
-		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 60); //60 là chiều rộng của simon
+		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 30); //60 là chiều rộng của simon
 		CScenes::GetInstance()->stateGame = STATE_2_2;
 		CScenes::GetInstance()->setStateWidth();
 		CScenes::GetInstance()->stopMovingObject = true;
-		SetState(SIMON_STATE_IDLE);
-		autoWalk(40.0f);
+		vx = SIMON_AUTO_WALK_SPEED;
+		autoWalk(100, SIMON_STATE_IDLE, 1);
 		break;
 	case STOP_CAM_2:
 		CScenes::GetInstance()->startPointOfState = 3072;
 		CCamera::GetInstance()->movingCamera(3072);
 		supporter->isEnable = false;
-		break;
-	case TURN_OF_CAM_UPDATE:
-		supporter->isEnable = false;
-		CScenes::GetInstance()->startPointOfState = 3072;
 		break;
 	default:
 		break;
@@ -527,7 +517,16 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
 				if (stair->stateStair == UP_RIGHT || stair->stateStair == UP_LEFT)
 				{
-					startOnStair(stair);
+					if (this->x > stair->firstLadderPosX)
+					{
+
+					}
+					else if (this->x > stair->firstLadderPosX)
+					{
+
+					}
+					else
+						startOnStair(stair);
 					return;
 				}
 			}
@@ -596,7 +595,6 @@ void CSimon::startOnStair(LPGAMEOBJECT obj)
 	if (isStartOnStair) return;
 	isStartOnStair = true;
 	auto stair = dynamic_cast<CStair*>(obj);
-	SetPosition(stair->firstLadderPosX, y);
 	switch (stair->stateStair)
 	{
 	case UP_RIGHT:
@@ -639,26 +637,43 @@ void CSimon::attack()
 	isAttacking = true;
 }
 
-void CSimon::autoWalk(float distance)
+void CSimon::autoWalk(float distance, int new_state, int new_nx)
 {
 	isAutoWalk = true;
-	vx = SIMON_AUTO_WALK_SPEED * nx;
-	vy = 0;
-	isAutoWalk = true;
-	autoDistance = distance;
+
+	autoWalkDistance = distance;
+	stateAfterAutoWalk = new_state;
+	nxAfterAutoWalk = new_nx;
 }
 
-void CSimon::autoWalkToX(float posX)
+void CSimon::DoAutoWalk()
 {
-	if (this->x < posX)
+	if (abs(dx) <= abs(autoWalkDistance))
 	{
-		nx = 1;
+		x += dx;
+		if (isOnStair)
+			y += dy;
+		autoWalkDistance -= abs(dx);
 	}
 	else
 	{
-		nx = -1;
+		x += autoWalkDistance;
+		state = stateAfterAutoWalk;
+		nx = nxAfterAutoWalk;
+
+		SetState(state);
+		if (state == SIMON_STATE_DOWN_STAIR && stairDirection == 1) {
+			x += 20.0f; y += 1.0f;
+		}
+		else if (state == SIMON_STATE_DOWN_STAIR && stairDirection == -1) {
+			x -= 8.0f; y += 0.5f;
+		}
+
+		isAutoWalk = false;
+		autoWalkDistance = 0;
+		stateAfterAutoWalk = -1;
+		nxAfterAutoWalk = 0;
 	}
-	autoWalk(abs(posX - this->x));
 }
 
 void CSimon::LoadResources()

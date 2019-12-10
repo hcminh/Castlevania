@@ -177,7 +177,7 @@ void CScenes::changeScene(SCENEID newScene)
 		stateGame = STATE_2_1;
 		setStateWidth();
 		startPointOfState = 0;
-		simon->SetPosition(1000, 330);
+		simon->SetPosition(3000, 100);
 	}
 	else if (newScene == SCENEID_3)
 	{
@@ -258,23 +258,23 @@ void CScenes::loadObjectToGrid(string path)
 			obj = new CDoor(SCENEID(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
 			break;
 		}
-		case ENEMY_DOG:
-		{
-			obj = new CDog(x, y);
-			break;
-		}
-		case ENEMY_ZOMBIE:
-		{
-			LPGAMEOBJECT zom = new CZombie(width, state);
-			zom->setID(idInGame);
-			zombies.push_back(zom);
-			break;
-		}
-		case ENEMY_FISH:
-		{
-			obj = new CFish();
-			break;
-		}
+		//case ENEMY_DOG:
+		//{
+		//	obj = new CDog(x, y);
+		//	break;
+		//}
+		//case ENEMY_ZOMBIE:
+		//{
+		//	LPGAMEOBJECT zom = new CZombie(width, state);
+		//	zom->setID(idInGame);
+		//	zombies.push_back(zom);
+		//	break;
+		//}
+		//case ENEMY_FISH:
+		//{
+		//	obj = new CFish();
+		//	break;
+		//}
 		case STAIR:
 		{
 			obj = new CStair(STATESTAIR(state), width, height, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên

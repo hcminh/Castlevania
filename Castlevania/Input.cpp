@@ -94,7 +94,9 @@ void Input::OnKeyDown(int KeyCode)
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", simon->x, simon->y);
 		break;
 	case DIK_0:
-		simon->SetState(SIMON_STATE_AUTO_WALK);
+		simon->SetState(SIMON_STATE_WALK);
+		simon->vx = SIMON_AUTO_WALK_SPEED;
+		simon->autoWalk(100, SIMON_STATE_IDLE, 1);
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);

@@ -28,6 +28,7 @@ void CScenes::Update(DWORD dt)
 		onCamObjects.clear();
 		stairs.clear();
 		grounds.clear();
+		doors.clear();
 
 		for (int i = 0;i < zombies.size();i++)
 		{
@@ -46,6 +47,10 @@ void CScenes::Update(DWORD dt)
 			{
 				stairs.push_back(obj.second);
 			}
+			else if (obj.second->type == ObjectType::DOOR)
+			{
+				doors.push_back(obj.second);
+			}
 			else if (obj.second->isEnable)
 			{
 				onCamObjects.push_back(obj.second);
@@ -60,6 +65,10 @@ void CScenes::Update(DWORD dt)
 			}
 		}
 
+		if (doors.size() != 0)
+		{
+			simon->checkColisionDoor(doors);
+		}
 		simon->Update(dt, &onCamObjects);
 	}
 	// update camera

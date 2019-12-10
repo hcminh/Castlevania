@@ -85,12 +85,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					if (ny != 0) y -= ny * 0.4f;
 				}
 			}
-			else if (e->obj->type == ObjectType::DOOR)
-			{
-				isAutoWalk = false;
-				autoDistance = 0;
-				CScenes::GetInstance()->changeScene(e->obj);
-			}
 			else if (e->obj->type == ObjectType::SUPPORTER)
 			{
 				//xử lý kiểm tra va chạm vs supporter nào
@@ -223,15 +217,19 @@ void CSimon::SetState(int state)
 
 	switch (state)
 	{
-	case SIMON_STATE_WALKING_RIGHT:
-		vx = SIMON_WALKING_SPEED;
+		//case SIMON_STATE_WALKING_RIGHT:
+		//	vx = SIMON_WALKING_SPEED;
+		//	if (isSitting) SetState(SIMON_STATE_STANDUP);
+		//	nx = 1;
+		//	break;
+		//case SIMON_STATE_WALKING_LEFT:
+		//	vx = -SIMON_WALKING_SPEED;
+		//	if (isSitting) SetState(SIMON_STATE_STANDUP);
+		//	nx = -1;
+		//	break;
+	case SIMON_STATE_WALK:
+		vx = SIMON_WALKING_SPEED * nx;
 		if (isSitting) SetState(SIMON_STATE_STANDUP);
-		nx = 1;
-		break;
-	case SIMON_STATE_WALKING_LEFT:
-		vx = -SIMON_WALKING_SPEED;
-		if (isSitting) SetState(SIMON_STATE_STANDUP);
-		nx = -1;
 		break;
 	case SIMON_STATE_SIT:
 		if (isSitting || isAttacking)return;
@@ -338,6 +336,26 @@ void CSimon::GetBoundingBox(float &left, float &top, float &right, float &bottom
 		right = x + SIMON_BBOX_WIDTH - PADDING;
 		bottom = top + SIMON_BBOX_HEIGHT;
 	}
+}
+
+bool CSimon::checkColisionDoor(vector<LPGAMEOBJECT> doors)
+{
+	float l, t, r, b;
+	float l1, t1, r1, b1;
+	this->GetBoundingBox(l, t, r, b);  // lấy BBOX của simon
+
+	for (UINT i = 0; i < doors.size(); i++)
+	{
+		doors[i]->GetBoundingBox(l1, t1, r1, b1);
+		if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
+		{
+			isAutoWalk = false;
+			autoDistance = 0;
+			CScenes::GetInstance()->changeScene(doors[i]);
+			return true; // check with AABB
+		}
+	}
+
 }
 
 bool CSimon::isColisionItem(CItem *item)
@@ -623,6 +641,7 @@ void CSimon::attack()
 
 void CSimon::autoWalk(float distance)
 {
+	isAutoWalk = true;
 	vx = SIMON_AUTO_WALK_SPEED * nx;
 	vy = 0;
 	isAutoWalk = true;

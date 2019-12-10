@@ -45,10 +45,14 @@ void Input::KeyState(BYTE *state)
 	}
 	else if (game->IsKeyDown(DIK_RIGHT) && !simon->isOnStair)
 	{
-		simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		simon->nx = 1;
+		simon->SetState(SIMON_STATE_WALK);
 	}
 	else if (game->IsKeyDown(DIK_LEFT) && !simon->isOnStair)
-		simon->SetState(SIMON_STATE_WALKING_LEFT);
+	{
+		simon->nx = -1;
+		simon->SetState(SIMON_STATE_WALK);
+	}
 	else if (game->IsKeyDown(DIK_UP))
 	{
 		simon->upStair(CScenes::GetInstance()->stairs);

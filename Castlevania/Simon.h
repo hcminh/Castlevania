@@ -39,6 +39,7 @@
 #define SIMON_STATE_UP_STAIR			13
 #define SIMON_STATE_DOWN_STAIR			14
 #define SIMON_STATE_IDLE_STAIR			15
+#define SIMON_STATE_WALK				16
 
 
 #define ANI_IDLE_RIGHT				0
@@ -158,6 +159,7 @@ public:
 	bool isColisionWeapon(CWeapon *weapon);
 	void colisionWeapon(CWeapon *weapon);
 	void collisionSupporter(LPGAMEOBJECT obj);
+	bool checkColisionDoor(vector<LPGAMEOBJECT> doors);
 	void upStair(vector<LPGAMEOBJECT> stairs);
 	bool downStair(vector<LPGAMEOBJECT> stairs);
 	void startOnStair(LPGAMEOBJECT stair);

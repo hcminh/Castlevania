@@ -50,6 +50,7 @@ class CScenes
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
 	vector<LPGAMEOBJECT> zombies; // quản lý zombie
 	vector<LPGAMEOBJECT> grounds; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
+	vector<LPGAMEOBJECT> doors; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
 	unordered_map<SCENEID, LPSCENE> scenes;
 	SCENEID currentScene;
 	int curentMap;

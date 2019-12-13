@@ -46,6 +46,7 @@ void CScenes::Update(DWORD dt)
 			else if (obj.second->type == ObjectType::STAIR)
 			{
 				stairs.push_back(obj.second);
+				onCamObjects.push_back(obj.second);
 			}
 			else if (obj.second->type == ObjectType::DOOR)
 			{
@@ -177,7 +178,7 @@ void CScenes::changeScene(SCENEID newScene)
 		stateGame = STATE_2_1;
 		setStateWidth();
 		startPointOfState = 0;
-		simon->SetPosition(3000, 100);
+		simon->SetPosition(3000.963501, 100);
 	}
 	else if (newScene == SCENEID_3)
 	{
@@ -202,7 +203,7 @@ void CScenes::getObjectsFromGrid(float xCam, int widthCam)
 	int indexOfFirstCell = floor(xCam / CELL_WIDTH);
 	int indexOfLastCell = ceil((xCam + widthCam) / CELL_WIDTH);
 
-	for (int i = indexOfFirstCell; i <= indexOfLastCell; i++)
+	for (int i = indexOfFirstCell; i < indexOfLastCell; i++)
 	{
 		int sizeOfCell = grid->cells[i]->objects.size();
 		for (int j = 0; j < sizeOfCell; j++)

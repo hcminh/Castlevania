@@ -17,9 +17,9 @@ class CStair : public CGameObject
 {
 public:
 	STATESTAIR stateStair = STATESTAIR::STAIR_NONE;
-	int ladders = 0;
+	int stairDirection;
 	int firstLadderPosX = 0;
-	CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y);
+	CStair(STATESTAIR st, int direction, int firstLadderPosX, float x, float y);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

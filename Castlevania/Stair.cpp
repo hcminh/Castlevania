@@ -1,10 +1,10 @@
 #include "Stair.h"
 
-CStair::CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y)
+CStair::CStair(STATESTAIR st, int direction, int firstLadderPosX, float x, float y)
 {
 	this->isEnable = true;
 	this->stateStair = st;
-	this->ladders = ladders;
+	this->stairDirection = direction;
 	this->firstLadderPosX = firstLadderPosX;
 	this->type = ObjectType::STAIR;
 	this->SetPosition(x, y);
@@ -12,7 +12,7 @@ CStair::CStair(STATESTAIR st, int ladders, int firstLadderPosX, float x, float y
 
 void CStair::Render()
 {
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CStair::GetBoundingBox(float & l, float & t, float & r, float & b)

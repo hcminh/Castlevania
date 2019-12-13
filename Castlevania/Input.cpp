@@ -15,7 +15,7 @@ bool Input::canUseKeyboard()
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return false;
 	if (simon->isJumping) return false;
-	if (simon->isAutoWalk) return false;
+	if (simon->isAutoWalk2D) return false;
 	if (simon->isAttacking) return false;
 	if (simon->levelUpgrade) return false;
 	if (simon->isFalling) return false;
@@ -26,7 +26,7 @@ bool Input::canUseKeyboard()
 bool Input::canPressKey()
 {
 	if (simon->GetState() == SIMON_STATE_DIE) return false;
-	if (simon->isAutoWalk) return false;
+	if (simon->isAutoWalk2D) return false;
 	if (simon->isAttacking) return false;
 	if (simon->levelUpgrade) return false;
 	if (simon->isHurting) return false;
@@ -61,7 +61,7 @@ void Input::KeyState(BYTE *state)
 	{
 		if(simon->isOnStair) simon->SetState(SIMON_STATE_IDLE_STAIR);
 		else if (simon->isSitting)  simon->SetState(SIMON_STATE_STANDUP);
-		else if (simon->isAutoWalk) simon->SetState(SIMON_STATE_WALKING_RIGHT);
+		else if (simon->isAutoWalk2D) simon->SetState(SIMON_STATE_WALKING_RIGHT);
 		else simon->SetState(SIMON_STATE_IDLE);
 	}
 }
@@ -93,10 +93,25 @@ void Input::OnKeyDown(int KeyCode)
 	case DIK_X:
 		DebugOut(L"[CORD] tọa độ X là: %f, Y là: %f \n", simon->x, simon->y);
 		break;
+	case DIK_H:
+		simon->nx = -simon->nx;
+		break;
+	case DIK_L:
+		simon->x += 1.0f;
+		break;
+	case DIK_J:
+		simon->x -= 1.0f;
+		break;
+	case DIK_I:
+		simon->y -= 1.0f;
+		break;
+	case DIK_K:
+		simon->y += 1.0f;
+		break;
 	case DIK_0:
 		simon->SetState(SIMON_STATE_WALK);
 		simon->vx = SIMON_AUTO_WALK_SPEED;
-		simon->autoWalk(100, SIMON_STATE_IDLE, 1);
+		simon->autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case DIK_1: //qua scene 1
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);

@@ -27,23 +27,22 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	updateState();
 
-	// Auto - walk
-	if (isAutoWalk)
-		DoAutoWalk();
-	if (coObjects == NULL)
+	if (isAutoWalk2D)
+		doAutoWalk2D();
+	/*if (coObjects == NULL)
 	{
-		if (!isAutoWalk)
+		if (!isAutoWalk2D)
 		{
 			x += dx;
 			y += dy;
 		}
 		return;
-	}
+	}*/
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM)
+		if (coObjects->at(i)->type != ObjectType::ITEM && coObjects->at(i)->type != ObjectType::STAIR)
 		{
 			listObject.push_back(coObjects->at(i));
 		}
@@ -56,7 +55,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	CalcPotentialCollisions(&listObject, coEvents);
 
 	// No collision occured, proceed normally
-	if (coEvents.size() == 0 && !isAutoWalk)
+	if (coEvents.size() == 0 && !isAutoWalk2D)
 	{
 		x += dx;
 		y += dy;
@@ -68,10 +67,10 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
-		if (!isAutoWalk)
+		if (!isAutoWalk2D)
 		{
-			x += min_tx * dx + nx * 0.4f;	// nx*0.4f : need to push out a bit to avoid overlapping next frame
-			y += min_ty * dy + ny * 0.4f;
+			x += min_tx * dx + nx * 0.1f;	// nx*0.4f : need to push out a bit to avoid overlapping next frame
+			y += min_ty * dy + ny * 0.1f;
 		}
 
 		for (UINT i = 0; i < coEventsResult.size(); i++)
@@ -89,16 +88,16 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					y += dy;
 				}
 
-				if (nx != 0 && isAutoWalk)
+				if (nx != 0 && isAutoWalk2D)
 				{
-					x += min_tx * dx + nx * 0.4f;
+					//x += min_tx * dx + nx * 0.4f;
 				}
 
 				// Khi đang lên/xuống cầu thang, va chạm theo trục x sẽ không được xét tới
 				if (state == SIMON_STATE_UP_STAIR || state == SIMON_STATE_DOWN_STAIR)
 				{
-					if (nx != 0) x -= nx * 0.4f;
-					if (ny != 0) y -= ny * 0.4f;
+					//if (nx != 0) x -= nx * 0.4f;
+					if (ny != 0) y -= ny * 0.1f;
 				}
 			}
 			else if (e->obj->type == ObjectType::SUPPORTER)
@@ -210,7 +209,7 @@ void CSimon::Render()
 	{
 		whip->Render();
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -227,7 +226,8 @@ void CSimon::SetState(int state)
 	case SIMON_STATE_SIT:
 		if (isSitting || isAttacking)return;
 		isSitting = true;
-		y += 18;
+		isOnStair = false;
+		y += 15;
 		vx = 0;
 		break;
 	case SIMON_STATE_SIT_AFTER_FALL:
@@ -251,7 +251,7 @@ void CSimon::SetState(int state)
 		attack();
 		break;
 	case SIMON_STATE_IDLE:
-		isAutoWalk = false;
+		isAutoWalk2D = false;
 		isOnStair = false;
 		isUpStair = false;
 		isDownStair = false;
@@ -283,19 +283,20 @@ void CSimon::SetState(int state)
 		break;
 	case SIMON_STATE_DOWN_STAIR:
 		if (isUpStair) nx = -nx;
-		if (nx > 0) vx = SIMON_STAIR_SPEED_X;
-		else vx = -SIMON_STAIR_SPEED_X;
-		vy = SIMON_STAIR_SPEED_Y;
+		if (nx > 0) vx = 0.08f;
+		else vx = -0.08f;
+		vy = 0.08f;
 		isOnStair = true;
 		isUpStair = false;
 		isMoving = true;
 		isDownStair = true;
+		isStartOnStair = false;
 		break;
 	case SIMON_STATE_UP_STAIR:
 		if (isDownStair) nx = -nx;
-		if (nx > 0) vx = SIMON_STAIR_SPEED_X;
-		else vx = -SIMON_STAIR_SPEED_X;
-		vy = -SIMON_STAIR_SPEED_Y;
+		if (nx > 0) vx = 0.08f;
+		else vx = -0.08f;
+		vy = -0.08f;
 		isOnStair = true;
 		isUpStair = true;
 		isMoving = true;
@@ -342,7 +343,7 @@ bool CSimon::checkColisionDoor(vector<LPGAMEOBJECT> doors)
 		doors[i]->GetBoundingBox(l1, t1, r1, b1);
 		if (CGameObject::AABB(l, t, r, b, l1, t1, r1, b1))
 		{
-			isAutoWalk = false;
+			isAutoWalk2D = false;
 			CScenes::GetInstance()->changeScene(doors[i]);
 			return true; // check with AABB
 		}
@@ -446,7 +447,7 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 	case DOOR_1_TO_2:
 		SetState(SIMON_STATE_WALK);
 		vx = SIMON_AUTO_WALK_SPEED;
-		autoWalk(100, SIMON_STATE_IDLE, 1);
+		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case CONECT_SCENE_2:
 		cantHandle = true;
@@ -455,7 +456,7 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 		CScenes::GetInstance()->setStateWidth();
 		CScenes::GetInstance()->stopMovingObject = true;
 		vx = SIMON_AUTO_WALK_SPEED;
-		autoWalk(100, SIMON_STATE_IDLE, 1);
+		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case STOP_CAM_2:
 		CScenes::GetInstance()->startPointOfState = 3072;
@@ -477,8 +478,7 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
 
-		//simon_t -= 60;
-		simon_b += 5;
+		simon_b -= 5;
 
 		for (UINT i = 0; i < stairs.size(); i++)
 		{
@@ -490,14 +490,14 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
 				if (simon_b < stair_b && stair->stateStair != UP_RIGHT && stair->stateStair != UP_LEFT)
 				{
-					y -= 10;
-					x += 10 * nx; //dich x simon qua de va cham vs gach
-					SetState(SIMON_STATE_IDLE);
+					SetState(SIMON_STATE_UP_STAIR);
+					autoWalk2D(15.0f, 12.0f, SIMON_STATE_IDLE, nx, false);
 					return;
 				}
 			}
 		}
 		SetState(SIMON_STATE_UP_STAIR);
+		autoWalk2D(15.0f, 16.0f, SIMON_STATE_IDLE_STAIR, nx, false);
 	}
 	else
 	{
@@ -517,16 +517,13 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
 				if (stair->stateStair == UP_RIGHT || stair->stateStair == UP_LEFT)
 				{
-					if (this->x > stair->firstLadderPosX)
+					if (this->x > stair->firstLadderPosX || this->x < stair->firstLadderPosX)
 					{
-
+						float distance = stair->firstLadderPosX - this->x;
+						this->nx = distance/abs(distance);
+						SetState(SIMON_STATE_WALK);
+						autoWalk2D(abs(distance), 0.0f, SIMON_STATE_UP_STAIR, stair->stairDirection, false);
 					}
-					else if (this->x > stair->firstLadderPosX)
-					{
-
-					}
-					else
-						startOnStair(stair);
 					return;
 				}
 			}
@@ -543,8 +540,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
 
-		//simon_t -= 60;
-		simon_b += 5;
+		simon_b += 6;
 
 		for (UINT i = 0; i < stairs.size(); i++)
 		{
@@ -554,7 +550,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 			if (CGameObject::AABB(simon_l, simon_t, simon_r, simon_b, stair_l, stair_t, stair_r, stair_b))
 			{
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
-				if (simon_b < stair_b && stair->stateStair != DOWN_RIGHT && stair->stateStair != DOWN_LEFT)
+				if (simon_b > stair_t && stair->stateStair != DOWN_RIGHT && stair->stateStair != DOWN_LEFT)
 				{
 					SetState(SIMON_STATE_IDLE);
 					return true;
@@ -562,6 +558,8 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 			}
 		}
 		SetState(SIMON_STATE_DOWN_STAIR);
+		autoWalk2D(16.0f, 15.5f, SIMON_STATE_DOWN_STAIR, nx, false);
+		return true;
 	}
 	else
 	{
@@ -580,41 +578,19 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
 				if (stair->stateStair == DOWN_RIGHT || stair->stateStair == DOWN_LEFT)
 				{
-					startOnStair(stair);
+					if (this->x > stair->firstLadderPosX || this->x < stair->firstLadderPosX)
+					{
+						float distance = stair->firstLadderPosX - this->x;
+						this->nx = distance / abs(distance);
+						SetState(SIMON_STATE_WALK);
+						autoWalk2D(abs(distance), 0.0f, SIMON_STATE_DOWN_STAIR, stair->stairDirection, true);
+					}
 					return true;
 				}
 				return false;
 			}
 		}
 		return false;
-	}
-}
-
-void CSimon::startOnStair(LPGAMEOBJECT obj)
-{
-	if (isStartOnStair) return;
-	isStartOnStair = true;
-	auto stair = dynamic_cast<CStair*>(obj);
-	switch (stair->stateStair)
-	{
-	case UP_RIGHT:
-		nx = 1;
-		SetState(SIMON_STATE_UP_STAIR);
-		break;
-	case DOWN_LEFT:
-		nx = -1;
-		SetState(SIMON_STATE_DOWN_STAIR);
-		break;
-	case DOWN_RIGHT:
-		nx = 1;
-		SetState(SIMON_STATE_DOWN_STAIR);
-		break;
-	case UP_LEFT:
-		nx = -1;
-		SetState(SIMON_STATE_UP_STAIR);
-		break;
-	default:
-		break;
 	}
 }
 
@@ -637,42 +613,52 @@ void CSimon::attack()
 	isAttacking = true;
 }
 
-void CSimon::autoWalk(float distance, int new_state, int new_nx)
+void CSimon::autoWalk2D(float distanceX, float distanceY, int new_state, int new_nx, bool nextauto)
 {
-	isAutoWalk = true;
+	isAutoWalk2D = true;
 
-	autoWalkDistance = distance;
-	stateAfterAutoWalk = new_state;
-	nxAfterAutoWalk = new_nx;
+	autoWalkDistanceX2D = distanceX;
+	autoWalkDistanceY2D = distanceY;
+	stateAfterAutoWalk2D = new_state;
+	nxAfterAutoWalk2D = new_nx;
+	nextAuto = nextauto;
 }
 
-void CSimon::DoAutoWalk()
+void CSimon::doAutoWalk2D()
 {
-	if (abs(dx) <= abs(autoWalkDistance))
+	if (abs(dx) <= abs(autoWalkDistanceX2D) || abs(dy) <= abs(autoWalkDistanceY2D))
 	{
-		x += dx;
-		if (isOnStair)
+		if (abs(dx) <= abs(autoWalkDistanceX2D))
+		{
+			x += dx;
+			autoWalkDistanceX2D -= abs(dx);
+		}
+		if (abs(dy) <= abs(autoWalkDistanceY2D))
+		{
 			y += dy;
-		autoWalkDistance -= abs(dx);
+			autoWalkDistanceY2D -= abs(dy);
+		}
 	}
 	else
 	{
-		x += autoWalkDistance;
-		state = stateAfterAutoWalk;
-		nx = nxAfterAutoWalk;
+		x += autoWalkDistanceX2D;
+		y += autoWalkDistanceY2D - 1.0f; //sai so
+		state = stateAfterAutoWalk2D;
+		nx = nxAfterAutoWalk2D;
 
 		SetState(state);
-		if (state == SIMON_STATE_DOWN_STAIR && stairDirection == 1) {
-			x += 20.0f; y += 1.0f;
-		}
-		else if (state == SIMON_STATE_DOWN_STAIR && stairDirection == -1) {
-			x -= 8.0f; y += 0.5f;
-		}
 
-		isAutoWalk = false;
-		autoWalkDistance = 0;
-		stateAfterAutoWalk = -1;
-		nxAfterAutoWalk = 0;
+		isAutoWalk2D = false;
+		autoWalkDistanceX2D = 0;
+		autoWalkDistanceY2D = 0;
+		stateAfterAutoWalk2D = -1;
+		nxAfterAutoWalk2D = 0;
+
+		if (isDownStair && nextAuto)
+		{
+			nextAuto = false;
+			autoWalk2D(16.0f, 16.0f, SIMON_STATE_DOWN_STAIR, nx, false);
+		}
 	}
 }
 

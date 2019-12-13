@@ -127,11 +127,13 @@ public:
 	bool isDownStair = false;
 	int stairDirection = 0;			// 1: trái dưới - phải trên, -1: trái trên - phải dưới
 
-	// auto-walk
-	bool isAutoWalk = false;		// tự động đi
-	float autoWalkDistance = 0;		// Khoảng cách 
-	int stateAfterAutoWalk = -1;	// Trạng thái sau khi auto-walk
-	int nxAfterAutoWalk = 0;		// Hướng Simon sau khi auto-walk
+	// auto-walk 2d
+	bool isAutoWalk2D = false;		// tự động đi
+	float autoWalkDistanceX2D = 0;		// Khoảng cách 
+	float autoWalkDistanceY2D = 0;		// Khoảng cách 
+	int stateAfterAutoWalk2D = -1;	// Trạng thái sau khi auto-walk
+	int nxAfterAutoWalk2D = 0;		// Hướng Simon sau khi auto-walk
+	bool nextAuto = false;
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
@@ -174,8 +176,10 @@ public:
 	void startSittingAfterFall() { isSitting = true; isFalling = true; sittingStart = GetTickCount(); }
 	void LoadResources();
 	//autowalk
-	void autoWalk(float distance, int new_state, int new_nx);
-	void DoAutoWalk();
+	//void autoWalk(float distance, int new_state, int new_nx);
+	//void DoAutoWalk();
+	void autoWalk2D(float distanceX, float distanceY, int new_state, int new_nx, bool nextAuto);
+	void doAutoWalk2D();
 };
 
 typedef CSimon * LPSIMON;

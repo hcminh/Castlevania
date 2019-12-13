@@ -9,7 +9,7 @@ CDoor::CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y)
 	if(nextScene == SCENEID::SCENEID_3)
 		this->nextStateGame = STATESCENE::STATE_3;
 	else if (nextScene == SCENEID::SCENEID_2)
-		this->nextStateGame = STATESCENE::STATE_2_2; // set cứng tạm thời vầy để tìm cách giải quết vì lười thêm feild mới vào file txt
+		this->nextStateGame = STATESCENE::STATE_2_1; // set cứng tạm thời vầy để tìm cách giải quết vì lười thêm feild mới vào file txt
 	this->newPosX = newPosX;
 	this->newPosY = newPosY;
 	this->x = x;
@@ -19,7 +19,7 @@ CDoor::CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y)
 
 void CDoor::Render()
 {
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CDoor::GetBoundingBox(float & l, float & t, float & r, float & b)

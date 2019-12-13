@@ -51,6 +51,7 @@ void CScenes::Update(DWORD dt)
 			else if (obj.second->type == ObjectType::DOOR)
 			{
 				doors.push_back(obj.second);
+				onCamObjects.push_back(obj.second);
 			}
 			else if (obj.second->isEnable)
 			{
@@ -100,12 +101,16 @@ void CScenes::setStateWidth()
 		stateWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
 		break;
 	case STATE_2_1:
+		startPointOfState = 0.0f;
 		stateWidth = 3092;
 		break;
 	case STATE_2_2:
-		stateWidth = 5632;
+		startPointOfState = 3072;
+		stateWidth = 4113;
 		break;
 	case STATE_2_3:
+		startPointOfState = 4100;
+		stateWidth = 5632;
 		break;
 	}
 }

@@ -98,6 +98,7 @@ void CScenes::setStateWidth()
 	case STATE_1:
 	case STATE_3:
 	default:
+		startPointOfState = 0.0f;
 		stateWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
 		break;
 	case STATE_2_1:
@@ -105,32 +106,12 @@ void CScenes::setStateWidth()
 		stateWidth = 3092;
 		break;
 	case STATE_2_2:
-		startPointOfState = 3072;
+		//startPointOfState = 3072;
 		stateWidth = 4113;
 		break;
 	case STATE_2_3:
 		startPointOfState = 4100;
 		stateWidth = 5632;
-		break;
-	}
-}
-
-float CScenes::getStateWidth()
-{
-	switch (stateGame)
-	{
-	case STATE_1:
-	case STATE_3:
-	default:
-		return CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
-		break;
-	case STATE_2_1:
-		return 3092;
-		break;
-	case STATE_2_2:
-		return 5632;
-		break;
-	case STATE_2_3:
 		break;
 	}
 }
@@ -158,9 +139,9 @@ void CScenes::changeScene(LPGAMEOBJECT obj)
 	curentMap = scenes[currentScene]->mapID;
 	stateGame = door->nextStateGame;
 	setStateWidth();
+	if(stateGame == STATESCENE::STATE_2_2) startPointOfState = 3072; //trường hợp đặc biệt do bị ảnh hưởng bởi 2 cái cửa //fix sau
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	simon->SetPosition(door->newPosX, door->newPosY);
-	startPointOfState = 0;
 	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
@@ -261,7 +242,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case DOOR:
 		{
-			obj = new CDoor(SCENEID(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
+			obj = new CDoor(STATESCENE(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
 			break;
 		}
 		//case ENEMY_DOG:

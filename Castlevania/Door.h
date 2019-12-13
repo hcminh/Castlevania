@@ -13,7 +13,7 @@ public:
 	STATESCENE nextStateGame;
 	float newPosX = 0;
 	float newPosY = 0;
-	CDoor(SCENEID nextScene, float newPosX, float newPosY, float x, float y);
+	CDoor(STATESCENE nextScene, float newPosX, float newPosY, float x, float y);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 };

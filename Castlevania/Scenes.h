@@ -73,7 +73,6 @@ public:
 	static CScenes * GetInstance();
 	// Get, Set
 	void setStateWidth();
-	float getStateWidth();
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
 	void updateCam();

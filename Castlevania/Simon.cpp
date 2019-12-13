@@ -453,7 +453,6 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 		cantHandle = true;
 		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 30); //60 là chiều rộng của simon
 		CScenes::GetInstance()->stateGame = STATE_2_2;
-		CScenes::GetInstance()->setStateWidth();
 		CScenes::GetInstance()->stopMovingObject = true;
 		vx = SIMON_AUTO_WALK_SPEED;
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);

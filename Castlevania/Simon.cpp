@@ -42,7 +42,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM && coObjects->at(i)->type != ObjectType::STAIR && coObjects->at(i)->type != ObjectType::DOOR)
+		if (coObjects->at(i)->type != ObjectType::ITEM)
 		{
 			listObject.push_back(coObjects->at(i));
 		}
@@ -93,12 +93,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 					//x += min_tx * dx + nx * 0.4f;
 				}
 
-				// Khi đang lên/xuống cầu thang, va chạm theo trục x sẽ không được xét tới
-				if (state == SIMON_STATE_UP_STAIR || state == SIMON_STATE_DOWN_STAIR)
-				{
-					//if (nx != 0) x -= nx * 0.4f;
-					if (ny != 0) y -= ny * 0.1f;
-				}
 			}
 			else if (e->obj->type == ObjectType::SUPPORTER)
 			{
@@ -107,18 +101,20 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (e->obj->type == ObjectType::ENEMY)
 			{
-				DebugOut(L"[VA CHẠM ENEMY] \n");
 				if (!invisible && !untouchable)
 				{
 					SetState(SIMON_STATE_ATTACKED);
+					e->obj->SetState(BAT_STATE_DEAD);
 				}
 				else
 				{
 					if (e->nx != 0) x += dx;
 					if (e->ny != 0) y += dy;
 				}
-
-				//Sử lý nếu đang trên cầu thang thì ko bị nhảy ra sau
+			}
+			else if (e->obj->type == ObjectType::WATER)
+			{
+				SetPosition(10.0f, 120.0f);
 			}
 		}
 	}
@@ -209,7 +205,7 @@ void CSimon::Render()
 	{
 		whip->Render();
 	}
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -444,7 +440,7 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 	auto supporter = dynamic_cast<CSupportObject*> (obj);
 	switch (supporter->stateSp)
 	{
-	case DOOR_1_TO_2:
+	case AUTOWALK_TO_DOOR_1:
 		SetState(SIMON_STATE_WALK);
 		vx = SIMON_AUTO_WALK_SPEED;
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
@@ -458,6 +454,7 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case STOP_CAM_2:
+		CScenes::GetInstance()->stopMovingObject = true;
 		CScenes::GetInstance()->startPointOfState = 3072;
 		CCamera::GetInstance()->movingCamera(3072);
 		supporter->isEnable = false;

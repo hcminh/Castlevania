@@ -8,23 +8,30 @@ CSupportObject::CSupportObject(STATESP stateSp, float distance, float x, float y
 	this->x = x;
 	this->y = y;
 	isEnable = true;
-	//switch (this->stateSp)
-	//{
-	//case DOOR_1_TO_2:
-	//	AddAnimation(319); // hình cửa ở scene 1
-	//	break;
-	//default:
-	//	break;
-	//}
+	switch (this->stateSp)
+	{
+	case DOOR_1_TO_2:
+		AddAnimation(319); // hình cửa ở scene 1
+		break;
+	case DOOR_2_TO_2_2:
+		AddAnimation(321); // hình cửa ở scene 2
+		AddAnimation(320); //ANI
+		break;
+	default:
+		break;
+	}
 }
 
 void CSupportObject::Render()
 {
-	//if (isActive)
-	//{
-	//	animations[0]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//}
-	RenderBoundingBox();
+	if (animations.size() != 0)
+	{
+		int ani = 0;
+		if (stateSp == STATESP::DOOR_2_TO_2_2 && CCamera::GetInstance()->autoMoving)
+			ani = 1;
+		animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+	}
+	//RenderBoundingBox();
 }
 
 void CSupportObject::GetBoundingBox(float & l, float & t, float & r, float & b)
@@ -32,12 +39,17 @@ void CSupportObject::GetBoundingBox(float & l, float & t, float & r, float & b)
 	l = x;
 	t = y;
 	r = x + SPOBJ_BBOX_WIDTH;
-	if (stateSp == DOOR_1_TO_2 || stateSp == CONECT_SCENE_2 || stateSp == TURN_OF_CAM_UPDATE)
+	if (stateSp == AUTOWALK_TO_DOOR_1 || stateSp == CONECT_SCENE_2 || stateSp == TURN_OF_CAM_UPDATE)
 	{
 		b = y + SPOBJ_DOOR_1_TO_2_BBOX_HEIGHT;
 	}
 	else if(stateSp == STOP_CAM || stateSp == STOP_CAM_2)
 	{
+		b = y + SPOBJ_STOP_CAM_BBOX_HEIGHT;
+	}
+	else if(stateSp == DOOR_1_TO_2)
+	{
+		r = x + 100;
 		b = y + SPOBJ_STOP_CAM_BBOX_HEIGHT;
 	}
 }

@@ -2,16 +2,15 @@
 #include "Camera.h"
 #include "Debug.h"
 
-CBat::CBat(DWORD timeToRespawn, int nx) : CEnemy()
+CBat::CBat(DWORD timeToRespawn, int nx, float y) : CEnemy()
 {
 	isEnable = true;
 	this->nx = nx;
+	this->y = y;
 	this->timeToRespawn = timeToRespawn;
 	velVariation = BAT_SPEED_VARIATION;
 	width = BAT_BBOX;
 	height = BAT_BBOX;
-	vx = -ENEMY_WALKING_SPEED;
-	vy = 0.08f;
 	AddAnimation(313);	//dơi bay phải
 	AddAnimation(314);	//dơi bay trái
 	AddAnimation(252);		// DEAD
@@ -75,9 +74,9 @@ void CBat::respawn()
 	vy = 0.08f;
 
 	if (nx > 0)
-		SetPosition(CCamera::GetInstance()->getBorderCamLeft() + 50, 50 + rand() % 100);
+		SetPosition(CCamera::GetInstance()->getBorderCamLeft() + 50, y);
 	else
-		SetPosition(CCamera::GetInstance()->getBorderCamRight() - 50, 50 + rand() % 100);
+		SetPosition(CCamera::GetInstance()->getBorderCamRight() - 50, y);
 }
 
 void CBat::dead()
@@ -85,7 +84,6 @@ void CBat::dead()
 	isDead = true;
 	vx = 0;
 	vy = 0;
-	SetPosition(0, 450);
 }
 
 void CBat::SetState(int state)
@@ -97,6 +95,7 @@ void CBat::SetState(int state)
 		else vx = -BAT_FLYING_SPEED_X;
 		vy = 0;
 		break;
+	case ENEMY_STATE_DEAD:
 	case BAT_STATE_DEAD:
 		vx = 0;
 		vy = 0;

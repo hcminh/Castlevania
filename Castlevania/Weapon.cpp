@@ -69,7 +69,7 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (coObjects->at(i)->type == ObjectType::ENEMY);
 				{
-					coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
+					coObjects->at(i)->SetState(ENEMY_STATE_DEAD);
 					if (state == WeaponType::KNIFE_WEAPON || state == WeaponType::AXE_WEAPON) isFlying = false;
 				}
 				if (state == WeaponType::HOLY_WATER_WEAPON)
@@ -125,10 +125,10 @@ void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & b
 		bottom = top + FIRER_BBOX;
 		break;
 	case WeaponType::FIRE_BALL:
-		left = x;
-		top = y;
-		right = left + HOLY_WATER_BBOX; //sài lại cho lẹ
-		bottom = top + HOLY_WATER_BBOX;
+		left = x + 10.0f;
+		top = y + 10.0f;
+		right = left + 15.0f; //sài lại cho lẹ
+		bottom = top + 15.0f;
 		break;
 	}
 }

@@ -32,6 +32,8 @@ public:
 	CWeapon *weapon = NULL;
 	DWORD waitToShoot;
 	DWORD shootingTime;
+	DWORD nextShootTime;
+
 	bool isShooting = false;
 	bool isFlying = false;
 	bool isWalking = false;

@@ -148,6 +148,7 @@
     <ClInclude Include="SupportObject.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="tilemap.h" />
+    <ClInclude Include="Water.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Whip.h" />
     <ClInclude Include="Zombie.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="SupportObject.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="tilemap.cpp" />
+    <ClCompile Include="Water.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Whip.cpp" />
     <ClCompile Include="Zombie.cpp" />

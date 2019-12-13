@@ -27,7 +27,7 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				else if (coObjects->at(i)->type == ObjectType::ENEMY);
 				{
-					coObjects->at(i)->SetState(ZOMBIE_STATE_DEAD);
+					coObjects->at(i)->SetState(ENEMY_STATE_DEAD);
 				}
 			}
 

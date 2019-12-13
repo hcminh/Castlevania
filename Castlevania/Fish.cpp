@@ -9,6 +9,7 @@ CFish::CFish() : CEnemy()
 {
 	isEnable = true;
 
+	type = ObjectType::ENEMY;
 	width = FISH_BBOX_WIDTH;
 	height = FISH_BBOX_HEIGHT;
 	gravity = FISH_GRAVITY;
@@ -44,7 +45,7 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	CGameObject::Update(dt, coObject);
 	vy += gravity * dt;
 
-	if (isWaitToShoot && (GetTickCount() - waitToShoot > FISH_WAIT_TO_SHOOT_TIME))
+	if (isWaitToShoot && (GetTickCount() - waitToShoot > nextShootTime))
 	{
 		waitToShoot = 0;
 		isWaitToShoot = false;
@@ -62,8 +63,7 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	{
 		shootingTime = 0;
 		isShooting = false;
-		float distanceToSimon = x - CSimon::GetInstance()->x + 1;// tránh TH xSimon trùng xFish
-		nx = -(distanceToSimon) / (abs(distanceToSimon))*nx;
+		nx *= -1;
 		SetState(FISH_STATE_WALK);
 		waitingToShoot();
 	}
@@ -84,25 +84,45 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 		else
 		{
 			float min_tx, min_ty, nx = 0, ny;
-			DebugOut(L"[FISH] %d \n", coEvents.size());
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 			x += dx; // để vầy là khỏi cần kiểm tra va chạm nx
-			if (ny != 0 && isFlying)
-			{
-				if (ny < 0)
-				{
-					active();
-				}
-				else
-					y += dy;
-			}
+			y += min_ty * dy + ny * 0.1f;
 
-			if (nx != 0)
+
+			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
-				this->nx *= -1; // chạm tường thì đổi chiều
-				this->vx *= -1;
+				LPCOLLISIONEVENT e = coEventsResult[i];
+
+				if (e->obj->type == ObjectType::GROUND)
+				{
+					if (e->ny != 0)
+					{
+						if (e->ny < 0.0f && isFlying)
+						{
+							vy = 0;
+
+							active();
+						}
+						else if(e->ny > 0.0f && isFlying)
+							y += dy;
+					}
+				}
+				else if (e->obj->type == ObjectType::WATER)
+				{
+					if (e->ny < 0.0f)
+					{
+						SetState(ENEMY_STATE_DEAD);
+						//dead();
+						//waitingToRepawn();
+					}
+				}
 			}
+		}
+		if (this->x <= 2.0f)
+		{
+			nx *= -1; //do không set va cham vs gạch nữa nên dùng cách này để chặn cá đi khỏi map
+			SetState(FISH_STATE_WALK);
 		}
 
 		// clean up collision events
@@ -138,19 +158,21 @@ void CFish::respawn()
 	isDead = false;
 	isWalking = false;
 	isFlying = true;
-	SetPosition(200, 350);
+	float respawPosX = rand() % (int)CCamera::GetInstance()->getBorderCamRight() + CCamera::GetInstance()->getBorderCamLeft();
+	SetPosition(respawPosX, 350);
 }
 
 void CFish::dead()
 {
 	vy = vx = 0;
-	gravity = FISH_GRAVITY;
+	gravity = 0;
 	isDead = true;
 	isShooting = false;
 	isFlying = false;
 	isWalking = false;
 	isWaitToShoot = false;
-	SetPosition(0, 450);
+	burningStart = 0;
+	isBurning = false;
 }
 
 void CFish::active()
@@ -158,6 +180,7 @@ void CFish::active()
 	vy = 0;
 	isFlying = false;
 	SetState(FISH_STATE_WALK);
+	nextShootTime = rand() % 2500 + 500;
 	waitingToShoot();
 }
 
@@ -171,6 +194,7 @@ void CFish::SetState(int state)
 		break;
 	case FISH_STATE_SHOOT:
 		vx = 0;
+		nextShootTime = rand() % 2500 + 500;
 		isWalking = false;
 		startShoot();
 		if (!weapon->isFlying)
@@ -181,7 +205,7 @@ void CFish::SetState(int state)
 			weapon->SetState(WeaponType::FIRE_BALL);
 		}
 		break;
-	case FISH_STATE_DEAD:
+	case ENEMY_STATE_DEAD:
 		vx = 0;
 		vy = 0;
 		gravity = 0;

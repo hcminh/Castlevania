@@ -60,8 +60,8 @@ void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			x += min_tx * dx + nx * 0.4f;
-			y += min_ty * dy + ny * 0.4f;
+			x += min_tx * dx + nx * 0.1f;
+			y += min_ty * dy + ny * 0.1f;
 			if (nx != 0)
 			{
 				this->nx *= -1; // chạm tường thì đổi chiều
@@ -128,7 +128,7 @@ void CZombie::SetState(int state)
 	case ENEMY_STATE_WALKING:
 		vx = nx * ZOMBIE_WALKING_SPEED;
 		break;
-	case ZOMBIE_STATE_DEAD:
+	case ENEMY_STATE_DEAD:
 		vx = 0;
 		vy = 0;
 		gravity = 0;

@@ -7,6 +7,7 @@
 #include "Fish.h"
 #include "Dog.h"
 #include "Bat.h"
+#include "Water.h"
 #include "SupportObject.h"
 #include <fstream>
 
@@ -29,10 +30,14 @@ void CScenes::Update(DWORD dt)
 		stairs.clear();
 		grounds.clear();
 		doors.clear();
+		supporters.clear();
 
-		for (int i = 0;i < zombies.size();i++)
+		if (inZombiesActiveArea)
 		{
-			insertObject(zombies[i]);
+			for (int i = 0;i < zombies.size();i++)
+			{
+				insertObject(zombies[i]);
+			}
 		}
 
 		for (auto obj : objects)
@@ -46,15 +51,17 @@ void CScenes::Update(DWORD dt)
 			else if (obj.second->type == ObjectType::STAIR)
 			{
 				stairs.push_back(obj.second);
-				onCamObjects.push_back(obj.second);
 			}
 			else if (obj.second->type == ObjectType::DOOR)
 			{
 				doors.push_back(obj.second);
-				onCamObjects.push_back(obj.second);
 			}
 			else if (obj.second->isEnable)
 			{
+				if (obj.second->type == ObjectType::SUPPORTER)
+				{
+					supporters.push_back(obj.second);
+				}
 				onCamObjects.push_back(obj.second);
 			}
 		}
@@ -71,6 +78,7 @@ void CScenes::Update(DWORD dt)
 		{
 			simon->checkColisionDoor(doors);
 		}
+
 		simon->Update(dt, &onCamObjects);
 	}
 	// update camera
@@ -83,6 +91,10 @@ void CScenes::Render()
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
 	simon->Render(); //render simon cuối cùng để nó đè lên mấy thằng kia
+
+	//các hiệu ứng mở cửa
+	for (int i = 0; i < supporters.size(); i++)
+		supporters[i]->Render();
 }
 
 void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
@@ -98,18 +110,22 @@ void CScenes::setStateWidth()
 	case STATE_1:
 	case STATE_3:
 	default:
+		inZombiesActiveArea = false;
 		startPointOfState = 0.0f;
 		stateWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
 		break;
 	case STATE_2_1:
+		inZombiesActiveArea = true;
 		startPointOfState = 0.0f;
 		stateWidth = 3092;
 		break;
 	case STATE_2_2:
+		inZombiesActiveArea = false;
 		//startPointOfState = 3072;
 		stateWidth = 4113;
 		break;
 	case STATE_2_3:
+		inZombiesActiveArea = true;
 		startPointOfState = 4100;
 		stateWidth = 5632;
 		break;
@@ -164,7 +180,7 @@ void CScenes::changeScene(SCENEID newScene)
 		stateGame = STATE_2_1;
 		setStateWidth();
 		startPointOfState = 0;
-		simon->SetPosition(3000.963501, 100);
+		simon->SetPosition(2961, 100);
 	}
 	else if (newScene == SCENEID_3)
 	{
@@ -207,7 +223,6 @@ void CScenes::loadObjectToGrid(string path)
 		grid = nullptr;
 	}
 	grid = new CGrid();
-	//grid->initCells(CMaps::GetInstance()->Get(curentMap)->GetMapWidth());
 	clearAllObject();
 	zombies.clear();
 
@@ -245,23 +260,28 @@ void CScenes::loadObjectToGrid(string path)
 			obj = new CDoor(STATESCENE(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
 			break;
 		}
-		//case ENEMY_DOG:
-		//{
-		//	obj = new CDog(x, y);
-		//	break;
-		//}
-		//case ENEMY_ZOMBIE:
-		//{
-		//	LPGAMEOBJECT zom = new CZombie(width, state);
-		//	zom->setID(idInGame);
-		//	zombies.push_back(zom);
-		//	break;
-		//}
-		//case ENEMY_FISH:
-		//{
-		//	obj = new CFish();
-		//	break;
-		//}
+		case ENEMY_DOG:
+		{
+			obj = new CDog(x, y);
+			break;
+		}
+		case ENEMY_ZOMBIE:
+		{
+			LPGAMEOBJECT zom = new CZombie(width, state);
+			zom->setID(idInGame);
+			zombies.push_back(zom);
+			break;
+		}
+		case ENEMY_FISH:
+		{
+			obj = new CFish();
+			break;
+		}
+		case ENEMY_BAT:
+		{
+			obj = new CBat(5000, state, y); //state = nx
+			break;
+		}
 		case STAIR:
 		{
 			obj = new CStair(STATESTAIR(state), width, height, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên
@@ -270,6 +290,11 @@ void CScenes::loadObjectToGrid(string path)
 		case SUPPORTER:
 		{
 			obj = new CSupportObject(STATESP(state), width, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
+			break;
+		}
+		case WATER:
+		{
+			obj = new CWater(); 
 			break;
 		}
 
@@ -282,10 +307,6 @@ void CScenes::loadObjectToGrid(string path)
 		}
 	}
 	fs.close();
-
-	CBat *bat = new CBat(5000, -1);
-	bat->setID(200);
-	grid->addObject(cellIndex, bat);
 
 }
 

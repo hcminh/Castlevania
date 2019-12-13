@@ -26,6 +26,8 @@ enum ObjectType
 	ENEMY_FISH,
 	ENEMY,
 	BREAK_WALL,
+	WATER,
+	ENEMY_BAT,
 };
 
 

@@ -8,6 +8,7 @@
 CDog::CDog(float x, float y) : CEnemy()
 {
 	isEnable = true;
+	type = ObjectType::ENEMY;
 	SetPosition(x, y);
 	isSitting = true;
 	this->nx = -1;
@@ -40,9 +41,9 @@ void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	{
 		active();
 	}
+	vy += gravity * dt;
 	CGameObject::Update(dt, coObject);
 
-	vy += gravity  * dt;
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
@@ -55,6 +56,11 @@ void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	{
 		x += dx;
 		y += dy;
+
+		if (!isJumping && (state == ENEMY_STATE_WALKING))
+		{
+			SetState(DOG_STATE_JUMP);
+		}
 	}
 	else
 	{
@@ -62,29 +68,17 @@ void CDog::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-		x += min_tx * dx + nx * 0.4f;
+		x += dx;
 		y += min_ty * dy + ny * 0.4f;
 
-		for (UINT i = 0; i < coEventsResult.size(); i++)
+		if (ny == -1.0f)
 		{
-			LPCOLLISIONEVENT e = coEventsResult[i];
+			vy = 0;
 
-			if (e->obj->type == ObjectType::GROUND)
+			if (state == DOG_STATE_JUMP)
 			{
-				if (e->ny != 0 && isJumping)
-				{
-					if (e->ny < 0)
-					{
-						vy = 0;
-						isJumping = false;
-					}
-					else
-						y += dy;
-				}
-			}
-			else
-			{
-				x += dx;
+				(this->nx) *= -1;
+				SetState(ENEMY_STATE_WALKING);
 			}
 		}
 	}
@@ -99,7 +93,7 @@ void CDog::Render()
 	if (isDead) return;
 	int ani;
 	if (isBurning) ani = DOG_ANI_BURNING;
-	else if (isJumping) ani = DOG_ANI_JUMP_RIGHT;
+	else if (state == DOG_STATE_JUMP) ani = DOG_ANI_JUMP_RIGHT;
 	else if (isSitting) ani = DOG_ANI_SIT_RIGHT;
 	else ani = DOG_ANI_WALK_RIGHT;
 
@@ -129,23 +123,27 @@ void CDog::dead()
 void CDog::active()
 {
 	isSitting = false;
-	SetState(DOG_STATE_JUMP);
+	SetState(ENEMY_STATE_WALKING);
 }
 
 void CDog::SetState(int state)
 {
+	CGameObject::SetState(state);
 	switch (state)
 	{
 	case ENEMY_STATE_WALKING:
+		//isJumping = false;
+		vy = 0;
 		vx = nx * DOG_WALKING_SPEED;
 		break;
 	case DOG_STATE_JUMP:
 		vy = -DOG_JUMPING_SPEED;
-		vx = nx * DOG_WALKING_SPEED;
 		isJumping = true;
 		break;
-	case DOG_STATE_DEAD:
+	case ENEMY_STATE_DEAD:
 		vx = 0;
+		vy = 0;
+		gravity = 0;
 		startBurning();
 		break;
 	case DOG_STATE_RESPAWN:

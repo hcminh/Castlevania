@@ -18,6 +18,7 @@ bool CCamera::isMovingCamera()
 		camX++;
 		return true;
 	}
+	CScenes::GetInstance()->stopMovingObject = false;
 	autoMoving = false;
 	return false;
 }

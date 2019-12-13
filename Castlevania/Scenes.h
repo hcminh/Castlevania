@@ -51,6 +51,7 @@ class CScenes
 	vector<LPGAMEOBJECT> zombies; // quản lý zombie
 	vector<LPGAMEOBJECT> grounds; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
 	vector<LPGAMEOBJECT> doors; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
+	vector<LPGAMEOBJECT> supporters; // list obj hỗ trợ game để render
 	unordered_map<SCENEID, LPSCENE> scenes;
 	SCENEID currentScene;
 	int curentMap;
@@ -61,6 +62,7 @@ class CScenes
 public:
 	bool isStopWatchInUse = false;
 	bool stopMovingObject = false;
+	bool inZombiesActiveArea = false;
 	float startPointOfState = 0;
 	STATESCENE stateGame;
 	float stateWidth;

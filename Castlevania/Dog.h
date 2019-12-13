@@ -4,10 +4,10 @@
 
 // Dog
 #define DOG_BBOX_WIDTH		65
-#define DOG_BBOX_HEIGHT		30
+#define DOG_BBOX_HEIGHT		28
 
 #define DOG_WALKING_SPEED		0.3f
-#define DOG_JUMPING_SPEED		0.5f
+#define DOG_JUMPING_SPEED		0.4f
 #define DOG_GRAVITY				0.002f
 
 #define DOG_STATE_DEAD			0

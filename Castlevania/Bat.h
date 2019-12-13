@@ -4,14 +4,13 @@
 
 // Zombie
 
-#define BAT_FLYING_SPEED_X	0.12f
+#define BAT_FLYING_SPEED_X	0.09f
 #define BAT_FLYING_SPEED_Y	0.1f
 #define BAT_SPEED_VARIATION 0.004f
 
 #define BAT_BBOX_WIDTH			30
 #define BAT_BBOX_HEIGHT			30
 
-#define BAT_STATE_DEAD			0
 #define BAT_STATE_RESPAWN		1
 
 #define BAT_ANI_WALK_RIGHT		0	//ma đi phải
@@ -22,7 +21,7 @@ class CBat : public CEnemy
 {
 public:
 	float velVariation;
-	CBat(DWORD timeToRespawn, int nx);
+	CBat(DWORD timeToRespawn, int nx, float y);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();
 	virtual void respawn();

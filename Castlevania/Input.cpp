@@ -124,7 +124,7 @@ void Input::OnKeyDown(int KeyCode)
 		break;
 	case DIK_3: //qua scene 3
 		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_3);
-		simon->SetPosition(1000.0f, 100);
+		simon->SetPosition(10.0f, 100);
 		break;
 	}
 }

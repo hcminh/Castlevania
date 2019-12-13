@@ -9,11 +9,13 @@
 
 enum STATESP
 {
-	DOOR_1_TO_2,
+	AUTOWALK_TO_DOOR_1,
 	STOP_CAM, // ko cập nhật cam ở cuối state 2
 	CONECT_SCENE_2,
 	STOP_CAM_2, // ko cập nhật cam ở đầu state 3
 	TURN_OF_CAM_UPDATE, // TẮT MẤY CÁI LIÊN QUAN ĐẾN CHUYỂN CẢNH
+	DOOR_1_TO_2,
+	DOOR_2_TO_2_2
 };
 
 class CSupportObject : public CGameObject

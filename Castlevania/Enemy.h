@@ -4,10 +4,11 @@
 #define ENEMY_WALKING_SPEED 0.1f;
 
 #define ENEMY_BURN_TIME			1000	//CHAYS
-#define ENEMY_RESPAWN_TIME		5000	//hoi sinh
+#define ENEMY_RESPAWN_TIME		3000	//hoi sinh
 
 #define ENEMY_STATE_WALKING 100
-#define ENEMY_STATE_DIE 200
+#define ENEMY_STATE_DEAD 200
+#define BAT_STATE_DEAD 300
 
 #define BAT_ANI_IDLE				12	//dơi đậu
 #define BAT_ANI_WALK_RIGHT			13	//dơi bay phải

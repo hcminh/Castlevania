@@ -77,9 +77,7 @@ void Input::OnKeyDown(int KeyCode)
 		simon->SetState(SIMON_STATE_JUMP);
 		break;
 	case DIK_R: // reset
-		simon->SetState(SIMON_STATE_IDLE);
-		simon->SetPosition(50.0f, 0.0f);
-		simon->SetSpeed(0, 0);
+		CScenes::GetInstance()->usingHolyCross();
 		break;
 	case DIK_A: // ATTACK
 		simon->SetState(SIMON_STATE_ATTACK);

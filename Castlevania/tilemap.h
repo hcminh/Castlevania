@@ -26,7 +26,7 @@ public:
 	CMap() {}
 	CMap(int ID, LPCWSTR dataPath);
 	void LoadMap(LPCWSTR dataPath);					// load ma trận map 
-	void Draw(D3DXVECTOR3 camPosition);	// vẽ tất cả các tile nằm trong camera
+	void Draw(D3DXVECTOR3 camPosition, int alpha);	// vẽ tất cả các tile nằm trong camera
 	int GetMapWidth();
 };
 

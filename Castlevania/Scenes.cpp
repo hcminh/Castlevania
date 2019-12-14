@@ -21,6 +21,12 @@ CScenes::CScenes()
 
 void CScenes::Update(DWORD dt)
 {
+	if (isUsingHolyCross && (GetTickCount() - useHolyCrossTime > 1000))
+	{
+		useHolyCrossTime = 0;
+		isUsingHolyCross = false;
+	}
+
 	if (!stopMovingObject)
 	{
 
@@ -87,7 +93,9 @@ void CScenes::Update(DWORD dt)
 
 void CScenes::Render()
 {
-	CMaps::GetInstance()->Get(curentMap)->Draw(camera->getCamPos());
+	int alpha = 255;
+	if (isUsingHolyCross) alpha = rand() % 255 + 200;
+	CMaps::GetInstance()->Get(curentMap)->Draw(camera->getCamPos(), alpha);
 	for (int i = 0; i < onCamObjects.size(); i++)
 		onCamObjects[i]->Render();
 	simon->Render(); //render simon cuối cùng để nó đè lên mấy thằng kia
@@ -140,6 +148,19 @@ void CScenes::insertObject(LPGAMEOBJECT object)
 void CScenes::clearAllObject()
 {
 	objects.clear();
+}
+
+void CScenes::usingHolyCross()
+{
+	isUsingHolyCross = true;
+	useHolyCrossTime = GetTickCount();
+	for (auto obj : objects)
+	{
+		if (obj.second->type == ObjectType::ENEMY)
+		{
+			obj.second->SetState(ENEMY_STATE_DEAD);
+		}
+	}
 }
 
 void CScenes::updateCam()

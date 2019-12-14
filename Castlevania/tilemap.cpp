@@ -46,7 +46,7 @@ void CMap::LoadMap(LPCWSTR dataPath)
 	fs.close();
 }
 
-void CMap::Draw(D3DXVECTOR3 camPosition)
+void CMap::Draw(D3DXVECTOR3 camPosition, int alpha)
 {
 	int startCol = (int)camPosition.x / 32;
 	int endCol = startCol + SCREEN_WIDTH / 32;
@@ -60,7 +60,7 @@ void CMap::Draw(D3DXVECTOR3 camPosition)
 			float x = TILE_WIDTH * (j - startCol) + camPosition.x - (int)camPosition.x % 32;
 			float y = TILE_HEIGHT * i + LAYOUT_HEIGHT;
 
-			tilemap[i][j]->Draw(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
+			tilemap[i][j]->Draw(x, y, D3DCOLOR_ARGB(alpha, 255, 255, 255));
 		}
 	}
 }

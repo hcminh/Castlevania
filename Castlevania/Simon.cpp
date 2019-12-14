@@ -393,6 +393,9 @@ void CSimon::colisionItem(CItem *it)
 	case ItemType::INVISIBLE:
 		SetState(SIMON_STATE_INVISIBLE);
 		break;
+	case ItemType::HOLY_CROSS:
+		CScenes::GetInstance()->usingHolyCross();
+		break;
 	default:
 		break;
 	}

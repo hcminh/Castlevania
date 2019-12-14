@@ -62,6 +62,8 @@ class CScenes
 public:
 	bool isStopWatchInUse = false;
 	bool stopMovingObject = false;
+	DWORD useHolyCrossTime = 0;
+	bool isUsingHolyCross = false;
 	bool inZombiesActiveArea = false;
 	float startPointOfState = 0;
 	STATESCENE stateGame;
@@ -77,6 +79,7 @@ public:
 	void setStateWidth();
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
+	void usingHolyCross();
 	void updateCam();
 	void changeScene(LPGAMEOBJECT obj);
 	void changeScene(SCENEID newScene);

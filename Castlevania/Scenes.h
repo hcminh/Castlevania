@@ -11,7 +11,21 @@
 #include "tilemap.h"
 #include "Grid.h"
 
-#define MAX_TIME_STOP_WATCH 5000
+#define TIME_STOP_WATCH 2000
+#define TIME_HOLY_CROSS 1000
+
+#define START_POINT_STAGE_1		 0.0f
+#define START_POINT_STAGE_2_1	 0.0f
+#define START_POINT_STAGE_2_2	 3072
+#define START_POINT_STAGE_2_3	 4100
+#define START_POINT_STAGE_3		 0.0f
+
+#define STAGE_1_WIDTH		 0
+#define STAGE_2_1_WIDTH		 3092
+#define STAGE_2_2_WIDTH		 4113
+#define STAGE_2_3_WIDTH		 5632
+#define STAGE_3_WIDTH		 0
+
 using namespace std;
 
 enum SCENEID

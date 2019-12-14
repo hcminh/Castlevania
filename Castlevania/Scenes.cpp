@@ -21,12 +21,12 @@ CScenes::CScenes()
 
 void CScenes::Update(DWORD dt)
 {
-	if (isUsingHolyCross && (GetTickCount() - useHolyCrossTime > 1000))
+	if (isUsingHolyCross && (GetTickCount() - useHolyCrossTime > TIME_HOLY_CROSS))
 	{
 		useHolyCrossTime = 0;
 		isUsingHolyCross = false;
 	}
-	else if (isUsingStopWatch && (GetTickCount() - useStopWatchTime > 2000))
+	else if (isUsingStopWatch && (GetTickCount() - useStopWatchTime > TIME_STOP_WATCH))
 	{
 		useStopWatchTime = 0;
 		isUsingStopWatch = false;
@@ -79,7 +79,7 @@ void CScenes::Update(DWORD dt)
 
 		for (auto obj : objects)
 		{
-			if (obj.second->isEnable && !isUsingStopWatch)
+			if (obj.second->isEnable && !isUsingStopWatch && !simon->levelUpgrade)
 			{
 				obj.second->Update(dt, &grounds); //obj khác ngoài simon chỉ cần kt va chạm vs ground
 			}
@@ -130,17 +130,17 @@ void CScenes::setStateWidth()
 	case STATE_2_1:
 		inZombiesActiveArea = true;
 		startPointOfState = 0.0f;
-		stateWidth = 3092;
+		stateWidth = STAGE_2_1_WIDTH;
 		break;
 	case STATE_2_2:
 		inZombiesActiveArea = false;
 		//startPointOfState = 3072;
-		stateWidth = 4113;
+		stateWidth = STAGE_2_2_WIDTH;
 		break;
 	case STATE_2_3:
 		inZombiesActiveArea = true;
-		startPointOfState = 4100;
-		stateWidth = 5632;
+		startPointOfState = START_POINT_STAGE_2_3;
+		stateWidth = STAGE_2_3_WIDTH;
 		break;
 	}
 }
@@ -187,7 +187,7 @@ void CScenes::changeScene(LPGAMEOBJECT obj)
 	curentMap = scenes[currentScene]->mapID;
 	stateGame = door->nextStateGame;
 	setStateWidth();
-	if(stateGame == STATESCENE::STATE_2_2) startPointOfState = 3072; //trường hợp đặc biệt do bị ảnh hưởng bởi 2 cái cửa //fix sau
+	if(stateGame == STATESCENE::STATE_2_2) startPointOfState = START_POINT_STAGE_2_2; //trường hợp đặc biệt do bị ảnh hưởng bởi 2 cái cửa //fix sau
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	simon->SetPosition(door->newPosX, door->newPosY);
 	updateCam();

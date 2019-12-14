@@ -495,13 +495,13 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 				if (simon_b < stair_b && stair->stateStair != UP_RIGHT && stair->stateStair != UP_LEFT)
 				{
 					SetState(SIMON_STATE_UP_STAIR);
-					autoWalk2D(15.0f, 12.0f, SIMON_STATE_IDLE, nx, false);
+					autoWalk2D(LAST_STEP_WIDTH, LAST_STEP_HEIGHT, SIMON_STATE_IDLE, nx, false);
 					return;
 				}
 			}
 		}
 		SetState(SIMON_STATE_UP_STAIR);
-		autoWalk2D(15.0f, 16.0f, SIMON_STATE_IDLE_STAIR, nx, false);
+		autoWalk2D(STEP_UP_WIDTH, STEP_UP_HEIGHT, SIMON_STATE_IDLE_STAIR, nx, false);
 	}
 	else
 	{
@@ -562,7 +562,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 			}
 		}
 		SetState(SIMON_STATE_DOWN_STAIR);
-		autoWalk2D(16.0f, 15.5f, SIMON_STATE_DOWN_STAIR, nx, false);
+		autoWalk2D(STEP_DOWN_WIDTH, STEP_DOWN_HEIGHT, SIMON_STATE_DOWN_STAIR, nx, false);
 		return true;
 	}
 	else

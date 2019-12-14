@@ -26,6 +26,12 @@ void CScenes::Update(DWORD dt)
 		useHolyCrossTime = 0;
 		isUsingHolyCross = false;
 	}
+	else if (isUsingStopWatch && (GetTickCount() - useStopWatchTime > 2000))
+	{
+		useStopWatchTime = 0;
+		isUsingStopWatch = false;
+	}
+	
 
 	if (!stopMovingObject)
 	{
@@ -48,7 +54,6 @@ void CScenes::Update(DWORD dt)
 
 		for (auto obj : objects)
 		{
-
 			if (obj.second->type == ObjectType::GROUND || obj.second->type == ObjectType::WATER)
 			{
 				onCamObjects.push_back(obj.second);
@@ -74,7 +79,7 @@ void CScenes::Update(DWORD dt)
 
 		for (auto obj : objects)
 		{
-			if (obj.second->isEnable)
+			if (obj.second->isEnable && !isUsingStopWatch)
 			{
 				obj.second->Update(dt, &grounds); //obj khác ngoài simon chỉ cần kt va chạm vs ground
 			}
@@ -161,6 +166,12 @@ void CScenes::usingHolyCross()
 			obj.second->SetState(ENEMY_STATE_DEAD);
 		}
 	}
+}
+
+void CScenes::usingStopWatch()
+{
+	isUsingStopWatch = true;
+	useStopWatchTime = GetTickCount();
 }
 
 void CScenes::updateCam()
@@ -335,12 +346,6 @@ CScenes * CScenes::GetInstance()
 {
 	if (__instance == NULL) __instance = new CScenes();
 	return __instance;
-}
-
-void CScenes::stopObject()
-{
-	isStopWatchInUse = true;
-	accutime = 0;
 }
 
 CScene::CScene(SCENEID sceneID, int mapID, string link)

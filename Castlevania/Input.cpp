@@ -79,6 +79,9 @@ void Input::OnKeyDown(int KeyCode)
 	case DIK_R: // reset
 		CScenes::GetInstance()->usingHolyCross();
 		break;
+	case DIK_T: // reset
+		CScenes::GetInstance()->usingStopWatch();
+		break;
 	case DIK_A: // ATTACK
 		simon->SetState(SIMON_STATE_ATTACK);
 		break;

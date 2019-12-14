@@ -60,7 +60,8 @@ class CScenes
 	LPCAMERA camera; // lưu địa chỉ cam lại để khỏi phải gọi getinstance()
 	LPSIMON simon; //lưu luôn con simon cho lẹ
 public:
-	bool isStopWatchInUse = false;
+	bool isUsingStopWatch = false;
+	DWORD useStopWatchTime = false;
 	bool stopMovingObject = false;
 	DWORD useHolyCrossTime = 0;
 	bool isUsingHolyCross = false;
@@ -80,12 +81,12 @@ public:
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
 	void usingHolyCross();
+	void usingStopWatch();
 	void updateCam();
 	void changeScene(LPGAMEOBJECT obj);
 	void changeScene(SCENEID newScene);
 	void loadObjectToGrid(string path);
 	void getObjectsFromGrid(float xCam, int widthCam);
-	void stopObject();
 	int getObjectsSize() { return objects.size(); };
 
 };

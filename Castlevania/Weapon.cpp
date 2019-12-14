@@ -152,9 +152,7 @@ void CWeapon::SetState(int state)
 		vy = -HOLY_WATER_SPEED_Y;
 		break;
 	case WeaponType::STOP_WATCH_WEAPON:
-		if (isStopWatch) return;
-		isStopWatch = true;
-		CScenes::GetInstance()->stopObject();
+		CScenes::GetInstance()->usingStopWatch();
 		break;
 	case WeaponType::FIRER:
 		vx = 0;

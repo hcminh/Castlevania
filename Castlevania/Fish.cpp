@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include "Simon.h"
+#include "Water.h"
 #include "debug.h"
 
 
@@ -110,11 +111,15 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 				}
 				else if (e->obj->type == ObjectType::WATER)
 				{
+					auto * water = dynamic_cast<CWater*>(e->obj);
+					water->AddBubbles(x, y + width);
 					if (e->ny < 0.0f)
 					{
 						SetState(ENEMY_STATE_DEAD);
-						//dead();
-						//waitingToRepawn();
+					}
+					if (e->ny > 0.0f)
+					{
+						SetState(ENEMY_STATE_DEAD);
 					}
 				}
 			}
@@ -127,6 +132,12 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
+
+		if (!CCamera::GetInstance()->onCamera(x, x + width))
+		{
+			dead();
+			waitingToRepawn();
+		}
 	}
 
 	if (weapon != NULL) weapon->Update(dt, coObject);

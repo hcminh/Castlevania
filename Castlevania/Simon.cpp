@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Scenes.h"
 #include "SupportObject.h"
+#include "Water.h"
 #include <math.h>
 
 CSimon * CSimon::__instance = NULL;
@@ -114,7 +115,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (e->obj->type == ObjectType::WATER)
 			{
-				SetPosition(10.0f, 120.0f);
+				auto * water = dynamic_cast<CWater*>(e->obj);
+				water->AddBubbles(x, y + SIMON_BBOX_HEIGHT);
+
+				SetPosition(200.0f, 90.0f);
+				return;
 			}
 		}
 	}

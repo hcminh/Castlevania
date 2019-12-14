@@ -43,7 +43,7 @@ void CScenes::Update(DWORD dt)
 		for (auto obj : objects)
 		{
 
-			if (obj.second->type == ObjectType::GROUND)
+			if (obj.second->type == ObjectType::GROUND || obj.second->type == ObjectType::WATER)
 			{
 				onCamObjects.push_back(obj.second);
 				grounds.push_back(obj.second);

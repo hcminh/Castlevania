@@ -45,12 +45,13 @@ void Render()
 
 	if (d3ddv->BeginScene())
 	{
-		d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
+		if (CScenes::GetInstance()->isUsingHolyCross)
+			d3ddv->ColorFill(bb, NULL, D3DCOLOR_XRGB(255, 255, 255));
+		else
+			d3ddv->ColorFill(bb, NULL, BACKGROUND_COLOR);
 
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
-
 		CScenes::GetInstance()->Render();
-
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}

@@ -1,7 +1,7 @@
 #include "Ground.h"
 #include "Scenes.h"
 
-CGround::CGround(float x, float y, int width, int height)
+CGround::CGround(int state, int width, int height, float x, float y)
 {
 	type = ObjectType::GROUND;
 	isEnable = true;
@@ -9,6 +9,7 @@ CGround::CGround(float x, float y, int width, int height)
 	this->y = y;
 	this->width = width;
 	this->height = height;
+	this->state = state;
 }
 
 void CGround::Render()

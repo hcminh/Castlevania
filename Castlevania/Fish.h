@@ -44,6 +44,7 @@ public:
 
 	void startShoot() { isShooting = true; shootingTime = GetTickCount(); }
 	void waitingToShoot() { isWaitToShoot = true; waitToShoot = GetTickCount(); }
+	bool canShoot();
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT>* coObject = NULL);
 	virtual void Render();
 	virtual void respawn();

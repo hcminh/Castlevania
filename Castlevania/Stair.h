@@ -10,8 +10,7 @@
 #define STEP_UP_HEIGHT			16.0f
 #define STEP_UP_WIDTH			15.0f
 #define STEP_DOWN_HEIGHT		15.5f
-#define STEP_DOWN_WIDTH			16.0f
-
+#define STEP_DOWN_WIDTH			15.5f
 
 
 enum STATESTAIR {

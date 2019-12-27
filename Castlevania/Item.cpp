@@ -3,12 +3,11 @@
 #include "Scenes.h"
 #include <ctime>
 
-CItem::CItem(float xPos, float yPos, ItemState itemState)
+CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 {
 	type = ObjectType::ITEM;
 	this->itemState = itemState;
 	SetPosition(xPos, yPos);
-	item = randomItem();;
 	isEnable = true;
 	isDestroyed = false;
 	isDestroying = false;
@@ -41,43 +40,100 @@ CItem::CItem(float xPos, float yPos, ItemState itemState)
 		break;
 	}
 	//item that obj holding
+	if (iType == RANDOM) item = randomItem();
+	else item = iType;
 	switch (item)
 	{
 	case TYPE_NONE:
-		AddAnimation(267);		// big heart
-		//vy = BIG_HEART_GRAVITY;
-		width = 0;
-		height = 0;
+		AddAnimation(267);		// none
+		width = 32;
+		height = 32;
 		break;
 	case BIG_HEART:
 		AddAnimation(253);		// big heart
 		vy = BIG_HEART_GRAVITY;
 		break;
 	case SMALL_HEART:
+	case RANDOM:
 		AddAnimation(254);		// small heart
 		velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
 		vy = SMALL_HEART_GRAVITY;
 		break;
 	case WHIP:
-		AddAnimation(255);		// whip
-		vy = BIG_HEART_GRAVITY;
-		break;
+		if (CSimon::GetInstance()->whip->isLevelMax())
+		{
+			item = SMALL_HEART;
+			AddAnimation(254);		// small heart
+			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+			vy = SMALL_HEART_GRAVITY;
+			break;
+		}
+		else
+		{
+			AddAnimation(255);		// whip
+			vy = BIG_HEART_GRAVITY;
+			break;
+		}
 	case KNIFE:
-		AddAnimation(256);		// knife
-		vy = BIG_HEART_GRAVITY;
-		break;
+		if (CSimon::GetInstance()->typeSubWeapon == KNIFE)
+		{
+			item = SMALL_HEART;
+			AddAnimation(254);		// small heart
+			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+			vy = SMALL_HEART_GRAVITY;
+			break;
+		}
+		else
+		{
+			AddAnimation(256);		// knife
+			vy = BIG_HEART_GRAVITY;
+			break;
+		}
 	case STOP_WATCH:
-		AddAnimation(258);		// STOP_WATCH
-		vy = BIG_HEART_GRAVITY;
-		break;
+		if (CSimon::GetInstance()->typeSubWeapon == STOP_WATCH)
+		{
+			item = SMALL_HEART;
+			AddAnimation(254);		// small heart
+			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+			vy = SMALL_HEART_GRAVITY;
+			break;
+		}
+		else
+		{
+			AddAnimation(258);		// STOP_WATCH
+			vy = BIG_HEART_GRAVITY;
+			break;
+		}
 	case AXE:
-		AddAnimation(257);		// AXE
-		vy = BIG_HEART_GRAVITY;
-		break;
+		if (CSimon::GetInstance()->typeSubWeapon == AXE)
+		{
+			item = SMALL_HEART;
+			AddAnimation(254);		// small heart
+			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+			vy = SMALL_HEART_GRAVITY;
+			break;
+		}
+		else
+		{
+			AddAnimation(257);		// AXE
+			vy = BIG_HEART_GRAVITY;
+			break;
+		}
 	case HOLY_WATER:
-		AddAnimation(260);		// HOLY_WATER
-		vy = BIG_HEART_GRAVITY;
-		break;
+		if (CSimon::GetInstance()->typeSubWeapon == HOLY_WATER)
+		{
+			item = SMALL_HEART;
+			AddAnimation(254);		// small heart
+			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+			vy = SMALL_HEART_GRAVITY;
+			break;
+		}
+		else
+		{
+			AddAnimation(260);		// HOLY_WATER
+			vy = BIG_HEART_GRAVITY;
+			break;
+		}
 	case HOLY_CROSS:
 		AddAnimation(269);		// HOLY_CROSS
 		vy = BIG_HEART_GRAVITY;
@@ -292,6 +348,6 @@ void CItem::SetState(int state)
 
 ItemType CItem::randomItem()
 {
-	return ItemType(rand() % 15);
+	return ItemType(rand() % 16);
 }
 

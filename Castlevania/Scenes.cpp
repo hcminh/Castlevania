@@ -54,13 +54,19 @@ void CScenes::Update(DWORD dt)
 
 		for (auto obj : objects)
 		{
-			if (obj.second->type == ObjectType::GROUND || obj.second->type == ObjectType::WATER)
+			if (obj.second->type == ObjectType::GROUND && obj.second->state != STATE_NOT_COLLISION_WIDTH_ENEMY)
+			{
+				onCamObjects.push_back(obj.second);
+				grounds.push_back(obj.second);
+			}
+			if (obj.second->type == ObjectType::WATER)
 			{
 				onCamObjects.push_back(obj.second);
 				grounds.push_back(obj.second);
 			}
 			else if (obj.second->type == ObjectType::STAIR)
 			{
+				onCamObjects.push_back(obj.second);
 				stairs.push_back(obj.second);
 			}
 			else if (obj.second->type == ObjectType::DOOR)
@@ -279,12 +285,12 @@ void CScenes::loadObjectToGrid(string path)
 		{
 		case ITEM:
 		{
-			obj = new CItem(x, y, ItemState(state));
+			obj = new CItem(ItemType(width), ItemState(state), x, y);
 			break;
 		}
 		case GROUND:
 		{
-			obj = new CGround(x, y, width, height);
+			obj = new CGround(state, width, height, x, y);
 			break;
 		}
 		case DOOR:

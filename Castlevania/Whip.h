@@ -43,7 +43,7 @@ public:
 	virtual void Render();
 
 	virtual void GetBoundingBox(float &left, float &top, float &right, float &bottom);
-
+	bool isLevelMax() { return level == LEVEL_MAX; };
 	void levelUp() { level += (level == LEVEL_MAX) ? 0 : 1; };
 	void levelDown() { level -= (level == LEVEL_MIN) ? 0 : 1; };
 	bool isCollision(float obj_left, float obj_top, float obj_right, float obj_bottom);

@@ -62,7 +62,8 @@ enum ItemType
 	POINT_700,
 	POINT_1000,
 	DOUBLE_SHOT,
-	TRIPLE_SHOT
+	TRIPLE_SHOT,
+	RANDOM,
 };
 
 class CItem : public CGameObject
@@ -77,7 +78,7 @@ class CItem : public CGameObject
 public:
 	ItemState itemState = ItemState::STATE_NONE;
 	ItemType item = TYPE_NONE;
-	CItem(float xPos, float yPos, ItemState itemState = ItemState::STATE_NONE);
+	CItem(ItemType iType, ItemState itemState, float xPos, float yPos);
 	virtual void Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects = NULL);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);

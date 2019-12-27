@@ -46,7 +46,7 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 	CGameObject::Update(dt, coObject);
 	vy += gravity * dt;
 
-	if (isWaitToShoot && (GetTickCount() - waitToShoot > nextShootTime))
+	if (canShoot())
 	{
 		waitToShoot = 0;
 		isWaitToShoot = false;
@@ -87,9 +87,8 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 			float min_tx, min_ty, nx = 0, ny;
 			FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
-			x += dx; // để vầy là khỏi cần kiểm tra va chạm nx
+			x += min_tx * dx + nx * 0.1f; // để vầy là khỏi cần kiểm tra va chạm nx
 			y += min_ty * dy + ny * 0.1f;
-
 
 			for (UINT i = 0; i < coEventsResult.size(); i++)
 			{
@@ -97,47 +96,53 @@ void CFish::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 				if (e->obj->type == ObjectType::GROUND)
 				{
+
+					if (e->nx != 0)
+					{
+						this->nx *= -1;
+						SetState(FISH_STATE_WALK);
+					}
 					if (e->ny != 0)
 					{
 						if (e->ny < 0.0f && isFlying)
 						{
 							vy = 0;
-
 							active();
 						}
-						else if(e->ny > 0.0f && isFlying)
+						else if (e->ny > 0.0f && isFlying)
 							y += dy;
 					}
 				}
 				else if (e->obj->type == ObjectType::WATER)
 				{
-					auto * water = dynamic_cast<CWater*>(e->obj);
-					water->AddBubbles(x, y + width);
-					if (e->ny < 0.0f)
+					if (e->ny == -1.0f)
 					{
-						SetState(ENEMY_STATE_DEAD);
+						auto * water = dynamic_cast<CWater*>(e->obj);
+						water->AddBubbles(x, y + width);
+						burningStart = 0;
+						isBurning = false;
+						dead();
+						waitingToRepawn();
 					}
-					if (e->ny > 0.0f)
+					else if (e->ny == 1.0f)
 					{
-						SetState(ENEMY_STATE_DEAD);
+						auto * water = dynamic_cast<CWater*>(e->obj);
+						water->AddBubbles(x, y - width);
+						y += dy;
 					}
 				}
 			}
-		}
-		if (this->x <= 2.0f)
-		{
-			nx *= -1; //do không set va cham vs gạch nữa nên dùng cách này để chặn cá đi khỏi map
-			SetState(FISH_STATE_WALK);
+
 		}
 
 		// clean up collision events
 		for (UINT i = 0; i < coEvents.size(); i++) delete coEvents[i];
 
-		if (!CCamera::GetInstance()->onCamera(x, x + width))
+		/*if (!CCamera::GetInstance()->onCamera(x, x + width))
 		{
 			dead();
 			waitingToRepawn();
-		}
+		}*/
 	}
 
 	if (weapon != NULL) weapon->Update(dt, coObject);
@@ -163,14 +168,14 @@ void CFish::Render()
 void CFish::respawn()
 {
 	vx = 0;
-	vy = -0.9f;
+	vy = -1.15f;
 	nx = -1;
 	gravity = FISH_GRAVITY;
 	isDead = false;
 	isWalking = false;
 	isFlying = true;
 	float respawPosX = rand() % (int)CCamera::GetInstance()->getBorderCamRight() + CCamera::GetInstance()->getBorderCamLeft();
-	SetPosition(respawPosX, 350);
+	SetPosition(respawPosX, 500);
 }
 
 void CFish::dead()
@@ -195,8 +200,15 @@ void CFish::active()
 	waitingToShoot();
 }
 
+bool CFish::canShoot()
+{
+	return (state != ENEMY_STATE_DEAD && isWaitToShoot &&
+		GetTickCount() - waitToShoot >= nextShootTime);
+}
+
 void CFish::SetState(int state)
 {
+	CGameObject::SetState(state);
 	switch (state)
 	{
 	case FISH_STATE_WALK:
@@ -217,6 +229,8 @@ void CFish::SetState(int state)
 		}
 		break;
 	case ENEMY_STATE_DEAD:
+		waitToShoot = 0;
+		isWaitToShoot = false;
 		vx = 0;
 		vy = 0;
 		gravity = 0;

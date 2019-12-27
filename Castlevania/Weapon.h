@@ -12,7 +12,7 @@
 #define KNIFE_BBOX_WIDTH		35
 #define KNIFE_BBOX_HEIGHT		15
 #define AXE_BBOX				35
-#define HOLY_WATER_BBOX			20
+#define HOLY_WATER_BBOX			35
 #define FIRER_BBOX				30
 
 #define KNIFE_FLYING_SPEED		0.5f

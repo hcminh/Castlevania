@@ -74,7 +74,8 @@ void CWeapon::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				}
 				if (state == WeaponType::HOLY_WATER_WEAPON)
 				{
-					SetState(WeaponType::FIRER);
+					if (coObjects->at(i)->type == ObjectType::GROUND)
+						SetState(WeaponType::FIRER);
 				}
 				break;
 
@@ -116,7 +117,7 @@ void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & b
 		left = x;
 		top = y;
 		right = left + HOLY_WATER_BBOX;
-		bottom = top + HOLY_WATER_BBOX;
+		bottom = top + HOLY_WATER_BBOX - 3;
 		break;
 	case WeaponType::FIRER:
 		left = x;

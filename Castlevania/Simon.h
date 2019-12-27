@@ -146,7 +146,7 @@ public:
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
 		subWeapon = new CWeapon();
-		typeSubWeapon = WeaponType::NONE;
+		typeSubWeapon = WeaponType::HOLY_WATER_WEAPON;
 		subWeapon->SetState(typeSubWeapon);
 	}
 

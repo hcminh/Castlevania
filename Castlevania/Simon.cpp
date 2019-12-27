@@ -43,7 +43,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM)
+		if (coObjects->at(i)->type != ObjectType::ITEM && coObjects->at(i)->type != ObjectType::STAIR)
 		{
 			listObject.push_back(coObjects->at(i));
 		}
@@ -210,7 +210,7 @@ void CSimon::Render()
 	{
 		whip->Render();
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -544,7 +544,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
 
-		simon_b += 6;
+		simon_b += 7.5;
 
 		for (UINT i = 0; i < stairs.size(); i++)
 		{
@@ -554,7 +554,7 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 			if (CGameObject::AABB(simon_l, simon_t, simon_r, simon_b, stair_l, stair_t, stair_r, stair_b))
 			{
 				auto stair = dynamic_cast<CStair*> (stairs[i]);
-				if (simon_b > stair_t && stair->stateStair != DOWN_RIGHT && stair->stateStair != DOWN_LEFT)
+				if (/*simon_b >= stair_t && */stair->stateStair != DOWN_RIGHT && stair->stateStair != DOWN_LEFT)
 				{
 					SetState(SIMON_STATE_IDLE);
 					return true;

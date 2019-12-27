@@ -67,7 +67,7 @@ CWater::CWater()
 {
 	type = ObjectType::WATER;
 	isEnable = true;
-	SetPosition(0, 368);
+	SetPosition(0, 380);
 	width = 1056;
 	height = 32;
 }

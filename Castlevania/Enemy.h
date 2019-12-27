@@ -3,7 +3,7 @@
 
 #define ENEMY_WALKING_SPEED 0.1f;
 
-#define ENEMY_BURN_TIME			1000	//CHAYS
+#define ENEMY_BURN_TIME			500	//CHAYS
 #define ENEMY_RESPAWN_TIME		3000	//hoi sinh
 
 #define ENEMY_STATE_WALKING 100

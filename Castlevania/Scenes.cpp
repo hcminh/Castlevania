@@ -21,13 +21,23 @@ CScenes::CScenes()
 
 void CScenes::Init()
 {
-	currentScene = SCENEID_1;
+	/*currentScene = SCENEID_2;
 	curentMap = scenes[currentScene]->mapID;
-	stageGame = STAGEID::STAGE_1;
-	startPointStage = 0;
-	stageWidth = STAGE_1_WIDTH;
+	stageGame = STAGEID::STAGE_2_1;
+	startPointStage = START_POINT_STAGE_2_1;
+	stageWidth = STAGE_2_1_WIDTH;
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
-	simon->SetPosition(0, 300);
+	simon->SetPosition(START_POINT_STAGE_2_1 + 3000, 100);
+	updateCam();
+	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);*/
+
+	currentScene = SCENEID_2;
+	curentMap = scenes[currentScene]->mapID;
+	stageGame = STAGEID::STAGE_2_2;
+	startPointStage = START_POINT_STAGE_2_2;
+	stageWidth = STAGE_2_3_WIDTH;
+	loadObjectToGrid(scenes[currentScene]->linkObjects);
+	simon->SetPosition(START_POINT_STAGE_2_2 + 900, 100);
 	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }

@@ -449,13 +449,17 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case CONECT_SCENE_2:
-		cantHandle = true;
 		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 30); //60 là chiều rộng của simon
-		CScenes::GetInstance()->stageGame = STAGE_2_2;
-		CScenes::GetInstance()->stageWidth = STAGE_2_2_WIDTH;
+		CScenes::GetInstance()->stageWidth += 550.0;
 		CScenes::GetInstance()->stopMovingObject = true;
 		vx = SIMON_AUTO_WALK_SPEED;
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
+		obj->isEnable = false;
+		break;
+	case STOP_CAM:
+		CScenes::GetInstance()->startPointStage = CCamera::GetInstance()->camX;
+		CScenes::GetInstance()->inZombiesActiveArea = false;
+		obj->isEnable = false;
 		break;
 	default:
 		break;
@@ -468,6 +472,7 @@ void CSimon::collisionNextStage(LPGAMEOBJECT obj)
 	auto nextStage = dynamic_cast<CNextStage*> (obj);
 
 	CScenes::GetInstance()->stopMovingObject = true;
+	CScenes::GetInstance()->stageWidth = nextStage->widthNextStage;
 	CScenes::GetInstance()->startPointStage = nextStage->startPointNextStage;
 	CScenes::GetInstance()->inZombiesActiveArea = nextStage->zombieStage;
 

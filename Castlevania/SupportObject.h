@@ -4,7 +4,7 @@
 #include "debug.h"
 
 #define SPOBJ_BBOX_WIDTH  32
-#define SPOBJ_DOOR_1_TO_2_BBOX_HEIGHT 60
+#define SPOBJ_DOOR_1_TO_2_BBOX_HEIGHT 96
 #define SPOBJ_STOP_CAM_BBOX_HEIGHT 360
 
 enum STATESP
@@ -15,7 +15,8 @@ enum STATESP
 	STOP_CAM_2, // ko cập nhật cam ở đầu state 3
 	TURN_OF_CAM_UPDATE, // TẮT MẤY CÁI LIÊN QUAN ĐẾN CHUYỂN CẢNH
 	DOOR_1_TO_2,
-	DOOR_2_TO_2_2
+	DOOR_2_TO_2_2,
+	DOOR_2_2_TO_2_3
 };
 
 class CSupportObject : public CGameObject

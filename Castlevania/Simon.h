@@ -164,10 +164,10 @@ public:
 	bool isColisionWeapon(CWeapon *weapon);
 	void colisionWeapon(CWeapon *weapon);
 	void collisionSupporter(LPGAMEOBJECT obj);
+	void collisionNextStage(LPGAMEOBJECT obj);
 	bool checkColisionDoor(vector<LPGAMEOBJECT> doors);
 	void upStair(vector<LPGAMEOBJECT> stairs);
 	bool downStair(vector<LPGAMEOBJECT> stairs);
-	void startOnStair(LPGAMEOBJECT stair);
 	void attack();
 	void startUntouchable() { untouchable = true; untouchableStart = GetTickCount(); }
 	void startHurting() { isHurting = true; hurtingStart = GetTickCount(); }

@@ -31,7 +31,7 @@ void CSupportObject::Render()
 			ani = 1;
 		animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CSupportObject::GetBoundingBox(float & l, float & t, float & r, float & b)

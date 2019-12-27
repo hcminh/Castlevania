@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Camera.h"
 #include "GameObject.h"
+#include "NextStage.h"
 #include "Simon.h"
 #include "tilemap.h"
 #include "Grid.h"
@@ -20,7 +21,7 @@
 #define START_POINT_STAGE_2_3	 4100
 #define START_POINT_STAGE_3		 0.0f
 
-#define STAGE_1_WIDTH		 0
+#define STAGE_1_WIDTH		 1536 
 #define STAGE_2_1_WIDTH		 3092
 #define STAGE_2_2_WIDTH		 4113
 #define STAGE_2_3_WIDTH		 5632
@@ -35,14 +36,7 @@ enum SCENEID
 	SCENEID_2,
 	SCENEID_3,
 };
-enum STATESCENE
-{
-	STATE_1,
-	STATE_2_1,
-	STATE_2_2,
-	STATE_2_3,
-	STATE_3,
-};
+
 
 class CScene
 {
@@ -61,6 +55,7 @@ class CScenes
 {
 	static CScenes * __instance; // Singleton Patern
 	unordered_map<int, LPGAMEOBJECT> objects; //các object của map
+	unordered_map<int, LPGAMEOBJECT> nextStages; //mảng quản lý các thông số của stage
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
 	vector<LPGAMEOBJECT> zombies; // quản lý zombie
 	vector<LPGAMEOBJECT> grounds; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
@@ -80,24 +75,25 @@ public:
 	DWORD useHolyCrossTime = 0;
 	bool isUsingHolyCross = false;
 	bool inZombiesActiveArea = false;
-	float startPointOfState = 0;
-	STATESCENE stateGame;
-	float stateWidth;
+	float startPointStage = 0;
+	STAGEID stageGame;
+	float stageWidth;
 	vector<LPGAMEOBJECT> stairs; //các cầu thang trong camera
 	CScenes();
+	void Init();
 	void Update(DWORD dt);
 	void Render();
 	void Add(SCENEID sceneID, int mapID, string linkObjects);
 	LPSCENE getCurrentScene() { return scenes[SCENEID(currentScene)]; };
 	static CScenes * GetInstance();
 	// Get, Set
-	void setStateWidth();
 	void insertObject(LPGAMEOBJECT object);
 	void clearAllObject();
 	void usingHolyCross();
 	void usingStopWatch();
 	void updateCam();
 	void changeScene(LPGAMEOBJECT obj);
+	void changeScene(CNextStage *stage);
 	void changeScene(SCENEID newScene);
 	void loadObjectToGrid(string path);
 	void getObjectsFromGrid(float xCam, int widthCam);

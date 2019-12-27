@@ -106,6 +106,9 @@
     <ClInclude Include="Water.h">
       <Filter>Static Objects</Filter>
     </ClInclude>
+    <ClInclude Include="NextStage.h">
+      <Filter>Static Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -182,6 +185,9 @@
       <Filter>Objects\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Water.cpp">
+      <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="NextStage.cpp">
       <Filter>Static Objects</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "Scenes.h"
 #include "SupportObject.h"
+#include "NextStage.h"
 #include "Water.h"
 #include <math.h>
 
@@ -30,20 +31,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	if (isAutoWalk2D)
 		doAutoWalk2D();
-	/*if (coObjects == NULL)
-	{
-		if (!isAutoWalk2D)
-		{
-			x += dx;
-			y += dy;
-		}
-		return;
-	}*/
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM && coObjects->at(i)->type != ObjectType::STAIR)
+		if (coObjects->at(i)->type != ObjectType::ITEM)
 		{
 			listObject.push_back(coObjects->at(i));
 		}
@@ -97,8 +89,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			}
 			else if (e->obj->type == ObjectType::SUPPORTER)
 			{
-				//xử lý kiểm tra va chạm vs supporter nào
 				collisionSupporter(e->obj);
+			}
+			else if (e->obj->type == ObjectType::NEXT_STAGE)
+			{
+				collisionNextStage(e->obj);
 			}
 			else if (e->obj->type == ObjectType::ENEMY)
 			{
@@ -456,21 +451,29 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 	case CONECT_SCENE_2:
 		cantHandle = true;
 		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 30); //60 là chiều rộng của simon
-		CScenes::GetInstance()->stateGame = STATE_2_2;
+		CScenes::GetInstance()->stageGame = STAGE_2_2;
+		CScenes::GetInstance()->stageWidth = STAGE_2_2_WIDTH;
 		CScenes::GetInstance()->stopMovingObject = true;
 		vx = SIMON_AUTO_WALK_SPEED;
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
-		break;
-	case STOP_CAM_2:
-		CScenes::GetInstance()->stopMovingObject = true;
-		CScenes::GetInstance()->startPointOfState = 3072;
-		CCamera::GetInstance()->movingCamera(3072);
-		supporter->isEnable = false;
 		break;
 	default:
 		break;
 	}
 
+}
+
+void CSimon::collisionNextStage(LPGAMEOBJECT obj)
+{
+	auto nextStage = dynamic_cast<CNextStage*> (obj);
+
+	CScenes::GetInstance()->stopMovingObject = true;
+	CScenes::GetInstance()->startPointStage = nextStage->startPointNextStage;
+	CScenes::GetInstance()->inZombiesActiveArea = nextStage->zombieStage;
+
+	CCamera::GetInstance()->movingCamera(nextStage->startPointNextStage);
+
+	obj->isEnable = false;
 }
 
 void CSimon::upStair(vector<LPGAMEOBJECT> stairs)

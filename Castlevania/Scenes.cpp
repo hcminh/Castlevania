@@ -19,6 +19,19 @@ CScenes::CScenes()
 	simon = CSimon::GetInstance();
 }
 
+void CScenes::Init()
+{
+	currentScene = SCENEID_1;
+	curentMap = scenes[currentScene]->mapID;
+	stageGame = STAGEID::STAGE_1;
+	startPointStage = 0;
+	stageWidth = STAGE_1_WIDTH;
+	loadObjectToGrid(scenes[currentScene]->linkObjects);
+	simon->SetPosition(0, 300);
+	updateCam();
+	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
+}
+
 void CScenes::Update(DWORD dt)
 {
 	if (isUsingHolyCross && (GetTickCount() - useHolyCrossTime > TIME_HOLY_CROSS))
@@ -31,7 +44,7 @@ void CScenes::Update(DWORD dt)
 		useStopWatchTime = 0;
 		isUsingStopWatch = false;
 	}
-	
+
 
 	if (!stopMovingObject)
 	{
@@ -66,7 +79,6 @@ void CScenes::Update(DWORD dt)
 			}
 			else if (obj.second->type == ObjectType::STAIR)
 			{
-				onCamObjects.push_back(obj.second);
 				stairs.push_back(obj.second);
 			}
 			else if (obj.second->type == ObjectType::DOOR)
@@ -96,6 +108,12 @@ void CScenes::Update(DWORD dt)
 			simon->checkColisionDoor(doors);
 		}
 
+		for (auto stage : nextStages)
+		{
+			if (stage.second->isEnable)
+				onCamObjects.push_back(stage.second);
+		}
+
 		simon->Update(dt, &onCamObjects);
 	}
 	// update camera
@@ -120,35 +138,6 @@ void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
 {
 	LPSCENE scene = new CScene(sceneID, mapID, linkObjects);
 	scenes[sceneID] = scene;
-}
-
-void CScenes::setStateWidth()
-{
-	switch (stateGame)
-	{
-	case STATE_1:
-	case STATE_3:
-	default:
-		inZombiesActiveArea = false;
-		startPointOfState = 0.0f;
-		stateWidth = CMaps::GetInstance()->Get(curentMap)->GetMapWidth();
-		break;
-	case STATE_2_1:
-		inZombiesActiveArea = true;
-		startPointOfState = 0.0f;
-		stateWidth = STAGE_2_1_WIDTH;
-		break;
-	case STATE_2_2:
-		inZombiesActiveArea = false;
-		//startPointOfState = 3072;
-		stateWidth = STAGE_2_2_WIDTH;
-		break;
-	case STATE_2_3:
-		inZombiesActiveArea = true;
-		startPointOfState = START_POINT_STAGE_2_3;
-		stateWidth = STAGE_2_3_WIDTH;
-		break;
-	}
 }
 
 void CScenes::insertObject(LPGAMEOBJECT object)
@@ -182,57 +171,62 @@ void CScenes::usingStopWatch()
 
 void CScenes::updateCam()
 {
-	setStateWidth();
-	camera->update(stateWidth, startPointOfState);
+	camera->update(stageWidth, startPointStage);
 }
 
 void CScenes::changeScene(LPGAMEOBJECT obj)
 {
 	auto door = dynamic_cast<CDoor *> (obj);
-	currentScene = door->nextScene;
+	auto stage = dynamic_cast<CNextStage *> (nextStages[door->nextStageID]);
+	currentScene = door->nextSceneID;
 	curentMap = scenes[currentScene]->mapID;
-	stateGame = door->nextStateGame;
-	setStateWidth();
-	if(stateGame == STATESCENE::STATE_2_2) startPointOfState = START_POINT_STAGE_2_2; //trường hợp đặc biệt do bị ảnh hưởng bởi 2 cái cửa //fix sau
+	stageGame = door->nextStageID;
+	startPointStage = stage->startPointNextStage;
+	stageWidth = stage->widthNextStage;
+	inZombiesActiveArea = stage->zombieStage;
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
 	simon->SetPosition(door->newPosX, door->newPosY);
 	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
+void CScenes::changeScene(CNextStage * stage)
+{
+	curentMap = scenes[currentScene]->mapID;
+	stageGame = stage->nextStageID;
+	startPointStage = stage->startPointNextStage;
+	stageWidth = stage->widthNextStage;
+	inZombiesActiveArea = stage->zombieStage;
+	loadObjectToGrid(scenes[currentScene]->linkObjects);
+	updateCam();
+	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
+}
+
 void CScenes::changeScene(SCENEID newScene)
 {
+	CDoor * door;
 	if (newScene == SCENEID_1)
 	{
-		currentScene = newScene;
-		curentMap = scenes[currentScene]->mapID;
-		stateGame = STATE_1;
-		setStateWidth();
-		startPointOfState = 0;
+		door = new CDoor(STAGEID(0), SCENEID_1, 10, 300, 0, 0);
+		changeScene(door);
 		simon->SetPosition(1000.0f, 300);
 	}
 	else if (newScene == SCENEID_2)
 	{
-		currentScene = newScene;
-		curentMap = scenes[currentScene]->mapID;
-		stateGame = STATE_2_1;
-		setStateWidth();
-		startPointOfState = 0;
+		door = new CDoor(STAGEID(1), SCENEID_2, 10, 300, 0, 0);
+		changeScene(door);
 		simon->SetPosition(2961, 100);
 	}
 	else if (newScene == SCENEID_3)
 	{
-		currentScene = newScene;
-		curentMap = scenes[currentScene]->mapID;
-		stateGame = STATE_3;
-		setStateWidth();
-		startPointOfState = 0;
+		door = new CDoor(STAGE_3, SCENEID_3, 10, 100, 0, 0);
+		changeScene(door);
 		simon->SetPosition(10, 330);
 	}
 
-	loadObjectToGrid(scenes[currentScene]->linkObjects);
-	updateCam();
-	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
+	//loadObjectToGrid(scenes[currentScene]->linkObjects);
+	//updateCam();
+	//getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
 void CScenes::getObjectsFromGrid(float xCam, int widthCam)
@@ -272,30 +266,37 @@ void CScenes::loadObjectToGrid(string path)
 		fs.close();
 	}
 	int id, cellIndex, numOfCell;
-	int idInGame, width, height, state;
+	int idInGame, state, param_1, param_2, param_3;
 	float x, y;
 	fs >> numOfCell;
 	grid->initListCells(numOfCell);
 	while (!fs.eof())
 	{
-		fs >> cellIndex >> id >> x >> y >> idInGame >> state >> width >> height;
+		fs >> cellIndex >> id >> x >> y >> idInGame >> state >> param_1 >> param_2 >> param_3;
 
 		LPGAMEOBJECT obj = NULL;
 		switch (ObjectType(id))
 		{
 		case ITEM:
 		{
-			obj = new CItem(ItemType(width), ItemState(state), x, y);
+			obj = new CItem(ItemType(param_2), ItemState(state), x, y);
 			break;
 		}
 		case GROUND:
 		{
-			obj = new CGround(state, width, height, x, y);
+			obj = new CGround(state, param_2, param_3, x, y);
 			break;
 		}
 		case DOOR:
 		{
-			obj = new CDoor(STATESCENE(state), width, height, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
+			obj = new CDoor(STAGEID(state), SCENEID(param_1), param_2, param_3, x, y); //width, heght đại diện cho vị trí mới của Simon khi qua màn. state là id của next scene
+			break;
+		}
+		case NEXT_STAGE:
+		{
+			LPGAMEOBJECT stage = new CNextStage(STAGEID(state), param_3, param_2, param_1, x, y); //height -> startpoint stage
+			stage->setID(idInGame);
+			nextStages.insert(make_pair(state, stage));
 			break;
 		}
 		case ENEMY_DOG:
@@ -305,7 +306,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case ENEMY_ZOMBIE:
 		{
-			LPGAMEOBJECT zom = new CZombie(width, state);
+			LPGAMEOBJECT zom = new CZombie(param_2, state);
 			zom->setID(idInGame);
 			zombies.push_back(zom);
 			break;
@@ -322,17 +323,17 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case STAIR:
 		{
-			obj = new CStair(STATESTAIR(state), width, height, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên
+			obj = new CStair(STATESTAIR(state), param_2, param_3, x, y); //đại diện cho số bậc và vị trí của bậc thang đầu tiên
 			break;
 		}
 		case SUPPORTER:
 		{
-			obj = new CSupportObject(STATESP(state), width, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
+			obj = new CSupportObject(STATESP(state), param_2, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
 			break;
 		}
 		case WATER:
 		{
-			obj = new CWater(); 
+			obj = new CWater();
 			break;
 		}
 

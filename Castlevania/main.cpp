@@ -28,7 +28,8 @@ void Init(HWND hWnd)
 
 	CLoadFile().LoadResources(RESOURCE_PATH);
 	inp->addSimon();
-	CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
+
+	CScenes::GetInstance()->Init();
 }
 
 void Update(DWORD dt)

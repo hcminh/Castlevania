@@ -38,7 +38,7 @@ void CScenes::Init()
 	startPointStage = START_POINT_STAGE_2_3;
 	stageWidth = STAGE_2_3_WIDTH;
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
-	simon->SetPosition(START_POINT_STAGE_2_3 + 10, 100);
+	simon->SetPosition(START_POINT_STAGE_2_3 + 1000, 100);
 	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
@@ -157,6 +157,11 @@ void CScenes::Add(SCENEID sceneID, int mapID, string linkObjects)
 void CScenes::insertObject(LPGAMEOBJECT object)
 {
 	this->objects.insert(make_pair(object->ID, object));
+}
+
+void CScenes::pushObjToCam(LPGAMEOBJECT object)
+{
+	onCamObjects.push_back(object);
 }
 
 void CScenes::clearAllObject()

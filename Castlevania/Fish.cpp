@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Simon.h"
 #include "Water.h"
+#include "FireBall.h"
 #include "debug.h"
 
 
@@ -15,8 +16,7 @@ CFish::CFish() : CEnemy()
 	height = FISH_BBOX_HEIGHT;
 	gravity = FISH_GRAVITY;
 
-	weapon = new CWeapon();
-	weapon->SetState(WeaponType::FIRE_BALL);
+	weapon = new CFireBall(1);
 
 	AddAnimation(304);	//cá bắn phải
 	AddAnimation(305);	//cá bắn trái
@@ -189,6 +189,8 @@ void CFish::dead()
 	isWaitToShoot = false;
 	burningStart = 0;
 	isBurning = false;
+	weapon->burningStart = 0;
+	weapon->isFlying = false;
 }
 
 void CFish::active()
@@ -203,7 +205,7 @@ void CFish::active()
 bool CFish::canShoot()
 {
 	return (state != ENEMY_STATE_DEAD && isWaitToShoot &&
-		GetTickCount() - waitToShoot >= nextShootTime);
+		GetTickCount() - waitToShoot >= nextShootTime && weapon->isFlying == false);
 }
 
 void CFish::SetState(int state)
@@ -222,10 +224,9 @@ void CFish::SetState(int state)
 		startShoot();
 		if (!weapon->isFlying)
 		{
-			weapon->isFlying = true;
 			weapon->nx = nx;
 			weapon->SetPosition(x, y);
-			weapon->SetState(WeaponType::FIRE_BALL);
+			weapon->SetState(FIRE_BALL_STATE_SHOOT);
 		}
 		break;
 	case ENEMY_STATE_DEAD:

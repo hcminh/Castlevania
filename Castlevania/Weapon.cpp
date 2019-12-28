@@ -125,12 +125,6 @@ void CWeapon::GetBoundingBox(float & left, float & top, float & right, float & b
 		right = left + FIRER_BBOX;
 		bottom = top + FIRER_BBOX;
 		break;
-	case WeaponType::FIRE_BALL:
-		left = x + 10.0f;
-		top = y + 10.0f;
-		right = left + 15.0f; //sài lại cho lẹ
-		bottom = top + 15.0f;
-		break;
 	}
 }
 
@@ -193,9 +187,6 @@ void CWeapon::LoadResources()
 
 	AddAnimation(206);		// cháy lúc holy water ném ra
 	AddAnimation(206);		// add cái ani cháy 2 lần để cho nó đồng bộ vs mấy thằng kia, viết cái hàm render cho đẹp
-
-	AddAnimation(207);		// cháy lúc holy water ném ra
-	AddAnimation(208);		// add cái ani cháy 2 lần để cho nó đồng bộ vs mấy thằng kia, viết cái hàm render cho đẹp
 }
 
 

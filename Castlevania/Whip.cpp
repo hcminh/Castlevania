@@ -25,7 +25,7 @@ void CWhip::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 				{
 					coObjects->at(i)->SetState(CANDLE_STATE_DESTROYING);
 				}
-				else if (coObjects->at(i)->type == ObjectType::ENEMY);
+				else if (coObjects->at(i)->type == ObjectType::ENEMY)
 				{
 					coObjects->at(i)->SetState(ENEMY_STATE_DEAD);
 				}

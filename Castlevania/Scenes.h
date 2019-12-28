@@ -57,6 +57,7 @@ class CScenes
 	unordered_map<int, LPGAMEOBJECT> objects; //các object của map
 	unordered_map<int, LPGAMEOBJECT> nextStages; //mảng quản lý các thông số của stage
 	vector<LPGAMEOBJECT> onCamObjects; //các object trong camera
+	//vector<LPGAMEOBJECT> specialist; //cacs obj dac biet
 	vector<LPGAMEOBJECT> zombies; // quản lý zombie
 	vector<LPGAMEOBJECT> grounds; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
 	vector<LPGAMEOBJECT> doors; // quản lý đất, vì zombie chỉ xét nó va cham vs đất thôi
@@ -88,6 +89,7 @@ public:
 	static CScenes * GetInstance();
 	// Get, Set
 	void insertObject(LPGAMEOBJECT object);
+	void pushObjToCam(LPGAMEOBJECT object);
 	void clearAllObject();
 	void usingHolyCross();
 	void usingStopWatch();

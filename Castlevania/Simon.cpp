@@ -56,7 +56,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 	else
 	{
 		float min_tx, min_ty, nx = 0, ny;
-
 		FilterCollision(coEvents, coEventsResult, min_tx, min_ty, nx, ny);
 
 		// block 
@@ -65,7 +64,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 			x += min_tx * dx + nx * 0.1f;	// nx*0.4f : need to push out a bit to avoid overlapping next frame
 			y += min_ty * dy + ny * 0.1f;
 		}
-
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
@@ -80,12 +78,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					y += dy;
 				}
-
-				if (nx != 0 && isAutoWalk2D)
-				{
-					//x += min_tx * dx + nx * 0.4f;
-				}
-
 			}
 			else if (e->obj->type == ObjectType::SUPPORTER)
 			{
@@ -101,6 +93,8 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 				{
 					SetState(SIMON_STATE_ATTACKED);
 					e->obj->SetState(BAT_STATE_DEAD);
+					e->obj->SetState(BIG_BAT_STATE_FLY_AWAY);
+					e->obj->SetState(FIRE_BALL_STATE_DEAD);
 				}
 				else
 				{
@@ -205,7 +199,7 @@ void CSimon::Render()
 	{
 		whip->Render();
 	}
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)

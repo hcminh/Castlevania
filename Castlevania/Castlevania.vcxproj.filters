@@ -7,9 +7,6 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{1c60619d-fdb9-4b60-a8d1-72a770244ce2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{b364ee3f-72dc-44d3-b8eb-1cfe04a8050a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{6c591322-f5c6-424f-b449-77f1b388cf65}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Weapon">
       <UniqueIdentifier>{067956b5-d6b8-4626-a524-3b9f1a28de52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{b364ee3f-72dc-44d3-b8eb-1cfe04a8050a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,16 +58,16 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="Scenes.h">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="tilemap.h">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClInclude>
     <ClInclude Include="Simon.h">
       <Filter>Objects\Simon</Filter>
@@ -112,6 +112,9 @@
     <ClInclude Include="BigBat.h">
       <Filter>Objects\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="FireBall.h">
+      <Filter>Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -136,16 +139,16 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="Scenes.cpp">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="tilemap.cpp">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="Grid.cpp">
-      <Filter>Scene</Filter>
+      <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Simon.cpp">
       <Filter>Objects\Simon</Filter>
@@ -195,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="BigBat.cpp">
       <Filter>Objects\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBall.cpp">
+      <Filter>Weapon</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

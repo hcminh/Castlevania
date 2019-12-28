@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "Enemy.h"
 #include "Weapon.h"
+#include "FireBall.h"
 
 // Zombie
 #define FISH_BBOX_WIDTH			30
@@ -29,7 +30,7 @@ class CFish : public CEnemy
 {
 public:
 
-	CWeapon *weapon = NULL;
+	CFireBall *weapon = NULL;
 	DWORD waitToShoot;
 	DWORD shootingTime;
 	DWORD nextShootTime;

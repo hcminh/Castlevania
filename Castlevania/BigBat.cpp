@@ -1,10 +1,12 @@
 ﻿#include "BigBat.h"
+#include "Simon.h"
+#include "Camera.h"
 
 CBigBat::CBigBat(float x, float y) : CEnemy()
 {
 	this->isEnable = true;
 	this->enemyType = EnemyType::SUPPER_BAT;
-	this->type = ObjectType::BIG_BAT;
+	this->type = ObjectType::ENEMY;
 	this->SetPosition(x, y);
 	SetState(BIG_BAT_STATE_IDLE);
 
@@ -19,7 +21,6 @@ CBigBat::CBigBat(float x, float y) : CEnemy()
 	isFlyToTarget = false;
 	isFlyToSimon = false;
 
-	idTarget = 0;
 	startTimeWaiting = 0;
 	isStopWaiting = false;
 
@@ -29,28 +30,38 @@ void CBigBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
 
 	if (state == BIG_BAT_STATE_IDLE || isDead)
-		return;
-
-	if (isFlyToTarget == false)
 	{
-		isFlyToTarget = true;
-
-		// deternmind target
-		if (idTarget == 1) // tỉ lệ bay vao simon là 33%
+		if (abs(CSimon::GetInstance()->x - this->x) < 100)
 		{
-			isFlyToSimon = true;
-			target = simonPostion;
+			SetState(BIG_BAT_STATE_ACTIVE);
+		}
+		else return;
+	}
+
+	if (GetTickCount() - attackTime > BIG_BAT_ATTACK_TIME_WAITING)	//enemy fire
+	{
+		attackTime = 0;
+		isFlying = true;
+		startAttack();
+		flyToSimonPercent = rand() % 3 + 1; // ==1 thi flytosimon
+		if (flyToSimonPercent == 1)
+		{
+			CSimon::GetInstance()->GetPosition(newPosition.x, newPosition.y);
 		}
 		else
 		{
-			target = GetRandomSpot();
+			randomNewPosition();
 		}
 
-		GetVelocity();
 	}
-	else
+
+	if (isFlying)
 	{
-		FlyToTarget(dt);
+		if (this->x > newPosition.x) vx = -0.15f;
+		else vx = 0.15f;
+		if (this->y > newPosition.y) vy = -0.15f;
+		else vy = 0.15f;
+		FlyToTarget(dt, newPosition);
 	}
 }
 
@@ -63,7 +74,7 @@ void CBigBat::Render()
 	else ani = BIG_BAT_ANI_FLYING;
 
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CBigBat::SetState(int state)
@@ -76,83 +87,56 @@ void CBigBat::SetState(int state)
 		vx = 0;
 		vy = 0;
 		break;
-
+	case BIG_BAT_STATE_ACTIVE:
+		xCam = CCamera::GetInstance()->camX;
+		vx = 0.1f;
+		vy = 0.05f;
+		startAttack();
+		break;
+	case BIG_BAT_STATE_FLY_AWAY:
+		randomNewPosition();
+		isFlying = true;
+		attackTime = 0;
+		break;
 	default:
 		break;
 	}
 }
 
-D3DXVECTOR2 CBigBat::GetRandomSpot()
-{
-	D3DXVECTOR2 randomSpot;
-
-	float left = x - BIG_BAT_RECT_RANDOMSPOT_BBOX_WIDTH;
-	float top = y;
-
-	float distance = 0;
-
-	do // chọn điểm random sao cho quãng đường bay dài dài một tí
-	{
-		randomSpot.x = left + rand() % (400);
-		randomSpot.y = top + rand() % (BIG_BAT_RECT_RANDOMSPOT_BBOX_HEIGHT);
-
-		float dx = abs(x - randomSpot.x);
-		float dy = abs(y - randomSpot.y);
-
-		distance = sqrt(pow(x - randomSpot.x, 2) + pow(y - randomSpot.y, 2));
-	} while (distance < 100.0f);
-
-	return randomSpot;
-}
-
-void CBigBat::FlyToTarget(DWORD dt)
+void CBigBat::FlyToTarget(DWORD dt, D3DXVECTOR2 target)
 {
 	x += vx * dt;
 	y += vy * dt;
 
-	if (abs(x - target.x) <= 1.0f)
+	if (abs(x - target.x) <= 1.0f && abs(y - target.y) <= 1.0f)
 	{
 		isFlyToTarget = false;
 		this->SetPosition(target.x, target.y);
-
-		idTarget = (idTarget + 1) % 3;
-
-		if (isFlyToSimon == true)
-		{
-			isFlyToSimon = false;
-		}
-		else
-		{
-			StartStopTimeCounter();
-		}
+		isFlying = false;
 	}
 }
 
-void CBigBat::GetVelocity()
+void CBigBat::Flying(DWORD dt)
 {
-	float dx = abs(x - target.x);
-	float dy = abs(y - target.y);
+	flyToSimonPercent = rand() % 3 + 1; // ==1 thi flytosimon
 
-	// lấy phương hướng
-	int nx, ny;
-
-	if (x < target.x) nx = 1;
-	else nx = -1;
-
-	if (y < target.y) ny = 1;
-	else ny = -1;
-
-	// tính vận tốc
-	if (isFlyToSimon == true)
+	if (flyToSimonPercent == 1)
 	{
-		vx = nx * dx / 1500;
-		vy = ny * dy / 1500;// BIG_BAT_FAST_TIME_TO_FLY;
+		CSimon::GetInstance()->GetPosition(simonPostion.x, simonPostion.y);
+		FlyToTarget(dt, simonPostion);
 	}
 	else
 	{
-		vx = nx * dx / 2000;
-		vy = ny * dy / 2000;
+		randomNewPosition();
+		FlyToTarget(dt, newPosition);
 	}
+}
+
+void CBigBat::randomNewPosition()
+{
+	srand(time(NULL));
+	newPosition.x = rand() % (SCREEN_WIDTH - BIG_BAT_BBOX_WIDTH) + xCam;
+	newPosition.y = rand() % (SCREEN_HEIGHT - 160) + 80;
 }
 
 void CBigBat::GetBoundingBox(float & left, float & top, float & right, float & bottom)

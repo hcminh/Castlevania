@@ -109,6 +109,9 @@
     <ClInclude Include="NextStage.h">
       <Filter>Static Objects</Filter>
     </ClInclude>
+    <ClInclude Include="BigBat.h">
+      <Filter>Objects\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -189,6 +192,9 @@
     </ClCompile>
     <ClCompile Include="NextStage.cpp">
       <Filter>Static Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="BigBat.cpp">
+      <Filter>Objects\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

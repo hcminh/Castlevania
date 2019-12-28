@@ -251,7 +251,6 @@ void CSimon::SetState(int state)
 		isOnStair = false;
 		isUpStair = false;
 		isDownStair = false;
-		isStartOnStair = false;
 		isMoving = false;
 		vx = 0;
 		break;
@@ -286,7 +285,6 @@ void CSimon::SetState(int state)
 		isUpStair = false;
 		isMoving = true;
 		isDownStair = true;
-		isStartOnStair = false;
 		break;
 	case SIMON_STATE_UP_STAIR:
 		if (isDownStair) nx = -nx;
@@ -297,12 +295,10 @@ void CSimon::SetState(int state)
 		isUpStair = true;
 		isMoving = true;
 		isDownStair = false;
-		isStartOnStair = false;
 		break;
 	case SIMON_STATE_IDLE_STAIR:
 		vx = vy = 0;
 		isMoving = false;
-		isStartOnStair = false;
 		break;
 	case SIMON_STATE_AUTO_WALK:
 		//autoWalkToX(1831);
@@ -441,14 +437,14 @@ void CSimon::colisionWeapon(CWeapon *weapon)
 void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 {
 	auto supporter = dynamic_cast<CSupportObject*> (obj);
-	switch (supporter->stateSp)
+	switch (supporter->state)
 	{
 	case AUTOWALK_TO_DOOR_1:
 		SetState(SIMON_STATE_WALK);
 		vx = SIMON_AUTO_WALK_SPEED;
 		autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
-	case CONECT_SCENE_2:
+	case CONECT_SCENE:
 		CCamera::GetInstance()->movingCamera(this->x - SCREEN_WIDTH / 2 + 30); //60 là chiều rộng của simon
 		CScenes::GetInstance()->stageWidth += 550.0;
 		CScenes::GetInstance()->stopMovingObject = true;
@@ -457,8 +453,9 @@ void CSimon::collisionSupporter(LPGAMEOBJECT obj)
 		obj->isEnable = false;
 		break;
 	case STOP_CAM:
-		CScenes::GetInstance()->startPointStage = CCamera::GetInstance()->camX;
+		CCamera::GetInstance()->stopFollowSiom = true; 
 		CScenes::GetInstance()->inZombiesActiveArea = false;
+		CScenes::GetInstance()->enableGroundHidden();
 		obj->isEnable = false;
 		break;
 	default:
@@ -485,7 +482,6 @@ void CSimon::upStair(vector<LPGAMEOBJECT> stairs)
 {
 	if (isOnStair)
 	{
-		isStartOnStair = false; //lên cầu thang thì ko stairOnStair nữa
 
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
@@ -547,7 +543,6 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 {
 	if (isOnStair)
 	{
-		isStartOnStair = false; //lên cầu thang thì ko stairOnStair nữa
 
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);

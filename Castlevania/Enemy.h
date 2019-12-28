@@ -22,7 +22,7 @@
 #define DOG_BBOX_WIDTH 65
 #define DOG_BBOX_HEIGHT 32
 #define BAT_BBOX	 32
-#define SUPER_BAT_BBOX_WIDTH 96
+#define SUPER_BAT_BBOX_WIDTH 150
 #define SUPER_BAT_BBOX_HEIGHT 44
 
 enum EnemyType {

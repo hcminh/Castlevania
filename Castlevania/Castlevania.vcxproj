@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Bat.h" />
+    <ClInclude Include="BigBat.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="define.h" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bat.cpp" />
+    <ClCompile Include="BigBat.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="Dog.cpp" />

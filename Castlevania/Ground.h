@@ -11,7 +11,7 @@ enum BrickType {
 class CGround : public CGameObject
 {
 public:
-	CGround(int state, int width, int height, float x, float y);
+	CGround(int state, int isEnable, int width, int height, float x, float y);
 	virtual void Render();
 	virtual void GetBoundingBox(float &l, float &t, float &r, float &b);
 	

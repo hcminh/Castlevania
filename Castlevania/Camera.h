@@ -8,9 +8,11 @@ class CCamera
 	static CCamera * __instance;
 public:
 	bool autoMoving = false;
+	bool stopFollowSiom = false;
 	float newX = 0.0f;
 	float camX = 0.0f;
 	float camY = 0.0f;
+
 
 	void SetCamPos(float x, float y) { camX = x; camY = y; };
 	D3DXVECTOR3 getCamPos() { return D3DXVECTOR3(camX, camY, 0); };

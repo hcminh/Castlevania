@@ -120,7 +120,6 @@ public:
 	bool isFalling = false;
 	bool cantHandle = false;
 	//stair
-	bool isStartOnStair = false; //bắt đầu lên/xuống thang, biến này dùng để kiếm tra giúp cho hàm stairOnStair chỉ chạy 1 lần duy nhất khi bấm phím
 	bool isOnStair = false;	// trạng thái đang đứng trên cầu thang 
 	bool isMoving = false;
 	bool isUpStair = false;
@@ -175,9 +174,6 @@ public:
 	void startInvisible() { invisible = true; invisibleStart = GetTickCount(); }
 	void startSittingAfterFall() { isSitting = true; isFalling = true; sittingStart = GetTickCount(); }
 	void LoadResources();
-	//autowalk
-	//void autoWalk(float distance, int new_state, int new_nx);
-	//void DoAutoWalk();
 	void autoWalk2D(float distanceX, float distanceY, int new_state, int new_nx, bool nextAuto);
 	void doAutoWalk2D();
 };

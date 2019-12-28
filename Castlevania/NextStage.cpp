@@ -13,7 +13,7 @@ CNextStage::CNextStage(STAGEID(id), int startPointNextStage, int widthNextStage,
 
 void CNextStage::Render()
 {
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CNextStage::GetBoundingBox(float & l, float & t, float & r, float & b)

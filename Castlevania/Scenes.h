@@ -98,6 +98,7 @@ public:
 	void loadObjectToGrid(string path);
 	void getObjectsFromGrid(float xCam, int widthCam);
 	int getObjectsSize() { return objects.size(); };
+	void enableGroundHidden();
 
 };
 

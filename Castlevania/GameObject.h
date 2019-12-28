@@ -28,7 +28,8 @@ enum ObjectType
 	BREAK_WALL,
 	WATER,
 	ENEMY_BAT,
-	NEXT_STAGE
+	NEXT_STAGE,
+	BIG_BAT
 };
 
 

@@ -1,10 +1,10 @@
 #include "Ground.h"
 #include "Scenes.h"
 
-CGround::CGround(int state, int width, int height, float x, float y)
+CGround::CGround(int state, int isEnable, int width, int height, float x, float y)
 {
 	type = ObjectType::GROUND;
-	isEnable = true;
+	this->isEnable = isEnable < 0 ? true : false; //set nguoc lai de khoi phai sua file lau
 	this->x = x;
 	this->y = y;
 	this->width = width;

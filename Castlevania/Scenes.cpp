@@ -7,6 +7,7 @@
 #include "Fish.h"
 #include "Dog.h"
 #include "Bat.h"
+#include "BigBat.h"
 #include "Water.h"
 #include "SupportObject.h"
 #include <fstream>
@@ -33,11 +34,11 @@ void CScenes::Init()
 
 	currentScene = SCENEID_2;
 	curentMap = scenes[currentScene]->mapID;
-	stageGame = STAGEID::STAGE_2_2;
-	startPointStage = START_POINT_STAGE_2_2;
+	stageGame = STAGEID::STAGE_2_3;
+	startPointStage = START_POINT_STAGE_2_3;
 	stageWidth = STAGE_2_3_WIDTH;
 	loadObjectToGrid(scenes[currentScene]->linkObjects);
-	simon->SetPosition(START_POINT_STAGE_2_2 + 900, 100);
+	simon->SetPosition(START_POINT_STAGE_2_3 + 10, 100);
 	updateCam();
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
@@ -79,8 +80,11 @@ void CScenes::Update(DWORD dt)
 		{
 			if (obj.second->type == ObjectType::GROUND && obj.second->state != STATE_NOT_COLLISION_WIDTH_ENEMY)
 			{
-				onCamObjects.push_back(obj.second);
 				grounds.push_back(obj.second);
+				if (obj.second->isEnable)
+				{
+					onCamObjects.push_back(obj.second);
+				}
 			}
 			if (obj.second->type == ObjectType::WATER)
 			{
@@ -257,6 +261,14 @@ void CScenes::getObjectsFromGrid(float xCam, int widthCam)
 	}
 }
 
+void CScenes::enableGroundHidden()
+{
+	for (int i = 0; i < grounds.size(); i++)
+	{
+		grounds[i]->isEnable = true;
+	}
+}
+
 void CScenes::loadObjectToGrid(string path)
 {
 	if (grid != NULL || grid != nullptr)
@@ -294,7 +306,7 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case GROUND:
 		{
-			obj = new CGround(state, param_2, param_3, x, y);
+			obj = new CGround(state, param_1, param_2, param_3, x, y);
 			break;
 		}
 		case DOOR:
@@ -338,12 +350,17 @@ void CScenes::loadObjectToGrid(string path)
 		}
 		case SUPPORTER:
 		{
-			obj = new CSupportObject(STATESP(state), param_2, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
+			obj = new CSupportObject(state, param_2, x, y); //hidden obj để hỗ trợ auto walk qua màn //width đại diện cho khoảng cách cần đi tiếp
 			break;
 		}
 		case WATER:
 		{
 			obj = new CWater();
+			break;
+		}
+		case BIG_BAT:
+		{
+			obj = new CBigBat(x, y);
 			break;
 		}
 

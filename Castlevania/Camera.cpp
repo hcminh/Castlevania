@@ -31,7 +31,7 @@ void CCamera::movingCamera(float newX)
 
 void CCamera::update(float stateWidth, float startPointOfState)
 {
-	if (autoMoving && isMovingCamera())
+	if ((autoMoving && isMovingCamera()) || stopFollowSiom)
 		return;
 	CScenes::GetInstance()->stopMovingObject = false;
 	float xSimon = CSimon::GetInstance()->x + 30; //nửa người simon

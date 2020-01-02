@@ -2,7 +2,7 @@
 
 #include "GameObject.h"
 
-#define STAIR_BBOX_WIDTH			48
+#define STAIR_BBOX_WIDTH			56
 #define STAIR_BBOX_HEIGHT			16
 
 #define LAST_STEP_HEIGHT		12.0f

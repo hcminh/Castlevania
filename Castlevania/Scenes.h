@@ -9,7 +9,7 @@
 #include "GameObject.h"
 #include "NextStage.h"
 #include "Simon.h"
-#include "tilemap.h"
+#include "GameMaps.h"
 #include "Grid.h"
 
 #define TIME_STOP_WATCH 2000

@@ -74,6 +74,7 @@ public:
 
 	int width;
 	int height;
+	float gravity;
 
 	DWORD dt; 
 	ObjectType type;

@@ -60,9 +60,6 @@
     <ClInclude Include="Scenes.h">
       <Filter>Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="tilemap.h">
-      <Filter>Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -115,6 +112,9 @@
     <ClInclude Include="FireBall.h">
       <Filter>Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="GameMaps.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Input.cpp">
@@ -139,9 +139,6 @@
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="Scenes.cpp">
-      <Filter>Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="tilemap.cpp">
       <Filter>Scenes</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -201,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="FireBall.cpp">
       <Filter>Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMaps.cpp">
+      <Filter>Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

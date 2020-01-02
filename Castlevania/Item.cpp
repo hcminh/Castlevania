@@ -51,13 +51,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 		break;
 	case BIG_HEART:
 		AddAnimation(253);		// big heart
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case SMALL_HEART:
 	case RANDOM:
 		AddAnimation(254);		// small heart
 		velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-		vy = SMALL_HEART_GRAVITY;
+		gravity = SMALL_HEART_GRAVITY;
 		break;
 	case WHIP:
 		if (CSimon::GetInstance()->whip->isLevelMax())
@@ -65,13 +65,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			item = SMALL_HEART;
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-			vy = SMALL_HEART_GRAVITY;
+			gravity = SMALL_HEART_GRAVITY;
 			break;
 		}
 		else
 		{
 			AddAnimation(255);		// whip
-			vy = BIG_HEART_GRAVITY;
+			gravity = ITEM_GRAVITY;
 			break;
 		}
 	case KNIFE:
@@ -80,13 +80,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			item = SMALL_HEART;
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-			vy = SMALL_HEART_GRAVITY;
+			gravity = SMALL_HEART_GRAVITY;
 			break;
 		}
 		else
 		{
 			AddAnimation(256);		// knife
-			vy = BIG_HEART_GRAVITY;
+			gravity = ITEM_GRAVITY;
 			break;
 		}
 	case STOP_WATCH:
@@ -95,13 +95,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			item = SMALL_HEART;
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-			vy = SMALL_HEART_GRAVITY;
+			gravity = SMALL_HEART_GRAVITY;
 			break;
 		}
 		else
 		{
 			AddAnimation(258);		// STOP_WATCH
-			vy = BIG_HEART_GRAVITY;
+			gravity = ITEM_GRAVITY;
 			break;
 		}
 	case AXE:
@@ -110,61 +110,66 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			item = SMALL_HEART;
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-			vy = SMALL_HEART_GRAVITY;
+			gravity = SMALL_HEART_GRAVITY;
+			break;
 		}
 		else
 		{
 			AddAnimation(257);		// AXE
-			vy = BIG_HEART_GRAVITY;
+			gravity = ITEM_GRAVITY;
+			break;
 		}
-		break;
 	case HOLY_WATER:
 		if (CSimon::GetInstance()->typeSubWeapon == HOLY_WATER)
 		{
 			item = SMALL_HEART;
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
-			vy = SMALL_HEART_GRAVITY;
+			gravity = SMALL_HEART_GRAVITY;
+			break;
 		}
 		else
 		{
 			AddAnimation(260);		// HOLY_WATER
-			vy = BIG_HEART_GRAVITY;
+			gravity = ITEM_GRAVITY;
+			break;
 		}
-		break;
 	case HOLY_CROSS:
 		AddAnimation(269);		// HOLY_CROSS
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case INVISIBLE:
 		AddAnimation(259);		// INVISIBLE
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case FOOD:
 		AddAnimation(266);		// GÀ NƯỚNG
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case POINT_400:
 		AddAnimation(263);		// túi xanh
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case POINT_700:
 		AddAnimation(264);		// túi vàng
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case POINT_1000:
 		AddAnimation(265);		// túi đỏ
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case DOUBLE_SHOT:
 		AddAnimation(268);		// double shot
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	case TRIPLE_SHOT:
 		AddAnimation(268);		// double shot
-		vy = BIG_HEART_GRAVITY;
+		gravity = ITEM_GRAVITY;
 		break;
 	default:
+		AddAnimation(254);		// small heart
+		velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
+		gravity = SMALL_HEART_GRAVITY;
 		break;
 	}
 
@@ -190,10 +195,10 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 
 	if (!isDestroyed) return;
 
+	vy += gravity * dt;
 	if (item == ItemType::SMALL_HEART && vy != 0)
 	{
 		vx += velocityVariation_x;
-		vy += SMALL_HEART_GRAVITY * dt;
 		if (vx >= ITEM_FALLING_SPEED_X || vx <= -ITEM_FALLING_SPEED_X)
 			velocityVariation_x *= -1; // đổi chiều
 	}
@@ -205,17 +210,17 @@ void CItem::Update(DWORD dt, vector<LPGAMEOBJECT>* coObjects)
 	}
 	if (isTouchGround) return;
 
-	vector<LPGAMEOBJECT> listObject_Ground;
-	listObject_Ground.clear();
-	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type == ObjectType::GROUND)
-			listObject_Ground.push_back(coObjects->at(i));
-	}
+	//vector<LPGAMEOBJECT> listObject_Ground;
+	//listObject_Ground.clear();
+	//for (UINT i = 0; i < coObjects->size(); i++) {
+	//	if (coObjects->at(i)->type == ObjectType::GROUND)
+	//		listObject_Ground.push_back(coObjects->at(i));
+	//}
 
 	vector<LPCOLLISIONEVENT> coEvents;
 	vector<LPCOLLISIONEVENT> coEventsResult;
 	coEvents.clear();
-	CalcPotentialCollisions(&listObject_Ground, coEvents); // Lấy danh sách các va chạm 
+	CalcPotentialCollisions(coObjects, coEvents); // Lấy danh sách các va chạm 
 	// No collision occured, proceed normally
 	if (coEvents.size() == 0)
 	{
@@ -246,7 +251,7 @@ void CItem::Render()
 	else if (!isDestroyed) ani = ITEM_ANI_STATE;
 	else ani = ITEM_ANI_ITEM;
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CItem::GetBoundingBox(float &l, float &t, float &r, float &b)
@@ -274,50 +279,23 @@ void CItem::stateChange()
 		height = SMALL_HEART_BBOX;
 		break;
 	case WHIP:
-		width = WEAPON_BBOX;
-		height = WEAPON_BBOX;
-		break;
 	case KNIFE:
-		width = WEAPON_BBOX;
-		height = WEAPON_BBOX;
-		break;
 	case AXE:
-		width = WEAPON_BBOX;
-		height = WEAPON_BBOX;
-		break;
 	case STOP_WATCH:
-		width = WEAPON_BBOX;
-		height = WEAPON_BBOX;
-		break;
 	case INVISIBLE:
-		width = WEAPON_BBOX;
-		height = WEAPON_BBOX;
-		break;
 	case HOLY_WATER:
 		width = WEAPON_BBOX;
 		height = WEAPON_BBOX;
 		break;
 	case POINT_400:
-		width = PACKAGE_BBOX;
-		height = PACKAGE_BBOX;
-		break;
 	case POINT_700:
-		width = PACKAGE_BBOX;
-		height = PACKAGE_BBOX;
-		break;
 	case POINT_1000:
-		width = PACKAGE_BBOX;
-		height = PACKAGE_BBOX;
-		break;
 	case FOOD:
-		width = PACKAGE_BBOX;
-		height = PACKAGE_BBOX;
-		break;
 	case DOUBLE_SHOT:
+	case TRIPLE_SHOT:
+	default:
 		width = PACKAGE_BBOX;
 		height = PACKAGE_BBOX;
-		break;
-	default:
 		break;
 	}
 }
@@ -346,6 +324,6 @@ void CItem::SetState(int state)
 
 ItemType CItem::randomItem()
 {
-	return ItemType(rand() % 16);
+	return ItemType(rand() % 16 + 1);
 }
 

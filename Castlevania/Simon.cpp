@@ -45,7 +45,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		{
 			auto *item = dynamic_cast<CItem*>(coObjects->at(i));
 			if(item->itemState == ItemState::STATE_BRICK || item->itemState == ItemState::STATE_WALL)
-				listObject.push_back(coObjects->at(i));
+				listObject.push_back(item);
 		}
 		else 
 		{
@@ -79,7 +79,7 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 		for (UINT i = 0; i < coEventsResult.size(); i++)
 		{
 			LPCOLLISIONEVENT e = coEventsResult[i];
-			if (e->obj->type == ObjectType::GROUND)
+			if (e->obj->type == ObjectType::GROUND || e->obj->type == ObjectType::ITEM)
 			{
 				if (e->ny < 0)
 				{
@@ -211,7 +211,7 @@ void CSimon::Render()
 	{
 		whip->Render();
 	}
-	//RenderBoundingBox();
+	RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -553,7 +553,9 @@ bool CSimon::downStair(vector<LPGAMEOBJECT> stairs)
 		float simon_l, simon_t, simon_r, simon_b;
 		GetBoundingBox(simon_l, simon_t, simon_r, simon_b);
 
-		simon_b += 7.5;
+		simon_b += 8;
+		simon_l += 10;
+		simon_r += 10;
 
 		for (UINT i = 0; i < stairs.size(); i++)
 		{

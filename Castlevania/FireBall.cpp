@@ -54,7 +54,7 @@ void CFireBall::Render()
 	else ani = 1;
 
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CFireBall::respawn()

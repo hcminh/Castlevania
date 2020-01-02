@@ -150,7 +150,7 @@
     <ClInclude Include="Stair.h" />
     <ClInclude Include="SupportObject.h" />
     <ClInclude Include="Textures.h" />
-    <ClInclude Include="tilemap.h" />
+    <ClInclude Include="GameMaps.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Whip.h" />
@@ -181,7 +181,7 @@
     <ClCompile Include="Stair.cpp" />
     <ClCompile Include="SupportObject.cpp" />
     <ClCompile Include="Textures.cpp" />
-    <ClCompile Include="tilemap.cpp" />
+    <ClCompile Include="GameMaps.cpp" />
     <ClCompile Include="Water.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="Whip.cpp" />

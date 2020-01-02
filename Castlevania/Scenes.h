@@ -96,7 +96,7 @@ public:
 	void updateCam();
 	void changeScene(LPGAMEOBJECT obj);
 	void changeScene(CNextStage *stage);
-	void changeScene(SCENEID newScene);
+	void changeScene(STAGEID newStage);
 	void loadObjectToGrid(string path);
 	void getObjectsFromGrid(float xCam, int widthCam);
 	int getObjectsSize() { return objects.size(); };

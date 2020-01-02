@@ -34,12 +34,6 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
-	//for (UINT i = 0; i < coObjects->size(); i++) {
-	//	if (coObjects->at(i)->type != ObjectType::ITEM)
-	//	{
-	//		listObject.push_back(coObjects->at(i));
-	//	}
-	//}
 	for (UINT i = 0; i < coObjects->size(); i++) {
 		if (coObjects->at(i)->type == ObjectType::ITEM)
 		{
@@ -624,7 +618,7 @@ void CSimon::attack()
 	{
 		isUseSubWeapon = false;
 	}
-	if (!isJumping) vx = 0;
+	//if (!isJumping) vx = 0;
 	isAttacking = true;
 }
 

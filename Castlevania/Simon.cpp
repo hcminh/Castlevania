@@ -34,8 +34,20 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	vector<LPGAMEOBJECT> listObject; // lọc danh sách có khả năng va chạm
 	listObject.clear();
+	//for (UINT i = 0; i < coObjects->size(); i++) {
+	//	if (coObjects->at(i)->type != ObjectType::ITEM)
+	//	{
+	//		listObject.push_back(coObjects->at(i));
+	//	}
+	//}
 	for (UINT i = 0; i < coObjects->size(); i++) {
-		if (coObjects->at(i)->type != ObjectType::ITEM)
+		if (coObjects->at(i)->type == ObjectType::ITEM)
+		{
+			auto *item = dynamic_cast<CItem*>(coObjects->at(i));
+			if(item->itemState == ItemState::STATE_BRICK || item->itemState == ItemState::STATE_WALL)
+				listObject.push_back(coObjects->at(i));
+		}
+		else 
 		{
 			listObject.push_back(coObjects->at(i));
 		}

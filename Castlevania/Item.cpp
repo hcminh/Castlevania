@@ -111,14 +111,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
 			vy = SMALL_HEART_GRAVITY;
-			break;
 		}
 		else
 		{
 			AddAnimation(257);		// AXE
 			vy = BIG_HEART_GRAVITY;
-			break;
 		}
+		break;
 	case HOLY_WATER:
 		if (CSimon::GetInstance()->typeSubWeapon == HOLY_WATER)
 		{
@@ -126,14 +125,13 @@ CItem::CItem(ItemType iType, ItemState itemState, float xPos, float yPos)
 			AddAnimation(254);		// small heart
 			velocityVariation_x = ITEM_FALLING_SPEED_X_VARIATION;
 			vy = SMALL_HEART_GRAVITY;
-			break;
 		}
 		else
 		{
 			AddAnimation(260);		// HOLY_WATER
 			vy = BIG_HEART_GRAVITY;
-			break;
 		}
+		break;
 	case HOLY_CROSS:
 		AddAnimation(269);		// HOLY_CROSS
 		vy = BIG_HEART_GRAVITY;

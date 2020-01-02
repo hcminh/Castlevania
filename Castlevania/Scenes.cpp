@@ -213,29 +213,32 @@ void CScenes::changeScene(CNextStage * stage)
 
 void CScenes::changeScene(STAGEID newStage)
 {
-	CDoor * door;
-	if (newScene == SCENEID_1)
-	{
-		door = new CDoor(STAGEID(0), SCENEID_1, 10, 300, 0, 0);
-		changeScene(door);
-		simon->SetPosition(1000.0f, 300);
-	}
-	else if (newScene == SCENEID_2)
-	{
-		door = new CDoor(STAGEID(1), SCENEID_2, 10, 300, 0, 0);
-		changeScene(door);
-		simon->SetPosition(2961, 100);
-	}
-	else if (newScene == SCENEID_3)
-	{
-		door = new CDoor(STAGE_3, SCENEID_3, 10, 100, 0, 0);
-		changeScene(door);
-		simon->SetPosition(10, 330);
-	}
 
-	//loadObjectToGrid(scenes[currentScene]->linkObjects);
-	//updateCam();
-	//getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
+	if (newStage == STAGE_1)
+	{
+		CDoor * door = new CDoor(newStage, SCENEID_1, 10, 300, 0, 0);
+		changeScene(door);
+	}
+	if (newStage == STAGE_2_1)
+	{
+		CDoor * door = new CDoor(newStage, SCENEID_2, 10, 300, 0, 0);
+		changeScene(door);
+	}
+	if (newStage == STAGE_2_2)
+	{
+		CDoor * door = new CDoor(newStage, SCENEID_2, START_POINT_STAGE_2_2 + 10, 300, 0, 0);
+		changeScene(door);
+	}
+	if (newStage == STAGE_2_3)
+	{
+		CDoor * door = new CDoor(newStage, SCENEID_2, START_POINT_STAGE_2_3 + 10, 300, 0, 0);
+		changeScene(door);
+	}
+	if (newStage == STAGE_3)
+	{
+		CDoor * door = new CDoor(newStage, SCENEID_3, 10, 100, 0, 0);
+		changeScene(door);
+	}
 }
 
 void CScenes::getObjectsFromGrid(float xCam, int widthCam)

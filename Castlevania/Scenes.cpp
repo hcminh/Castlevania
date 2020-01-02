@@ -211,7 +211,7 @@ void CScenes::changeScene(CNextStage * stage)
 	getObjectsFromGrid(camera->getCamPosX(), SCREEN_WIDTH);
 }
 
-void CScenes::changeScene(SCENEID newScene)
+void CScenes::changeScene(STAGEID newStage)
 {
 	CDoor * door;
 	if (newScene == SCENEID_1)

@@ -115,17 +115,19 @@ void Input::OnKeyDown(int KeyCode)
 		simon->autoWalk2D(100, 0.0f, SIMON_STATE_IDLE, 1, false);
 		break;
 	case DIK_1: //qua scene 1
-		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_1);
+		CScenes::GetInstance()->changeScene(STAGEID::STAGE_1);
 		break;
 	case DIK_2: //qua scene 2
-		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_2);
-		break;
-	case DIK_P: //qua scene 2
-		simon->SetPosition(1214.0f, 300);
+		CScenes::GetInstance()->changeScene(STAGEID::STAGE_2_1);
 		break;
 	case DIK_3: //qua scene 3
-		CScenes::GetInstance()->changeScene(SCENEID::SCENEID_3);
-		simon->SetPosition(10.0f, 100);
+		CScenes::GetInstance()->changeScene(STAGEID::STAGE_2_2);
+		break;
+	case DIK_4: //qua scene 3
+		CScenes::GetInstance()->changeScene(STAGEID::STAGE_2_3);
+		break;
+	case DIK_5: //qua scene 3
+		CScenes::GetInstance()->changeScene(STAGEID::STAGE_3);
 		break;
 	}
 }

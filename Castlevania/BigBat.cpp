@@ -5,6 +5,7 @@
 CBigBat::CBigBat(float x, float y) : CEnemy()
 {
 	this->isEnable = true;
+	this->isDead = false;
 	this->enemyType = EnemyType::SUPPER_BAT;
 	this->type = ObjectType::ENEMY;
 	this->SetPosition(x, y);
@@ -24,10 +25,20 @@ CBigBat::CBigBat(float x, float y) : CEnemy()
 	startTimeWaiting = 0;
 	isStopWaiting = false;
 
+	HP = 5;
 }
 
 void CBigBat::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 {
+	if (isDead) return;
+	if (isBurning && (GetTickCount() - burningStart > ENEMY_BURN_TIME))	//enemy fire
+	{
+		burningStart = 0;
+		isBurning = false;
+		vy = vx = 0;
+		gravity = 0;
+		isDead = true;
+	}
 
 	if (state == BIG_BAT_STATE_IDLE || isDead)
 	{
@@ -98,6 +109,16 @@ void CBigBat::SetState(int state)
 		isFlying = true;
 		attackTime = 0;
 		break;
+	case ENEMY_STATE_DEAD:
+		HP--;
+		if (HP < 0)
+		{
+			vx = 0;
+			vy = 0;
+			gravity = 0;
+			startBurning();
+		}
+		break;
 	default:
 		break;
 	}
@@ -141,6 +162,7 @@ void CBigBat::randomNewPosition()
 
 void CBigBat::GetBoundingBox(float & left, float & top, float & right, float & bottom)
 {
+	if (isDead) return;
 	left = x; 
 	top = y;
 	right = left + BIG_BAT_BBOX_WIDTH;

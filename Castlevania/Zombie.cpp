@@ -81,6 +81,15 @@ void CZombie::Update(DWORD dt, vector<LPGAMEOBJECT>* coObject)
 
 }
 
+
+void CZombie::GetBoundingBox(float &left, float &top, float &right, float &bottom)
+{
+		left = x + 11;  // (10/32)
+		top = y + 2; // (60,64)
+		right = left + 10;
+		bottom = top + 60;
+}
+
 void CZombie::Render()
 {
 	if (isDead) return;
@@ -91,7 +100,7 @@ void CZombie::Render()
 	else ani = 1;
 
 	animations[ani]->Render(x, y, D3DCOLOR_ARGB(255, 255, 255, 255));
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CZombie::respawn()

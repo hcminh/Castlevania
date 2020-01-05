@@ -121,7 +121,11 @@ void CSimon::Update(DWORD dt, vector<LPGAMEOBJECT> *coObjects)
 
 	//update weapon
 	whip->Update(dt, coObjects);
-	if (subWeapon != NULL) subWeapon->Update(dt, coObjects);
+	if (subWeapon != NULL)
+	{
+		subWeapon->Update(dt, coObjects);
+		subWeapon2nd->Update(dt, coObjects);
+	}
 	if (isAttacking && animations[ani]->getCurrentFrame() >= MAX_ATTACK_FRAME) //nếu là frame đánh cuói cùng thì tắt isAttacking
 	{
 		isAttacking = false;
@@ -199,13 +203,16 @@ void CSimon::Render()
 
 	//xử lý render sau khi đã bấm nút
 	if (typeSubWeapon != WeaponType::NONE && subWeapon->isFlying) subWeapon->Render();
-
+	if (doubleShootTimes > 0)
+	{
+		subWeapon2nd->Render();
+	}
 	//xử lý render vũ khí khi vừa bấm nút
 	if (isAttacking && !isUseSubWeapon)
 	{
 		whip->Render();
 	}
-	RenderBoundingBox();
+	//RenderBoundingBox();
 }
 
 void CSimon::SetState(int state)
@@ -613,12 +620,20 @@ void CSimon::attack()
 		subWeapon->nx = nx;
 		subWeapon->SetPosition(x, y);
 		subWeapon->SetState(typeSubWeapon);
+		if (doubleShootTimes > 0)
+		{
+			doubleShootTimes--;
+			subWeapon2nd->isFlying = true;
+			subWeapon2nd->nx = nx;
+			subWeapon2nd->SetPosition(x + 5 * nx, y + 5 * nx);
+			subWeapon2nd->SetState(typeSubWeapon);
+		}
 	}
 	else
 	{
 		isUseSubWeapon = false;
 	}
-	//if (!isJumping) vx = 0;
+	if (!isJumping) vx = 0;
 	isAttacking = true;
 }
 

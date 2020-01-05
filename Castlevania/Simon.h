@@ -126,6 +126,8 @@ public:
 	bool isDownStair = false;
 	int stairDirection = 0;			// 1: trái dưới - phải trên, -1: trái trên - phải dưới
 
+	int doubleShootTimes = 0;
+
 	// auto-walk 2d
 	bool isAutoWalk2D = false;		// tự động đi
 	float autoWalkDistanceX2D = 0;		// Khoảng cách 
@@ -136,6 +138,7 @@ public:
 
 	CWhip *whip;
 	CWeapon *subWeapon = NULL;
+	CWeapon *subWeapon2nd = NULL;
 	WeaponType typeSubWeapon = WeaponType::NONE;
 
 	CSimon() : CGameObject()
@@ -145,8 +148,11 @@ public:
 		SetPosition(0, 300.0f);
 		whip = new CWhip(x, y, nx);
 		subWeapon = new CWeapon();
+		subWeapon2nd = new CWeapon();
 		typeSubWeapon = WeaponType::HOLY_WATER_WEAPON;
 		subWeapon->SetState(typeSubWeapon);
+		subWeapon2nd->SetState(typeSubWeapon);
+		doubleShootTimes = 5;
 	}
 
 	static CSimon * GetInstance();

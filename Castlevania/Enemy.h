@@ -37,7 +37,6 @@ enum EnemyType {
 
 class CEnemy : public CGameObject
 {
-
 public:
 	DWORD burningStart;
 	DWORD respawnTime;

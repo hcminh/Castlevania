@@ -16,14 +16,10 @@ void CEnemy::GetBoundingBox(float &left, float &top, float &right, float &bottom
 	}
 	else
 	{
-		//left = x;
-		//top = y;
-		//right = left + width;
-		//bottom = top + height;
-		left = x + 11;  // (10/32)
-		top = y + 2; // (60,64)
-		right = left + 10;
-		bottom = top + 60;
+		left = x;
+		top = y;
+		right = left + width;
+		bottom = top + height;
 	}
 }
 
